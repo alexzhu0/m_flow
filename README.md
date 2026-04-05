@@ -2,7 +2,7 @@
 
 # M-flow
 
-**A memory engine that retrieves through reasoning and association, not just similarity.**
+**A memory engine that focuses on reasoning and association.**
 
 M-flow 是一款重构检索架构、侧重推理与联想的记忆引擎。
 
