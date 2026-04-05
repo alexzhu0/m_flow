@@ -7,7 +7,7 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
 ARG DEBUG=false
-ARG UV_EXTRAS="debug api postgres neo4j llama-index ollama mistral groq anthropic langchain"
+ARG UV_EXTRAS="debug deploy api postgres neo4j llama-index ollama mistral groq anthropic langchain"
 
 WORKDIR /opt/m_flow
 

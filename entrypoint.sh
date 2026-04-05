@@ -58,6 +58,12 @@ launch() {
     exec gunicorn "${common_flags[@]}" --log-level "$level" "$@" "$MODULE"
 }
 
+# Fallback: if gunicorn is not installed, use uvicorn directly
+if ! command -v gunicorn &>/dev/null; then
+    log "WARNING: gunicorn not found (install 'deploy' extra), falling back to uvicorn"
+    exec uvicorn "$MODULE" --host "$ADDR" --port "$PORT"
+fi
+
 # Optional: attach remote debugger before starting
 if [[ "${ENVIRONMENT:-production}" =~ ^(dev|local)$ ]]; then
     if [[ "${DEBUG:-false}" == "true" ]]; then
