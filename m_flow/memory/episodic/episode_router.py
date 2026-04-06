@@ -69,7 +69,7 @@ class CandidateInfo:
     # Ranks (lower is better, _NO_EVIDENCE_RANK means no evidence found)
     summary_rank: int = _NO_EVIDENCE_RANK
     facet_rank: int = _NO_EVIDENCE_RANK
-    alias_rank: int = _NO_EVIDENCE_RANK
+    anchor_rank: int = _NO_EVIDENCE_RANK
 
     # Note: entity_hits removed for parallel optimization (v1.3)
     # Entity extraction now runs in parallel with routing
@@ -85,7 +85,7 @@ class CandidateInfo:
         return (
             self.summary_rank < _NO_EVIDENCE_RANK
             or self.facet_rank < _NO_EVIDENCE_RANK
-            or self.alias_rank < _NO_EVIDENCE_RANK
+            or self.anchor_rank < _NO_EVIDENCE_RANK
         )
 
     def match_signals_str(self) -> str:
@@ -95,8 +95,8 @@ class CandidateInfo:
             signals.append(f"summary(rank={self.summary_rank})")
         if self.facet_rank < _NO_EVIDENCE_RANK:
             signals.append(f"facet(rank={self.facet_rank})")
-        if self.alias_rank < _NO_EVIDENCE_RANK:
-            signals.append(f"alias(rank={self.alias_rank})")
+        if self.anchor_rank < _NO_EVIDENCE_RANK:
+            signals.append(f"anchor(rank={self.anchor_rank})")
         return "; ".join(signals) if signals else "none"
 
 
@@ -370,7 +370,7 @@ async def route_episode_id_for_doc(
 
     Strategy:
         0) If routing disabled or default_episode_id exists -> return it
-        1) Vector recall: Episode_summary, Facet_search_text, Facet_aliases_text
+        1) Vector recall: Episode_summary, Facet_search_text, Facet_anchor_text
         2) Fetch detailed info for top candidates
         3) Filter candidates to same nodeset (dataset isolation)
         4) LLM decision: CREATE_NEW or MERGE_TO_EXISTING
@@ -427,10 +427,10 @@ async def route_episode_id_for_doc(
         logger.debug(f"[router] Using dataset filter: {where_filter}")
 
     # 1) Concurrent vector recall (with dataset isolation filter)
-    episode_res, facet_res, alias_res = await asyncio.gather(
+    episode_res, facet_res, anchor_res = await asyncio.gather(
         _search_collection(vector_engine, "Episode_summary", query_vector, episode_summary_k, where_filter),
         _search_collection(vector_engine, "Facet_search_text", query_vector, facet_k, where_filter),
-        _search_collection(vector_engine, "Facet_aliases_text", query_vector, facet_k, where_filter),
+        _search_collection(vector_engine, "Facet_anchor_text", query_vector, facet_k, where_filter),
     )
 
     candidates: Dict[str, CandidateInfo] = {}
@@ -461,17 +461,17 @@ async def route_episode_id_for_doc(
             c.sources.add("facet_search")
             c.facet_rank = min(c.facet_rank, rank)
 
-    # 4) Alias facet -> Episode
-    alias_ids = [str(getattr(r, "id", "") or "") for r in (alias_res or [])]
-    alias_ids = [x for x in alias_ids if x][: min(12, facet_k)]
-    alias_maps = await asyncio.gather(
-        *[_neighbor_episode_ids(graph_engine, fid, "has_facet") for fid in alias_ids]
+    # 4) Anchor facet -> Episode
+    anchor_ids = [str(getattr(r, "id", "") or "") for r in (anchor_res or [])]
+    anchor_ids = [x for x in anchor_ids if x][: min(12, facet_k)]
+    anchor_maps = await asyncio.gather(
+        *[_neighbor_episode_ids(graph_engine, fid, "has_facet") for fid in anchor_ids]
     )
-    for rank, eps in enumerate(alias_maps):
+    for rank, eps in enumerate(anchor_maps):
         for ep_id in eps:
             c = get(ep_id)
-            c.sources.add("facet_alias")
-            c.alias_rank = min(c.alias_rank, rank)
+            c.sources.add("facet_anchor")
+            c.anchor_rank = min(c.anchor_rank, rank)
 
     # Note: Entity overlap (step 5) removed for parallel optimization
     # Entity extraction now runs in parallel with routing, so entity IDs are not available here
@@ -487,7 +487,7 @@ async def route_episode_id_for_doc(
 
     # Sort by combined signal strength (lower rank is better)
     valid_candidates.sort(
-        key=lambda x: min(x.summary_rank, x.facet_rank, x.alias_rank)
+        key=lambda x: min(x.summary_rank, x.facet_rank, x.anchor_rank)
     )
 
     # Take top candidates for LLM

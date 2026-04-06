@@ -1,40 +1,52 @@
 # M-flow MCP Server Image
 # Model Context Protocol server for M-flow knowledge graphs
 
-FROM python:3.11-slim AS builder
+FROM python:3.12-slim AS builder
 
-# Build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential git curl && \
+    build-essential git curl libpq-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /srv/mcp
 
-# Install Python dependencies first (for layer caching)
-COPY m_flow-mcp/pyproject.toml ./
-RUN pip install --no-cache-dir -e ".[all]"
+# Copy ALL source first, then install (editable install needs source present)
+COPY m_flow-mcp/pyproject.toml ./pyproject.toml
+COPY m_flow-mcp/src/ ./src/
 
-# Copy M-flow source
-COPY m_flow/ /srv/mcp/m_flow/
-COPY m_flow-mcp/ /srv/mcp/
+# Install main backend from the parent context so m_flow is available locally
+COPY pyproject.toml /tmp/m_flow/pyproject.toml
+COPY README.md /tmp/m_flow/README.md
+COPY m_flow/ /tmp/m_flow/m_flow/
+RUN pip install --no-cache-dir /tmp/m_flow && rm -rf /tmp/m_flow
 
-FROM python:3.11-slim AS runtime
+# Install MCP package (deps already satisfied by m_flow above)
+RUN pip install --no-cache-dir ".[all]"
+
+# ── Runtime ──────────────────────────────────────────────────────────────────
+FROM python:3.12-slim AS runtime
 
 WORKDIR /srv/mcp
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /srv/mcp /srv/mcp
 
-# MCP HTTP/SSE server default port
+# Copy m_flow source for direct-mode (non-API) operation
+COPY m_flow/ /srv/mcp/m_flow/
+COPY alembic.ini /srv/mcp/alembic.ini
+COPY alembic/ /srv/mcp/alembic/
+
+ENV PYTHONPATH=/srv/mcp \
+    PYTHONUNBUFFERED=1
+
 EXPOSE 8000
 
-# Install curl for health checks
 RUN apt-get update && apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
 
 COPY m_flow-mcp/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Health check - verify MCP server is responding
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -sf http://localhost:8000/health || exit 1
 

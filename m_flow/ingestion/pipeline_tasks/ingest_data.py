@@ -159,7 +159,7 @@ async def _process_single_item(
             existing.owner_id = user.id
             existing.content_hash = orig_meta["content_hash"]
             existing.source_digest = store_meta["content_hash"]
-            existing.file_size = orig_meta["file_size"]
+            existing.data_size = orig_meta["file_size"]
             existing.external_metadata = ext_meta
             existing.graph_scope = json.dumps(node_labels) if node_labels else None
             existing.tenant_id = user.tenant_id or None

@@ -12,6 +12,7 @@ import { useConfirm } from "@/components/ui/confirm-dialog";
 import { toast } from "sonner";
 import { Upload, X, Check, AlertCircle, Loader2, ChevronDown, ChevronUp, Info, Settings2, RotateCcw, AlertTriangle } from "lucide-react";
 import type { ChunkerType } from "@/types";
+import { ConfigWizard } from "./ConfigWizard";
 
 // ============================================================================
 // Types
@@ -375,7 +376,6 @@ export function IngestPage() {
           dataset_name: datasetName,
           skip_memorize: options.skipMemorize,
           run_in_background: options.runInBackground,
-          custom_prompt: ingestionConfig.custom_prompt || undefined,
           chunk_size: effectiveChunkSize || undefined,
           chunks_per_batch: options.chunksPerBatch,
           enable_episode_routing: options.enableEpisodeRouting,
@@ -424,7 +424,6 @@ export function IngestPage() {
             datasetName,
             skipMemorize: options.skipMemorize,
             runInBackground: options.runInBackground,
-            customPrompt: ingestionConfig.custom_prompt || undefined,
             chunkSize: effectiveChunkSize || undefined,
             chunksPerBatch: options.chunksPerBatch,
             enableEpisodeRouting: options.enableEpisodeRouting,
@@ -736,6 +735,13 @@ export function IngestPage() {
                   </button>
                 </div>
               )}
+
+              {/* ── Configuration Wizard ── */}
+              <ConfigWizard
+                onApply={(result) => setOptions(prev => ({ ...prev, ...result }))}
+                disabled={isProcessing}
+              />
+
               {/* Chunk Size */}
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -906,7 +912,7 @@ export function IngestPage() {
                     <div className="group relative">
                       <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                       <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        Merge new content into existing episodes when semantically similar. Disable for faster processing of independent documents.
+                        When new content may closely relate to previously ingested content, enable this to merge them into coherent episodes. Costs extra LLM tokens and time. Disable to allow concurrent episode creation for much faster ingestion of independent documents.
                       </div>
                     </div>
                   </div>
@@ -929,7 +935,7 @@ export function IngestPage() {
                     <div className="group relative">
                       <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                       <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        Classify content at sentence level for better organization. Increases processing time but improves retrieval accuracy.
+                        When a single text block may contain multiple topics or semantic focuses, enable this to classify each sentence for cleaner memory structure. Costs extra LLM tokens and time per chunk. Disable for simple, single-topic documents.
                       </div>
                     </div>
                   </div>
@@ -952,7 +958,7 @@ export function IngestPage() {
                     <div className="group relative">
                       <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                       <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        Extract how-to instructions and step-by-step procedures. Useful for documentation and tutorials.
+                        Extract reusable procedures, preferences, and step-by-step knowledge to complement the factual episodic layer with an abstract dimension. Experimental feature. Costs extra LLM tokens and time.
                       </div>
                     </div>
                   </div>
@@ -975,7 +981,7 @@ export function IngestPage() {
                     <div className="group relative">
                       <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                       <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        Generate fine-grained FacetPoint nodes for detailed information retrieval. Adds processing time.
+                        Generate fine-grained FacetPoint nodes under each Facet for more precise retrieval matching. Costs extra LLM tokens per facet. Disable for faster processing when broad-level matching is sufficient.
                       </div>
                     </div>
                   </div>
@@ -998,7 +1004,7 @@ export function IngestPage() {
                     <div className="group relative">
                       <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                       <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                        Preserves all original factual information (dates, numbers, names, constraints) with lower compression — RAG context will be longer but more accurate. Slower processing.
+                        Preserve ALL factual information (dates, numbers, names, constraints) with zero information loss. Use for contracts, financial reports, or any content where every data point matters. Costs significantly more LLM tokens and time.
                       </div>
                     </div>
                   </div>

@@ -25,24 +25,6 @@ export function IngestionSettings() {
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Custom Prompt - This is the ONLY option that works! */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Label>Custom Prompt</Label>
-            <span className="text-[10px] px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded">Active</span>
-          </div>
-          <p className="text-xs text-zinc-500 mb-2">
-            Custom prompt will be passed to the backend LLM to guide knowledge extraction
-          </p>
-          <textarea
-            value={config.custom_prompt || ""}
-            onChange={(e) => config.setConfig({ custom_prompt: e.target.value })}
-            placeholder="Enter custom knowledge extraction prompt...&#10;Example: Focus on extracting technical concepts, API names and their relationships..."
-            rows={4}
-            className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-          />
-        </div>
-
         {/* Divider */}
         <div className="relative py-4">
           <div className="absolute inset-0 flex items-center">

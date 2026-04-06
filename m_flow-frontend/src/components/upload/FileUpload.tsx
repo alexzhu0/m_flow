@@ -12,6 +12,7 @@ import { ProgressTracker, getActionableErrorMessage, FileTypeIcon } from "@/comp
 import { cn, truncate } from "@/lib/utils";
 import { toast } from "sonner";
 import { Upload, X, Check, AlertCircle, Plus, Settings2, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { ConfigWizard, type WizardResult } from "@/components/memorize/ConfigWizard";
 
 // ============================================================================
 // Types
@@ -150,7 +151,6 @@ export function FileUpload() {
     datasetName: datasetName || "main_dataset",
     skipMemorize,
     runInBackground,
-    customPrompt: ingestionConfig.custom_prompt || undefined,
     enableEpisodeRouting,
     enableContentRouting,
     enableProcedural,
@@ -184,7 +184,6 @@ export function FileUpload() {
           dataset_name: targetDataset,
           skip_memorize: skipMemorize,
           run_in_background: runInBackground,
-          custom_prompt: ingestionConfig.custom_prompt || undefined,
           enable_episode_routing: enableEpisodeRouting,
           enable_content_routing: enableContentRouting,
           enable_procedural: enableProcedural,
@@ -467,9 +466,16 @@ export function FileUpload() {
                 />
               </div>
 
-              {/* Feature Toggles Section */}
+              {/* Scenario Presets + Feature Toggles */}
               {!skipMemorize && (
                 <div className="space-y-3 pt-3 border-t border-[var(--border-subtle)]">
+                  <ConfigWizard
+                    onApply={(result: WizardResult) => {
+                      if (result.enableEpisodeRouting !== undefined) setEnableEpisodeRouting(result.enableEpisodeRouting);
+                      if (result.enableContentRouting !== undefined) setEnableContentRouting(result.enableContentRouting);
+                    }}
+                    disabled={isUploading}
+                  />
                   <p className="text-[11px] text-[var(--text-muted)] uppercase tracking-wider">Processing Options</p>
                   
                   {/* Episode Routing */}
@@ -479,7 +485,7 @@ export function FileUpload() {
                       <div className="group relative">
                         <Info size={11} className="text-[var(--text-muted)] cursor-help" />
                         <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                          Merge new content into existing episodes when semantically similar. Disable for faster processing.
+                          When new content may closely relate to previously ingested content, enable this to merge them into coherent episodes. Costs extra LLM tokens and time. Disable for faster independent-document ingestion.
                         </div>
                       </div>
                     </div>
@@ -502,7 +508,7 @@ export function FileUpload() {
                       <div className="group relative">
                         <Info size={11} className="text-[var(--text-muted)] cursor-help" />
                         <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                          Classify content at sentence level for better organization. Increases processing time.
+                          When a single text block may contain multiple topics, enable this to classify each sentence for cleaner memory structure. Costs extra LLM tokens per chunk.
                         </div>
                       </div>
                     </div>
@@ -525,7 +531,7 @@ export function FileUpload() {
                       <div className="group relative">
                         <Info size={11} className="text-[var(--text-muted)] cursor-help" />
                         <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-52 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                          Extract how-to instructions and procedures. Useful for documentation and tutorials.
+                          Extract reusable procedures and preferences to complement episodic facts with abstract knowledge. Experimental. Costs extra LLM tokens.
                         </div>
                       </div>
                     </div>

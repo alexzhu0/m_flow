@@ -94,7 +94,6 @@ async def _health_check(request):
 @_mcp.tool()
 async def memorize(
     data: str,
-    custom_prompt: str = None,
     dataset_name: str = "main_dataset",
 ) -> list:
     """
@@ -106,8 +105,6 @@ async def memorize(
     ----
     data : str
         待处理的数据内容
-    custom_prompt : str, optional
-        自定义提示词
     dataset_name : str, optional
         目标数据集名称 (默认: main_dataset)
 
@@ -117,20 +114,19 @@ async def memorize(
         包含后台任务启动信息的 TextContent 列表
     """
 
-    async def _task(content: str, prompt: str = None, ds_name: str = "main_dataset"):
+    async def _task(content: str, ds_name: str = "main_dataset"):
         with redirect_stdout(sys.stderr):
             try:
                 _log.info("记忆化处理开始: dataset=%s", ds_name)
                 await _client.add(content, dataset_name=ds_name)
-                # MCP 工具输入通常是单条消息，禁用 content_routing 避免需要声明 content_type
-                await _client.memorize(custom_prompt=prompt, enable_content_routing=False)
+                await _client.memorize(enable_content_routing=False)
                 _log.info("记忆化处理完成: dataset=%s", ds_name)
             except Exception as e:
                 _log.error("记忆化处理失败: %s", e)
                 import traceback
                 _log.debug(traceback.format_exc())
 
-    asyncio.create_task(_task(data, custom_prompt, dataset_name))
+    asyncio.create_task(_task(data, dataset_name))
     log_path = get_log_file_location()
 
     return [

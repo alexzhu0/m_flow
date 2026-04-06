@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Loader2, AlertCircle, Database, ChevronDown, ChevronUp, Info, Settings2, AlertTriangle } from "lucide-react";
 import type { MemorizeResponse, ChunkerType } from "@/types";
+import { ConfigWizard, type WizardResult } from "./ConfigWizard";
 
 // ============================================================================
 // Constants
@@ -22,7 +23,6 @@ result = await m_flow.memorize(
     datasets=["my_dataset"],
     chunk_size=512,
     run_in_background=True,
-    custom_prompt="Focus on technical entities...",
 )`;
 
 const MEMORIZE_PARAMS = [
@@ -31,7 +31,6 @@ const MEMORIZE_PARAMS = [
   { name: "chunk_size", type: "int | None", default: "auto", description: "Max tokens per chunk" },
   { name: "chunks_per_batch", type: "int", default: "100", description: "Chunks per processing batch" },
   { name: "run_in_background", type: "bool", default: "False", description: "Async processing for large datasets" },
-  { name: "custom_prompt", type: "str | None", default: "None", description: "Custom extraction prompt" },
 ];
 
 const PIPELINE_STEPS = [
@@ -237,7 +236,6 @@ export function MemorizePage() {
       const result = await memorize.mutateAsync({
         datasets: datasetsToProcess,
         run_in_background: runInBackground,
-        custom_prompt: ingestionConfig.custom_prompt || undefined,
         chunk_size: effectiveChunkSize || undefined,
         chunker: chunker,
         incremental_loading: incrementalLoading,
@@ -637,6 +635,19 @@ export function MemorizePage() {
                 </div>
               </div>
 
+              {/* Configuration Wizard */}
+              <ConfigWizard
+                onApply={(result: WizardResult) => {
+                  if (result.enableEpisodeRouting !== undefined) setEnableEpisodeRouting(result.enableEpisodeRouting);
+                  if (result.enableContentRouting !== undefined) setEnableContentRouting(result.enableContentRouting);
+                  if (result.preciseMode !== undefined) {
+                    /* MemorizePage has no preciseMode state; skip */
+                  }
+                  if (result.contentType !== undefined) setContentType(result.contentType);
+                }}
+                disabled={isProcessing || trackingPipelines.length > 0}
+              />
+
               {/* Feature Toggles Divider */}
               <div className="pt-2 border-t border-[var(--border-subtle)]">
                 <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Feature Toggles</span>
@@ -649,7 +660,7 @@ export function MemorizePage() {
                   <div className="group relative">
                     <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                     <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      Route content to existing or new episodes based on semantic similarity. Auto = use environment config.
+                      When new content may closely relate to previously ingested content, enable this to merge them into coherent episodes. Costs extra LLM tokens and time. Disable for faster independent-document ingestion.
                     </div>
                   </div>
                 </div>
@@ -675,7 +686,7 @@ export function MemorizePage() {
                   <div className="group relative">
                     <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                     <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      Group sentences by topic before episode creation. Improves episode quality for long documents.
+                      When a single text block may contain multiple topics, enable this to classify each sentence for cleaner memory structure. Costs extra LLM tokens per chunk.
                     </div>
                   </div>
                 </div>
@@ -701,7 +712,7 @@ export function MemorizePage() {
                   <div className="group relative">
                     <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                     <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      Content format hint. &quot;text&quot; for articles/documents, &quot;dialog&quot; for conversation transcripts.
+                      &quot;text&quot; for articles/documents, &quot;dialog&quot; for chat logs and meeting transcripts (splits by speaker turn). Auto-detected when left on Auto.
                     </div>
                   </div>
                 </div>
@@ -724,7 +735,7 @@ export function MemorizePage() {
                   <div className="group relative">
                     <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                     <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      Extract how-to procedures from content during ingestion.
+                      Extract reusable procedures and preferences to complement episodic facts with abstract knowledge. Experimental. Costs extra LLM tokens.
                     </div>
                   </div>
                 </div>
@@ -750,7 +761,7 @@ export function MemorizePage() {
                   <div className="group relative">
                     <Info size={12} className="text-[var(--text-muted)] cursor-help" />
                     <div className="absolute bottom-full left-0 mb-1 px-2 py-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded text-[10px] text-[var(--text-muted)] w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      Generate fine-grained FacetPoint nodes for detailed information retrieval.
+                      Generate fine-grained FacetPoint nodes under each Facet for more precise retrieval matching. Costs extra LLM tokens per facet.
                     </div>
                   </div>
                 </div>

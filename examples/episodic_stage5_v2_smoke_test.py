@@ -164,9 +164,9 @@ async def test_5_13_search_v2():
 
     source = inspect.getsource(episodic_triplet_search)
 
-    assert "Facet_aliases_text" in source, "v2 应该包含 Facet_aliases_text 集合"
+    assert "Facet_anchor_text" in source, "v2 应该包含 Facet_anchor_text 集合"
     assert "best_by_id" in source, "v2 应该使用 best_by_id 聚合"
-    print("  ✅ episodic_triplet_search v2 包含 aliases 兜底召回")
+    print("  ✅ episodic_triplet_search v2 包含 anchor 兜底召回")
 
     # 测试 _best_node_distance_by_id
     class MockResult:
@@ -176,7 +176,7 @@ async def test_5_13_search_v2():
 
     node_distances = {
         "Facet_search_text": [MockResult("f1", 0.3)],
-        "Facet_aliases_text": [MockResult("f1", 0.2)],  # f1 在两个集合都命中
+        "Facet_anchor_text": [MockResult("f1", 0.2)],  # f1 在两个集合都命中
     }
 
     best = _best_node_distance_by_id(node_distances)

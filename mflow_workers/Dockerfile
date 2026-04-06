@@ -1,5 +1,9 @@
-# M-flow Distributed Worker Image
-# Builds a container for running M-flow pipeline workers
+# DEPRECATED — This Dockerfile references the removed distributed/ directory.
+# The distributed worker module was renamed to mflow_workers/ but this
+# Dockerfile was not updated. It is not referenced by docker-compose.yml.
+# Do NOT use this file. It will be removed in a future release.
+#
+# M-flow Distributed Worker Image (legacy)
 
 FROM python:3.11-slim AS base
 

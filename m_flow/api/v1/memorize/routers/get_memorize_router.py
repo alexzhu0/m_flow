@@ -61,12 +61,6 @@ class MemorizePayloadDTO(InDTO):
         description="If true, process asynchronously and return immediately"
     )
     
-    # Custom prompt
-    custom_prompt: Optional[str] = Field(
-        default="",
-        description="Custom prompt for entity extraction and graph generation"
-    )
-    
     # Chunking configuration
     chunk_size: Optional[int] = Field(
         default=None,
@@ -100,46 +94,50 @@ class MemorizePayloadDTO(InDTO):
     # ========================================================================
     enable_episode_routing: Optional[bool] = Field(
         default=None,
-        description="Enable cross-batch incremental update routing. "
-                    "When enabled, new content can be merged into existing episodes. "
-                    "Set to false for isolated batch processing. "
-                    "Default: uses MFLOW_EPISODIC_ENABLE_ROUTING env var (true)."
+        description="Merge new content into existing related episodes. "
+                    "Enable when new content may relate to previously ingested content. "
+                    "Disable for much faster concurrent ingestion of independent documents. "
+                    "Default: MFLOW_EPISODIC_ENABLE_ROUTING env var (true)."
     )
     enable_content_routing: Optional[bool] = Field(
         default=None,
-        description="Enable sentence-level content classification. "
-                    "Default: uses MFLOW_CONTENT_ROUTING env var (true)."
+        description="Classify each sentence by topic within a chunk. "
+                    "Enable when text may contain multiple topics per block. "
+                    "Costs extra LLM tokens per multi-sentence chunk. "
+                    "Default: MFLOW_CONTENT_ROUTING env var (true)."
     )
     content_type: Optional[str] = Field(
         default=None,
-        description="Content type declaration. Required when enable_content_routing=True. "
-                    "Values: 'text' for articles/documents, 'dialog' for conversations/chat logs."
+        description="'text' for articles/documents, 'dialog' for chat logs and meeting transcripts "
+                    "(splits by speaker turn). Auto-detected when omitted."
     )
     enable_procedural: Optional[bool] = Field(
         default=None,
-        description="Enable procedural memory extraction. "
-                    "Default: uses MFLOW_PROCEDURAL_ENABLED env var (true)."
+        description="Extract reusable procedures/preferences to complement episodic facts. "
+                    "Experimental. Costs extra LLM tokens. "
+                    "Default: MFLOW_PROCEDURAL_ENABLED env var (false)."
     )
     enable_semantic_merge: Optional[bool] = Field(
         default=None,
-        description="Enable semantic merge for similar facets. "
-                    "Default: uses MFLOW_EPISODIC_ENABLE_SEMANTIC_MERGE env var (false)."
+        description="Merge semantically similar facets to reduce redundancy. "
+                    "Default: MFLOW_EPISODIC_ENABLE_SEMANTIC_MERGE env var (false)."
     )
     enable_facet_points: Optional[bool] = Field(
         default=None,
-        description="Enable FacetPoint three-layer structure. "
-                    "Default: uses MFLOW_EPISODIC_ENABLE_FACET_POINTS env var (true)."
+        description="Generate fine-grained FacetPoint nodes for more precise retrieval. "
+                    "Costs extra LLM tokens per facet. "
+                    "Default: MFLOW_EPISODIC_ENABLE_FACET_POINTS env var (true)."
     )
     extract_relationships: Optional[bool] = Field(
         default=None,
-        description="Enable relationship edge extraction between entities. "
-                    "Default: true."
+        description="Extract relationship edges between entities. Default: true."
     )
     precise_mode: Optional[bool] = Field(
         default=None,
-        description="Enable precise summarization: preserves all factual details (dates, numbers, names) "
-                    "with lower compression ratio — RAG context will be longer but more accurate. "
-                    "Default: uses MFLOW_PRECISE_MODE env var (false)."
+        description="Preserve ALL factual information (dates, numbers, names) with zero compression loss. "
+                    "Use for contracts, financial reports, or content where every data point matters. "
+                    "Costs significantly more LLM tokens. "
+                    "Default: MFLOW_PRECISE_MODE env var (false)."
     )
 
 
@@ -167,7 +165,6 @@ def get_memorize_router() -> APIRouter:
         - **datasets** (Optional[List[str]]): List of dataset names to process. Dataset names are resolved to datasets owned by the authenticated user.
         - **dataset_ids** (Optional[List[UUID]]): List of existing dataset UUIDs to process. UUIDs allow processing of datasets not owned by the user (if permitted).
         - **run_in_background** (Optional[bool]): Whether to execute processing asynchronously. Defaults to False (blocking).
-        - **custom_prompt** (Optional[str]): Custom prompt for entity extraction and graph generation. If provided, this prompt will be used instead of the default prompts for knowledge graph extraction.
         - **chunk_size** (Optional[int]): Maximum tokens per chunk. Auto-calculated based on LLM context window if None.
         - **chunker** (Optional[str]): Text chunking strategy - 'TextChunker' (paragraph-based, default) or 'LangchainChunker' (recursive with overlap).
         - **chunks_per_batch** (Optional[int]): Number of chunks to process in a single batch. Defaults to 100.
@@ -188,7 +185,6 @@ def get_memorize_router() -> APIRouter:
         {
             "datasets": ["research_papers", "documentation"],
             "run_in_background": false,
-            "custom_prompt": "Extract entities focusing on technical concepts and their relationships.",
             "chunk_size": 2048,
             "chunker": "TextChunker",
             "chunks_per_batch": 100,
@@ -249,7 +245,6 @@ def get_memorize_router() -> APIRouter:
                 datasets,
                 user,
                 run_in_background=payload.run_in_background,
-                custom_prompt=payload.custom_prompt,
                 chunk_size=payload.chunk_size,
                 chunker=chunker_class,
                 chunks_per_batch=payload.chunks_per_batch,

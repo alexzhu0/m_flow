@@ -106,18 +106,13 @@ async def _process_search(params: dict, current_user) -> list:
 async def _process_memorize(params: dict, current_user) -> str:
     """Process memorize request."""
     input_text = params.get("text")
-    prompt_override = params.get("custom_prompt")
 
     # If there is input text, add data first
     if input_text:
         await add(data=input_text, user=current_user)
 
-    # Execute memorize
-    # Disable content_routing for LLM tool calls - single inputs don't need
-    # sentence-level routing and would fail content_type validation
     await memorize(
         user=current_user,
-        custom_prompt=prompt_override,
         enable_content_routing=False,
     )
 

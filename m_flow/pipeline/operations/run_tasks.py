@@ -14,7 +14,7 @@ from m_flow.adapters.graph import get_graph_provider
 from m_flow.adapters.relational import get_db_adapter
 from m_flow.auth.methods import get_seed_user
 from m_flow.auth.models import User
-from m_flow.data.models import Dataset
+from m_flow.data.models import Data, Dataset
 from m_flow.ingestion.pipeline_tasks import resolve_data_directories
 from m_flow.pipeline.exceptions import WorkflowRunFailedError
 from m_flow.pipeline.models.RunEvent import (
@@ -35,7 +35,7 @@ from m_flow.pipeline.utils import derive_pipeline_key
 from m_flow.shared.logging_utils import get_logger
 
 from ..tasks import Stage
-from .process_data_items import process_data_items
+from .process_data_items import process_data_items, preload_processing_status, clear_processing_status_cache
 from .db_concurrency import run_with_concurrency_limit, get_pipeline_concurrency_limit
 
 _log = get_logger("m_flow.pipeline.run_tasks")
@@ -138,6 +138,11 @@ async def _process_batches(
     for offset in range(0, len(items), items_per_batch):
         batch = items[offset : offset + items_per_batch]
 
+        if incremental_loading:
+            batch_ids = [item.id for item in batch if isinstance(item, Data)]
+            if batch_ids:
+                await preload_processing_status(batch_ids, ctx.workflow_name, ctx.dataset.id)
+
         coros = [
             process_data_items(
                 item, ctx.dataset, tasks, ctx.workflow_name,
@@ -150,6 +155,8 @@ async def _process_batches(
         results.extend(r for r in batch_results if r)
 
         await update_pipeline_progress(ctx.run_id, processed_items=min(offset + len(batch), total))
+
+    clear_processing_status_cache()
 
     errors = [r for r in results if isinstance(r.get("run_detail"), RunFailed)]
     if errors:

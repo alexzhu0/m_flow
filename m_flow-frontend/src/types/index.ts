@@ -447,7 +447,6 @@ export interface IngestionConfig {
   extract_summaries?: boolean;
   concept_types?: string[];
   relationship_types?: string[];
-  custom_prompt?: string;
 }
 
 /**
@@ -537,7 +536,6 @@ export interface MemorizeRequest {
   datasets?: string[];
   dataset_ids?: string[];
   run_in_background?: boolean;
-  custom_prompt?: string;
   chunk_size?: number;
   chunker?: ChunkerType;
   chunks_per_batch?: number;
@@ -577,7 +575,6 @@ export interface IngestTextRequest {
   graph_scope?: string[];
   skip_memorize?: boolean;
   run_in_background?: boolean;
-  custom_prompt?: string;
   chunk_size?: number;
   chunks_per_batch?: number;
   // Feature toggles

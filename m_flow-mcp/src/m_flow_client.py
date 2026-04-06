@@ -91,7 +91,6 @@ class MflowClient:
     async def memorize(
         self,
         datasets: Optional[List[str]] = None,
-        custom_prompt: Optional[str] = None,
         enable_content_routing: Optional[bool] = None,
         content_type: Optional[str] = None,
     ) -> Dict[str, Any]:
@@ -99,7 +98,6 @@ class MflowClient:
 
         Args:
             datasets: Restrict processing to these dataset names.
-            custom_prompt: Override the default entity-extraction prompt.
             enable_content_routing: Toggle sentence-level routing.
             content_type: Either ``'text'`` or ``'dialog'``.
 
@@ -112,8 +110,6 @@ class MflowClient:
                 "datasets": datasets or ["main_dataset"],
                 "run_in_background": False,
             }
-            if custom_prompt:
-                body["custom_prompt"] = custom_prompt
             if enable_content_routing is not None:
                 body["enable_content_routing"] = enable_content_routing
             if content_type:
@@ -127,8 +123,6 @@ class MflowClient:
             opts: Dict[str, Any] = {}
             if datasets:
                 opts["datasets"] = datasets
-            if custom_prompt:
-                opts["custom_prompt"] = custom_prompt
             if enable_content_routing is not None:
                 opts["enable_content_routing"] = enable_content_routing
             if content_type:

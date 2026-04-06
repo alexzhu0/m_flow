@@ -50,10 +50,6 @@ _MEMORIZE_TOOL = {
                 "type": "string",
                 "description": "Content to ingest and transform.",
             },
-            "custom_prompt": {
-                "type": "string",
-                "description": "Override extraction prompt (optional).",
-            },
         },
         "required": ["text"],
     },

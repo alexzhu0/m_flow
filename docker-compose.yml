@@ -73,7 +73,7 @@ services:
       - "host.docker.internal:host-gateway"
     ports:
       - "8001:8000"   # MCP port (offset to avoid clash with backend)
-      - "9230:9230"   # MCP debugger
+      - "9231:9230"   # MCP debugger (offset from backend's 9230)
     networks:
       - m_flow-network
     deploy:

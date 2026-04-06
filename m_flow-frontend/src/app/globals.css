@@ -31,10 +31,10 @@
   --accent-dim: #a0a0a0;
   --accent-subtle: rgba(255, 255, 255, 0.06);
 
-  /* Semantic Colors - Low Saturation */
-  --success: #00d26a;
-  --error: #ff4444;
-  --warning: #ffaa00;
+  /* Semantic Colors - Muted but recognizable */
+  --success: #4da378;
+  --error: #b05a5a;
+  --warning: #c4ab65;
 
   /* Spacing */
   --space-xs: 4px;

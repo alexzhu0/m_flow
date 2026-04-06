@@ -7,7 +7,8 @@ Runs tasks on individual data items with optional incremental mode.
 from __future__ import annotations
 
 import os
-from typing import Any, AsyncGenerator, Dict, Optional
+from typing import Any, AsyncGenerator, Dict, List, Optional, Set
+from uuid import UUID
 
 from sqlalchemy import select
 
@@ -32,6 +33,45 @@ _log = get_logger("m_flow.pipeline.process_data_items")
 
 _RAISE_ERRORS = os.getenv("RAISE_INCREMENTAL_LOADING_ERRORS", "true").lower() == "true"
 
+_STATUS_CACHE: Dict[str, Set[UUID]] = {}
+
+
+async def preload_processing_status(
+    data_ids: List[UUID],
+    workflow_name: str,
+    dataset_id: UUID,
+) -> None:
+    """Batch-load workflow_state for *data_ids* into a module-level cache.
+
+    Subsequent calls to :func:`_is_already_processed` will read from the
+    cache instead of opening individual DB sessions, reducing round-trips
+    from N to 1 per batch.
+    """
+    if not data_ids:
+        return
+    cache_key = f"{workflow_name}:{dataset_id}"
+    engine = get_db_adapter()
+    _SQL_IN_LIMIT = 500
+    completed: Set[UUID] = set()
+    for offset in range(0, len(data_ids), _SQL_IN_LIMIT):
+        chunk = data_ids[offset : offset + _SQL_IN_LIMIT]
+        async with engine.get_async_session() as session:
+            rows = (
+                await session.execute(
+                    select(Data.id, Data.workflow_state).where(Data.id.in_(chunk))
+                )
+            ).all()
+            for row in rows:
+                ws = row.workflow_state or {}
+                if ws.get(workflow_name, {}).get(str(dataset_id)) == DataItemStatus.DATA_ITEM_PROCESSING_COMPLETED:
+                    completed.add(row.id)
+    _STATUS_CACHE[cache_key] = completed
+
+
+def clear_processing_status_cache() -> None:
+    """Drop all cached processing statuses (call after pipeline run)."""
+    _STATUS_CACHE.clear()
+
 
 async def _resolve_data_id(item: Any, user: User):
     """Determine data ID for item."""
@@ -44,7 +84,11 @@ async def _resolve_data_id(item: Any, user: User):
 
 
 async def _is_already_processed(data_id, workflow_name: str, dataset_id) -> bool:
-    """Check if item was already processed."""
+    """Check if item was already processed (uses batch cache when available)."""
+    cache_key = f"{workflow_name}:{dataset_id}"
+    if cache_key in _STATUS_CACHE:
+        return data_id in _STATUS_CACHE[cache_key]
+
     engine = get_db_adapter()
     async with engine.get_async_session() as session:
         record = (
@@ -54,7 +98,7 @@ async def _is_already_processed(data_id, workflow_name: str, dataset_id) -> bool
         if not record:
             return False
 
-        status_map = record.workflow_state.get(workflow_name, {})
+        status_map = (record.workflow_state or {}).get(workflow_name, {})
         return status_map.get(str(dataset_id)) == DataItemStatus.DATA_ITEM_PROCESSING_COMPLETED
 
 

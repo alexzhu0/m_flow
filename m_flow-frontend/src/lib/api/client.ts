@@ -601,9 +601,6 @@ export class MflowApiClient {
     if (options.runInBackground !== undefined) {
       formData.append("run_in_background", String(options.runInBackground));
     }
-    if (options.customPrompt) {
-      formData.append("custom_prompt", options.customPrompt);
-    }
     if (options.chunkSize !== undefined) {
       formData.append("chunk_size", String(options.chunkSize));
     }

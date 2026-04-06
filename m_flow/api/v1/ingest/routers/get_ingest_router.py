@@ -53,10 +53,6 @@ class IngestRequest(BaseModel):
         default=False,
         description="If true, memorize runs in background (returns immediately)"
     )
-    custom_prompt: Optional[str] = Field(
-        default=None,
-        description="Custom LLM prompt for knowledge extraction"
-    )
     chunk_size: Optional[int] = Field(
         default=None,
         description="Chunk size for text splitting"
@@ -67,24 +63,29 @@ class IngestRequest(BaseModel):
     )
     enable_episode_routing: Optional[bool] = Field(
         default=None,
-        description="Enable episode routing for content merging"
+        description="Merge new content into existing related episodes. "
+                    "Disable for faster concurrent ingestion of independent documents."
     )
     enable_content_routing: Optional[bool] = Field(
         default=None,
-        description="Enable sentence-level content classification"
+        description="Classify each sentence by topic within a chunk. "
+                    "Enable when text may contain multiple topics per block. "
+                    "Costs extra LLM tokens per multi-sentence chunk."
     )
     content_type: Optional[Literal["text", "dialog"]] = Field(
         default=None,
-        description="Content type declaration. Required when enable_content_routing=True (default). "
-                    "'text' for articles/documents, 'dialog' for conversations/chat logs."
+        description="'text' for articles/documents, 'dialog' for chat logs and meeting transcripts "
+                    "(splits by speaker turn). Auto-detected when omitted."
     )
     enable_procedural: Optional[bool] = Field(
         default=None,
-        description="Enable procedural memory extraction"
+        description="Extract reusable procedures/preferences to complement episodic facts. "
+                    "Experimental. Costs extra LLM tokens."
     )
     enable_facet_points: Optional[bool] = Field(
         default=None,
-        description="Enable FacetPoint three-layer structure within Episodes"
+        description="Generate fine-grained FacetPoint nodes for more precise retrieval. "
+                    "Costs extra LLM tokens per facet."
     )
     conflict_mode: Optional[str] = Field(
         default=None,
@@ -263,8 +264,6 @@ def get_ingest_router() -> APIRouter:
                 kwargs["graph_scope"] = request.graph_scope
             if request.run_in_background:
                 kwargs["run_in_background"] = request.run_in_background
-            if request.custom_prompt:
-                kwargs["custom_prompt"] = request.custom_prompt
             if request.chunk_size is not None:
                 kwargs["chunk_size"] = request.chunk_size
             if request.chunks_per_batch is not None:
@@ -331,14 +330,13 @@ def get_ingest_router() -> APIRouter:
         graph_scope: Optional[list[str]] = Form(default=None, examples=[[""]], description="Node identifiers"),
         skip_memorize: bool = Form(default=False, description="Skip knowledge graph construction"),
         run_in_background: bool = Form(default=False, description="Run memorize in background"),
-        custom_prompt: Optional[str] = Form(default=None, description="Custom LLM prompt"),
         chunk_size: Optional[int] = Form(default=None, description="Chunk size"),
         chunks_per_batch: Optional[int] = Form(default=None, description="Chunks per batch"),
-        enable_episode_routing: Optional[bool] = Form(default=None, description="Enable episode routing"),
-        enable_content_routing: Optional[bool] = Form(default=None, description="Enable content routing"),
-        content_type: Optional[Literal["text", "dialog"]] = Form(default=None, description="Content type: 'text' or 'dialog'"),
-        enable_procedural: Optional[bool] = Form(default=None, description="Enable procedural memory"),
-        enable_facet_points: Optional[bool] = Form(default=None, description="Enable FacetPoint three-layer structure"),
+        enable_episode_routing: Optional[bool] = Form(default=None, description="Merge new content into existing related episodes; disable for faster independent ingestion"),
+        enable_content_routing: Optional[bool] = Form(default=None, description="Classify sentences by topic within chunks; costs extra LLM tokens"),
+        content_type: Optional[Literal["text", "dialog"]] = Form(default=None, description="'text' or 'dialog' (speaker-turn split); auto-detected when omitted"),
+        enable_procedural: Optional[bool] = Form(default=None, description="Extract procedures/preferences (experimental, extra LLM tokens)"),
+        enable_facet_points: Optional[bool] = Form(default=None, description="Fine-grained FacetPoint nodes for precise retrieval (extra LLM tokens)"),
         conflict_mode: Optional[str] = Form(default=None, description="Conflict mode"),
         created_at: Optional[Union[int, str]] = Form(default=None, description="Timestamp for content (Unix ms or ISO 8601)"),
         incremental_loading: bool = Form(default=True, description="add() only; false for repeated ingest to same dataset"),
@@ -364,7 +362,6 @@ def get_ingest_router() -> APIRouter:
             graph_scope: Node identifiers for graph organization.
             skip_memorize: If true, only add files without building KG.
             run_in_background: If true, memorize runs asynchronously.
-            custom_prompt: Custom LLM prompt for extraction.
             chunk_size: Text chunking size.
             chunks_per_batch: Processing batch size.
             enable_episode_routing: Episode routing toggle.
@@ -396,8 +393,6 @@ def get_ingest_router() -> APIRouter:
                 kwargs["dataset_id"] = effective_dataset_id
             if run_in_background:
                 kwargs["run_in_background"] = run_in_background
-            if custom_prompt:
-                kwargs["custom_prompt"] = custom_prompt
             if chunk_size is not None:
                 kwargs["chunk_size"] = chunk_size
             if chunks_per_batch is not None:

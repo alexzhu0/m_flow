@@ -21,7 +21,7 @@ case "${1:-serve}" in
     serve)
         echo "[M-flow MCP] Starting server..."
         # 传递环境变量到命令行参数
-        exec python -m m_flow_mcp.src.server \
+        exec python -m src.server \
             --transport "${TRANSPORT_MODE:-sse}" \
             --host "0.0.0.0" \
             --port "${MCP_PORT:-8000}" \
@@ -29,7 +29,7 @@ case "${1:-serve}" in
         ;;
     test)
         echo "[M-flow MCP] Running test client..."
-        exec python -m m_flow_mcp.src.test_client
+        exec python -m src.test_client
         ;;
     *)
         echo "Usage: $0 {serve|test}"

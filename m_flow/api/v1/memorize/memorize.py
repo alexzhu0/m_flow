@@ -166,7 +166,6 @@ async def memorize(
     run_in_background: bool = False,
     incremental_loading: bool = True,
     enable_cache: bool = True,
-    custom_prompt: Optional[str] = None,
     items_per_batch: int = 20,
     conflict_mode: ConflictMode = "warn",
     **kwargs,
@@ -212,13 +211,35 @@ async def memorize(
         When True, schedule the pipeline asynchronously and return immediately.
     enable_cache : bool
         Skip re-processing datasets that have already been memorised.
-    custom_prompt : str | None
-        Replace the default extraction prompt for the LLM knowledge-graph step.
     items_per_batch : int
         Number of data items processed concurrently per batch (default 20).
     conflict_mode : ``"warn"`` | ``"error"`` | ``"ignore"``
         How to handle concurrent memorize calls on the same dataset.
         ``"error"`` raises :class:`ConcurrentMemorizeError`.
+
+    Keyword Arguments (via ``**kwargs``)
+    ------------------------------------
+    enable_content_routing : bool
+        Classify each sentence by topic within a chunk.  Enable when a
+        single text block may contain multiple topics.  Costs extra LLM
+        tokens per chunk.  Default: ``True`` (env ``MFLOW_CONTENT_ROUTING``).
+    enable_episode_routing : bool
+        Merge new content into existing episodes when semantically related.
+        Disable to allow concurrent episode creation for much faster
+        ingestion of independent documents.  Default: ``True``
+        (env ``MFLOW_EPISODIC_ENABLE_ROUTING``).
+    enable_procedural : bool
+        Extract reusable procedures / preferences to complement the factual
+        episodic layer.  Experimental.  Costs extra LLM tokens.
+        Default: ``False`` (env ``MFLOW_PROCEDURAL_ENABLED``).
+    precise_mode : bool
+        Preserve ALL factual information with zero compression loss.
+        Use for contracts, financial reports, or any content where every
+        data point matters.  Costs significantly more tokens.
+        Default: ``False`` (env ``MFLOW_PRECISE_MODE``).
+    content_type : ``"text"`` | ``"dialog"``
+        Declare content type for sentence splitting strategy.  ``"dialog"``
+        splits by speaker turns.  Auto-detected when omitted.
 
     Returns
     -------
@@ -270,7 +291,6 @@ async def memorize(
             user=user,
             chunker=chunker,
             chunk_size=chunk_size,
-            custom_prompt=custom_prompt,
             chunks_per_batch=chunks_per_batch,
             **kwargs,
         )
@@ -343,7 +363,6 @@ async def get_default_tasks(
     user: User = None,
     chunker=TextChunker,
     chunk_size: int = None,
-    custom_prompt: Optional[str] = None,
     chunks_per_batch: int = 100,
     **kwargs,
 ) -> list[Stage]:

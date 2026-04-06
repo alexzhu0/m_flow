@@ -33,9 +33,52 @@ from m_flow.memory.episodic.models import (
 )
 from m_flow.memory.episodic.sentence_splitter import smart_split_sentences
 from m_flow.shared.enums import ContentType
+from m_flow.shared.llm_concurrency import get_global_llm_semaphore
 from m_flow.shared.logging_utils import get_logger
 
+import os
+import re
+
 logger = get_logger("sentence_level_routing")
+
+_SPEAKER_LINE_RE = re.compile(
+    r"^(?:\[.*?\]\s*)?"              # optional [timestamp]
+    r"(?P<speaker>"
+    r"[A-Za-z\u4e00-\u9fff]"        # first char of speaker name
+    r"[^:\n()\[\]{}=.]{0,20}"       # rest of name (no code punctuation)
+    r")"
+    r"\s*[:：]\s*"                    # colon separator (ascii or fullwidth)
+    r"(?P<body>.{4,})$",            # message body: at least 4 chars (CJK-safe)
+    re.MULTILINE,
+)
+
+
+def _detect_dialog(sample_text: str, threshold: float = 0.35) -> bool:
+    """Return True if *sample_text* looks like multi-speaker dialog.
+
+    Checks whether a significant fraction of non-empty lines match the
+    ``[timestamp] Speaker: message`` pattern AND at least two distinct
+    speakers appear (with at least one recurring).  The speaker-repetition
+    check prevents false positives on code (type annotations, config files).
+    """
+    lines = [ln for ln in sample_text.split("\n") if ln.strip()]
+    if len(lines) < 4:
+        return False
+
+    speakers: list[str] = []
+    for ln in lines:
+        m = _SPEAKER_LINE_RE.match(ln.strip())
+        if m:
+            speakers.append(m.group("speaker").strip())
+
+    if len(speakers) / len(lines) < threshold:
+        return False
+
+    from collections import Counter
+    counts = Counter(speakers)
+    distinct_speakers = len(counts)
+    repeated_speakers = sum(1 for c in counts.values() if c >= 2)
+    return distinct_speakers >= 2 and repeated_speakers >= 1
 
 
 async def route_content_v2(
@@ -67,6 +110,19 @@ async def route_content_v2(
     """
     if not chunks:
         return chunks
+
+    if (
+        content_type == ContentType.TEXT
+        and os.getenv("MFLOW_AUTO_DETECT_DIALOG", "true").lower()
+        not in ("0", "false", "no", "off")
+    ):
+        sample = "\n".join(ch.text for ch in chunks[:3] if ch.text)
+        if _detect_dialog(sample):
+            content_type = ContentType.DIALOG
+            logger.info(
+                "[sentence_routing] Auto-detected DIALOG content type "
+                f"(sampled {len(chunks[:3])} chunks)"
+            )
 
     logger.info(
         f"[sentence_grouping] Processing {len(chunks)} chunks with sentence-level LLM classification "
@@ -271,11 +327,13 @@ async def _llm_route_sentences(
 
     logger.debug(f"[sentence_routing] LLM prompt for chunk {chunk_idx}")
 
-    result = await LLMService.extract_structured(
-        text_input=user_prompt,
-        system_prompt="",
-        response_model=SentenceRoutingResult,
-    )
+    _llm_semaphore = get_global_llm_semaphore()
+    async with _llm_semaphore:
+        result = await LLMService.extract_structured(
+            text_input=user_prompt,
+            system_prompt="",
+            response_model=SentenceRoutingResult,
+        )
 
     # Log raw result
     logger.debug(

@@ -211,7 +211,7 @@ async def write_episodic_memories(
     - New facets + alias_updates
     - String deduplication merging + (optional) semantic synonym merging
     - "Synonym expressions" from merging are not discarded, absorbed into aliases
-    - Write aliases_text to participate in indexing (Facet_search_text + Facet_aliases_text)
+    - Write aliases_text to participate in indexing (Facet_search_text + Facet_anchor_text)
     - Write evidence edges: Facet--supported_by-->ContentFragment, Episode--includes_chunk-->ContentFragment
     - Entity memory_spaces (ensures episodic subgraph projection can include entity edges)
 

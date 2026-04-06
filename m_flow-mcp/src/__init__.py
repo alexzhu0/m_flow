@@ -5,16 +5,16 @@ operations to AI assistants and tools via the Model Context Protocol.
 
 Usage:
     # Start the MCP server (stdio mode, default)
-    python -m m_flow_mcp.src.server
+    python -m src.server
 
     # Start with SSE transport
-    python -m m_flow_mcp.src.server --transport sse --port 8000
+    python -m src.server --transport sse --port 8000
 
     # Via Docker (recommended)
     docker compose --profile mcp up -d
 
 Available MCP Tools (11):
-    - memorize         : Convert data to knowledge graph (data, custom_prompt, dataset_name)
+    - memorize         : Convert data to knowledge graph (data, dataset_name)
     - save_interaction : Save user-agent interaction records (data)
     - search           : Search knowledge graph (search_query, recall_mode, top_k, datasets, 
                          system_prompt, enable_hybrid_search)

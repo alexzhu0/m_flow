@@ -174,7 +174,6 @@ async def ingest(
         常用参数（完整列表见 add()/memorize() 文档）:
         - chunk_size: 分块大小
         - chunker: 自定义分块器
-        - custom_prompt: 自定义 LLM 提示词
         - run_in_background: 后台运行
         - incremental_loading: 仅作用于 add()；memorize 默认仍为增量（可用 memorize_incremental_loading 覆盖）
         - user: 认证用户

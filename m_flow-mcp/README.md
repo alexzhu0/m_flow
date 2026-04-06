@@ -26,7 +26,7 @@ python src/server.py --transport sse --port 8000
 
 | 工具 | 说明 | 核心参数 |
 |------|------|----------|
-| `memorize` | 将数据转化为知识图谱 | `data` (必需), `custom_prompt`, `dataset_name` |
+| `memorize` | 将数据转化为知识图谱 | `data` (必需), `dataset_name` |
 | `save_interaction` | 保存用户-Agent 交互 | `data` (必需) |
 | `search` | 搜索知识图谱 | `search_query`, `recall_mode`, `top_k`, `datasets`, `system_prompt`, `enable_hybrid_search` |
 | `list_data` | 列出数据集 | `dataset_id` (可选) |

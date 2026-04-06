@@ -139,7 +139,6 @@ const defaultIngestionConfig: IngestionConfig = {
   extract_summaries: true,
   concept_types: [],
   relationship_types: [],
-  custom_prompt: "",
 };
 
 export const useIngestionConfigStore = create<IngestionConfigState>()(
