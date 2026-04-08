@@ -20,6 +20,7 @@ that import-time logging still works.
 from __future__ import annotations
 
 import logging
+import logging.handlers
 import os
 import platform
 import sys
@@ -185,13 +186,20 @@ class _ThirdPartyNoiseGate(logging.Filter):
 # ===================================================================
 
 
-class PlainFileHandler(logging.FileHandler):
-    """Writes human-readable single-line entries for every log record.
+class PlainFileHandler(logging.handlers.RotatingFileHandler):
+    """Writes human-readable single-line entries with automatic rotation.
 
     *structlog* passes records whose ``msg`` attribute is a dict; stdlib
     records carry a plain string.  This handler normalises both styles
     into a uniform ``TIMESTAMP [LEVEL   ] message [logger]`` layout.
+
+    Rotates at *maxBytes* (default 100 MB) keeping *backupCount* old files.
     """
+
+    def __init__(self, filename, mode="a", maxBytes=0, backupCount=0, encoding=None, **kwargs):
+        _max = int(os.getenv("LOG_FILE_MAX_BYTES", str(maxBytes or 100_000_000)))
+        _keep = int(os.getenv("LOG_FILE_BACKUP_COUNT", str(backupCount or 5)))
+        super().__init__(filename, mode=mode, maxBytes=_max, backupCount=_keep, encoding=encoding, **kwargs)
 
     def emit(self, record: logging.LogRecord) -> None:
         try:
@@ -201,6 +209,8 @@ class PlainFileHandler(logging.FileHandler):
                 self._write_structured(record)
             else:
                 self._write_plain(record)
+            if self.shouldRollover(record):
+                self.doRollover()
         except Exception:
             self.handleError(record)
             try:
@@ -463,7 +473,8 @@ def setup_logging(
         os.environ["LOG_FILE_NAME"] = log_file
     try:
         disk_handler = PlainFileHandler(log_file, encoding="utf-8")
-        disk_handler.setLevel(DEBUG)
+        file_log_level = log_levels.get(os.getenv("LOG_FILE_LEVEL", "DEBUG").upper(), DEBUG)
+        disk_handler.setLevel(file_log_level)
         root.addHandler(disk_handler)
     except Exception as file_err:
         root.warning("Could not create log file handler at %s: %s", log_file, file_err)

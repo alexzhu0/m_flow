@@ -339,7 +339,7 @@ class LanceDBAdapter(VectorProvider):
 
         if where_filter:
             _check_filter_security(where_filter)
-            search_builder = search_builder.where(where_filter, prefilter=False)
+            search_builder = search_builder.where(where_filter)
 
         raw_results = await search_builder.limit(limit).to_list()
 

@@ -145,7 +145,7 @@ async def _search_collection(
     except CollectionNotFoundError:
         return []
     except Exception as e:
-        logger.debug(f"[router] search {collection} failed: {e}")
+        logger.warning(f"[router] search {collection} failed: {e}")
         return []
 
 
@@ -426,11 +426,24 @@ async def route_episode_id_for_doc(
         where_filter = f"payload.dataset_id = '{target_dataset_id}'"
         logger.debug(f"[router] Using dataset filter: {where_filter}")
 
-    # 1) Concurrent vector recall (with dataset isolation filter)
+    # Skip vector recall if no collections exist yet (first ingestion)
+    required_collections = ["Episode_summary", "Facet_search_text", "Facet_anchor_text"]
+    existing_collections = [c for c in required_collections if await vector_engine.has_collection(c)]
+    if not existing_collections:
+        return default_episode_id, {"reason": "no_collections_exist"}
+
+    # 1) Concurrent vector recall (with dataset isolation filter, only existing collections)
+    async def _safe_search(coll):
+        if coll not in existing_collections:
+            return []
+        return await _search_collection(vector_engine, coll, query_vector,
+                                        episode_summary_k if coll == "Episode_summary" else facet_k,
+                                        where_filter)
+
     episode_res, facet_res, anchor_res = await asyncio.gather(
-        _search_collection(vector_engine, "Episode_summary", query_vector, episode_summary_k, where_filter),
-        _search_collection(vector_engine, "Facet_search_text", query_vector, facet_k, where_filter),
-        _search_collection(vector_engine, "Facet_anchor_text", query_vector, facet_k, where_filter),
+        _safe_search("Episode_summary"),
+        _safe_search("Facet_search_text"),
+        _safe_search("Facet_anchor_text"),
     )
 
     candidates: Dict[str, CandidateInfo] = {}
