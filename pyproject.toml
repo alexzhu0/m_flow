@@ -2,7 +2,7 @@
 
 [project]
 name = "mflow-ai"
-version = "0.3.2"
+version = "0.3.3"
 description = "M-flow builds semantic memory layers that help LLMs reason over your data with structured knowledge graphs."
 readme = "README.md"
 requires-python = ">=3.10"
