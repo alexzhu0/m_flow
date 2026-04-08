@@ -827,7 +827,7 @@ async def main():
 
     args = parser.parse_args()
 
-    _client = MflowClient(api_url=args.api_url, api_token=args.api_token)
+    _client = MflowClient(server_url=args.api_url, auth_token=args.api_token)
     _mcp.settings.host = args.host
     _mcp.settings.port = args.port
     _mcp.settings.log_level = args.log_level.upper()
@@ -843,7 +843,7 @@ async def main():
             ["python", "-m", "alembic", "upgrade", "head"],
             capture_output=True,
             text=True,
-            cwd=Path(__file__).resolve().parent.parent.parent,
+            cwd=Path(__file__).resolve().parent.parent,
         )
 
         if result.returncode != 0:
