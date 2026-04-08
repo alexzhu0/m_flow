@@ -6,12 +6,6 @@ description: >-
   retrieves via graph-routed search. Use when the agent needs to
   remember past conversations, recall user preferences, or maintain
   context across sessions. Requires Docker.
-requiredBinaries:
-  - docker
-requiredEnvVars:
-  - LLM_API_KEY
-homepage: https://github.com/FlowElement-ai/m_flow
-repository: https://github.com/FlowElement-ai/m_flow/tree/main/openclaw-skill/mflow-memory
 ---
 
 # M-flow Memory
