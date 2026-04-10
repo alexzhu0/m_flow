@@ -5,6 +5,7 @@ Provides:
 - query_time_parser: Parse time expressions in queries
 - time_bonus: Calculate time match bonus
 - mentioned_time_extractor: Extract event occurrence time during ingestion (Phase 2)
+- recency_decay: Exponential recency-based memory decay scoring
 """
 
 from .query_time_parser import (
@@ -28,6 +29,14 @@ from .mentioned_time_extractor import (
     validate_time_range,
 )
 
+from .recency_decay import (
+    compute_decay_factor,
+    compute_recency_decay,
+    apply_recency_decay_to_results,
+    RecencyDecayConfig,
+    RecencyDecayResult,
+)
+
 __all__ = [
     # Query time parsing
     "parse_query_time",
@@ -45,4 +54,10 @@ __all__ = [
     "MentionedTimeResult",
     # Time validation (Task 1.3)
     "validate_time_range",
+    # Recency decay
+    "compute_decay_factor",
+    "compute_recency_decay",
+    "apply_recency_decay_to_results",
+    "RecencyDecayConfig",
+    "RecencyDecayResult",
 ]
