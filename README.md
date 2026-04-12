@@ -30,7 +30,7 @@ RAG embeds chunks and ranks by vector similarity. GraphRAG goes further — it e
 
 M-flow takes a different approach: the graph is not a preprocessing step — it is the scoring engine. When a query arrives, vector search casts a wide net across multiple granularities to find entry points. Then **the graph takes over** — propagating evidence along typed, semantically weighted edges, and scoring each knowledge unit by the tightest chain of reasoning that connects it to the query.
 
-Similar ≠ relevant. Consider the query **"Why did the migration fail?"**
+Similar and relevant sometimes overlap, but they are fundamentally different. Consider the query **"Why did the migration fail?"**
 
 **Traditional retrieval** — matches by surface similarity:
 ```
