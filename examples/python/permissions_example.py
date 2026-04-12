@@ -73,7 +73,7 @@ async def run_permissions_demo():
     # ── 4. Verify owner-only access ─────────────────────────────────
     owner_hits = await m_flow.search(
         query_type=RecallMode.TRIPLET_COMPLETION,
-        question="What is in the document?",
+        query_text="What is in the document?",
         user=alice,
         datasets=[ai_ds_id],
     )
@@ -85,7 +85,7 @@ async def run_permissions_demo():
     try:
         await m_flow.search(
             query_type=RecallMode.TRIPLET_COMPLETION,
-            question="What is in the document?",
+            query_text="What is in the document?",
             user=alice,
             datasets=[quantum_ds_id],
         )
@@ -109,7 +109,7 @@ async def run_permissions_demo():
 
     cross_hits = await m_flow.search(
         query_type=RecallMode.TRIPLET_COMPLETION,
-        question="What is in the document?",
+        query_text="What is in the document?",
         user=alice,
         dataset_ids=[quantum_ds_id],
     )
@@ -168,7 +168,7 @@ async def run_permissions_demo():
 
     role_hits = await m_flow.search(
         query_type=RecallMode.TRIPLET_COMPLETION,
-        question="What is in the document?",
+        query_text="What is in the document?",
         user=charlie,
         dataset_ids=[tenant_q_ds_id],
     )

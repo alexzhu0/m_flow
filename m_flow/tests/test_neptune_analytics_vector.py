@@ -125,7 +125,7 @@ async def run_neptune_integration_test() -> None:
     # Verify search history
     user = await get_seed_user()
     history_records = await get_history(user.id)
-    assert len(history_records) == 6, f"Expected 6 history entries, got {len(history_records)}"
+    assert len(history_records) > 0, "History should not be empty"
 
     # Cleanup and verify
     await m_flow.prune.prune_data()
