@@ -49,6 +49,8 @@ class JSONEncoder(json.JSONEncoder):
         converter = _SERIALISERS.get(type(o))
         if converter is not None:
             return converter(o)
+        if hasattr(o, "hex"):
+            return str(o)
         return super().default(o)
 
 
