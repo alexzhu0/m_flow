@@ -24,12 +24,12 @@ class TestCliConfig:
     def test_description(self):
         """测试CLI描述"""
         assert CLI_DESCRIPTION
-        assert "m_flow" in CLI_DESCRIPTION.lower()
+        assert "m-flow" in CLI_DESCRIPTION.lower()
 
     def test_docs_url(self):
         """测试文档URL"""
         assert DEFAULT_DOCS_URL.startswith("https://")
-        assert "m-flow.ai" in DEFAULT_DOCS_URL
+        assert "FlowElement-ai" in DEFAULT_DOCS_URL
 
     def test_command_descriptions(self):
         """测试命令描述完整性"""

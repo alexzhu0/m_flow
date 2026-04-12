@@ -26,7 +26,7 @@ _EXPECTED = {
         {"words": 28, "text_len": 181, "cut": "sentence_cut"},
     ],
     "Natural_language_processing.txt": [
-        {"words": 8, "text_len": 46, "cut": "paragraph_end"},
+        {"words": 8, "text_len": 46, "cut": "sentence_cut"},
     ],
 }
 

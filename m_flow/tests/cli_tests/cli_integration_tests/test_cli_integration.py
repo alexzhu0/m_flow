@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 # Constants
 # ============================================================================
 
-CLI_MODULE = "m_flow.cli._m_flow"
+CLI_MODULE = "m_flow.cli.app"
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 

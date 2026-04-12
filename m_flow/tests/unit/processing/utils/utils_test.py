@@ -78,7 +78,7 @@ class TestEnsureAbsolutePath:
     @pytest.mark.asyncio
     async def test_relative_path_raises(self):
         """测试相对路径抛出错误"""
-        with pytest.raises(ValueError, match="must be absolute"):
+        with pytest.raises(ValueError, match="Expected an absolute path"):
             ensure_absolute_path("relative/path")
 
     @pytest.mark.asyncio

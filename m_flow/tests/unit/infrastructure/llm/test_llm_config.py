@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+from unittest.mock import patch
+
 import pytest
 from m_flow.llm.config import LLMConfig
 
@@ -24,7 +27,8 @@ class TestQuoteStripping:
 
     @pytest.fixture(autouse=True)
     def _setup(self):
-        self.cfg = _make_config()
+        with patch.dict(os.environ, {}, clear=True):
+            self.cfg = _make_config()
 
     def test_surrounding_double_quotes_removed(self):
         """双引号包裹的值应去除引号"""

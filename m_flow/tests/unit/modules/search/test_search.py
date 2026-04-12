@@ -83,9 +83,9 @@ class TestSearchAccessControl:
         assert out == [
             {
                 "search_result": ["r"],
-                "dataset_id": ds.id,
+                "dataset_id": str(ds.id),
                 "dataset_name": "ds1",
-                "dataset_tenant_id": ds.tenant_id,
+                "dataset_tenant_id": str(ds.tenant_id),
             }
         ]
 
@@ -100,9 +100,9 @@ class TestSearchAccessControl:
         assert out_v == [
             {
                 "search_result": ["r"],
-                "dataset_id": ds.id,
+                "dataset_id": str(ds.id),
                 "dataset_name": "ds1",
-                "dataset_tenant_id": ds.tenant_id,
+                "dataset_tenant_id": str(ds.tenant_id),
                 "graphs": {},
             }
         ]

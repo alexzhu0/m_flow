@@ -49,7 +49,7 @@ def test_add_duplicate_node(setup_graph):
     graph = setup_graph
     node = Node("node1")
     graph.add_node(node)
-    with pytest.raises(ConceptAlreadyExistsError, match="Node with id node1 already exists."):
+    with pytest.raises(ConceptAlreadyExistsError, match="Duplicate node insertion blocked"):
         graph.add_node(node)
 
 
@@ -96,7 +96,7 @@ def test_get_edges_success(setup_graph):
 def test_get_edges_nonexistent_node(setup_graph):
     """Test retrieving edges for a nonexistent node raises an exception."""
     graph = setup_graph
-    with pytest.raises(ConceptNotFoundError, match="Node with id nonexistent does not exist."):
+    with pytest.raises(ConceptNotFoundError, match="Cannot retrieve edges .* no node with id=nonexistent"):
         graph.get_edges_from_node("nonexistent")
 
 
@@ -192,7 +192,7 @@ async def test_project_graph_from_db_empty_graph(setup_graph, mock_adapter):
 
     mock_adapter.get_graph_data = AsyncMock(return_value=([], []))
 
-    with pytest.raises(ConceptNotFoundError, match="Empty graph projected from the database."):
+    with pytest.raises(ConceptNotFoundError, match="Persistence layer returned an empty graph"):
         await graph.project_graph_from_db(
             adapter=mock_adapter,
             node_properties_to_project=["name"],
@@ -214,7 +214,7 @@ async def test_project_graph_from_db_missing_nodes(setup_graph, mock_adapter):
 
     mock_adapter.get_graph_data = AsyncMock(return_value=(nodes_data, edges_data))
 
-    with pytest.raises(ConceptNotFoundError, match="Edge references nonexistent nodes"):
+    with pytest.raises(ConceptNotFoundError, match="references a vertex absent from the projection"):
         await graph.project_graph_from_db(
             adapter=mock_adapter,
             node_properties_to_project=["name"],

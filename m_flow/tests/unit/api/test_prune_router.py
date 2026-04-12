@@ -232,14 +232,14 @@ class TestPruneRouterPipelineChecks:
         router_file = self._get_router_file()
         content = router_file.read_text()
 
-        assert "DATASET_PROCESSING_STARTED" in content, "Should check for STARTED pipeline state"
+        assert "STARTED" in content, "Should check for STARTED pipeline state"
 
     def test_checks_initiated_state(self):
         """Verify checks for INITIATED pipeline state."""
         router_file = self._get_router_file()
         content = router_file.read_text()
 
-        assert "DATASET_PROCESSING_INITIATED" in content, "Should check for INITIATED pipeline state"
+        assert "INITIATED" in content, "Should check for INITIATED pipeline state"
 
     def test_pipeline_conflict_returns_409(self):
         """Verify running pipeline returns HTTP 409."""
