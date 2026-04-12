@@ -41,7 +41,8 @@ async def get_unique_data_id(data_identifier: str, user: User) -> UUID:
 
 def _build_modern_id(identifier: str, user: User) -> UUID:
     """Build ID with tenant context."""
-    seed = f"{identifier}{user.id}{user.tenant_id}"
+    tid = str(user.tenant_id) if user.tenant_id else ""
+    seed = f"{identifier}{user.id}{tid}"
     return uuid5(NAMESPACE_OID, seed)
 
 

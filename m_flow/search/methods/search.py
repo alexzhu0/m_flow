@@ -233,10 +233,10 @@ async def _persist_search_result(
     formatted = await prepare_search_result(first_result)
 
     if combined_mode:
-        serialized = json.dumps(jsonable_encoder(formatted))
+        serialized = json.dumps(jsonable_encoder(formatted), default=str)
     else:
         all_formatted = [await prepare_search_result(r) for r in results]
-        serialized = json.dumps(jsonable_encoder(all_formatted))
+        serialized = json.dumps(jsonable_encoder(all_formatted), default=str)
 
     await log_result(query_id, serialized, user_id)
 

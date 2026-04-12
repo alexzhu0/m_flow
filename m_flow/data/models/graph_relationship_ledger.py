@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from uuid import NAMESPACE_OID, uuid5
+from uuid import NAMESPACE_OID, UUID as PyUUID, uuid5
 
 from sqlalchemy import UUID, Column, DateTime, Index, String
 
 from m_flow.adapters.relational import Base
 
 
-def _mint_ledger_entry_id() -> str:
+def _mint_ledger_entry_id() -> PyUUID:
     """Derive a deterministic UUID from the current UTC wall-clock."""
     utc_now = datetime.now(tz=timezone.utc)
     return uuid5(NAMESPACE_OID, str(utc_now.timestamp()))

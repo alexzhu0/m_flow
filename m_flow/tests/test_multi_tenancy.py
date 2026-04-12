@@ -166,7 +166,7 @@ async def main():
     # Only datasets from current tenant should be visible
     assert len(tenant_2_search) == 1, f"Should see only current tenant's dataset: {tenant_2_search}"
     assert tenant_2_search[0]["dataset_name"] == "AI_MFLOW_LAB", f"Dataset name mismatch: {tenant_2_search[0]}"
-    assert tenant_2_search[0]["dataset_tenant_id"] == primary_user.tenant_id, (
+    assert tenant_2_search[0]["dataset_tenant_id"] == str(primary_user.tenant_id), (
         f"Tenant ID mismatch: {tenant_2_search[0]}"
     )
 
