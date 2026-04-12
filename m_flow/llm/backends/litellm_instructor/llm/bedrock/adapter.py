@@ -167,5 +167,7 @@ class BedrockAdapter(LLMBackend):
         if not system_prompt:
             raise MissingSystemPromptPathError()
 
-        rendered_system = LLMService.read_query_prompt(system_prompt)
+        from m_flow.llm.prompts import read_query_prompt
+
+        rendered_system = read_query_prompt(system_prompt) or system_prompt
         return f"System Prompt:\n{rendered_system}\n\nUser Input:\n{display_input}\n"

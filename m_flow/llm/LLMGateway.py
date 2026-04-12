@@ -102,18 +102,24 @@ class LLMService:
     @staticmethod
     def transcribe_audio(input) -> Coroutine:
         """Transcribe audio via the Instructor client."""
-        return _get_instructor_client().create_transcript(input=input)
+        return _get_instructor_client().transcribe_audio(input=input)
 
     @staticmethod
     def describe_image(input) -> Coroutine:
         """Extract text from an image via the Instructor client."""
-        return _get_instructor_client().transcribe_image(input=input)
+        return _get_instructor_client().describe_image(input=input)
 
     @staticmethod
     @retry(
         stop=stop_after_delay(_RETRY_CEILING),
         wait=wait_exponential_jitter(_BACKOFF_MIN, _BACKOFF_MAX),
-        retry=retry_if_not_exception_type(litellm.exceptions.NotFoundError),
+        retry=retry_if_not_exception_type(
+            (
+                litellm.exceptions.NotFoundError,
+                litellm.exceptions.BadRequestError,
+                litellm.exceptions.AuthenticationError,
+            )
+        ),
         before_sleep=before_sleep_log(logging.getLogger(__name__), logging.DEBUG),
         reraise=True,
     )

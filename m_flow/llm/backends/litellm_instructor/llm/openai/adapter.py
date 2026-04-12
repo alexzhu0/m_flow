@@ -210,15 +210,6 @@ class OpenAIAdapter(LLMBackend):
 
     def _build_messages(self, user_input: str, system_prompt: str) -> list:
         """Construct chat message list."""
-        import logging
-
-        _dbg = logging.getLogger("llm.debug")
-        _dbg.warning(
-            f"[STRUCTURED.DEBUG] user_input_len={len(user_input)}, "
-            f"system_prompt_len={len(system_prompt)}, "
-            f"user_input_first500={user_input[:500]!r}, "
-            f"system_prompt_first200={system_prompt[:200]!r}"
-        )
         return [
             {"role": "user", "content": user_input},
             {"role": "system", "content": system_prompt},
@@ -409,7 +400,7 @@ class OpenAIAdapter(LLMBackend):
 
         encoded = base64.b64encode(raw_bytes).decode("utf-8")
 
-        return litellm.completion(
+        return await litellm.acompletion(
             model=self._model,
             messages=[
                 {
@@ -428,7 +419,6 @@ class OpenAIAdapter(LLMBackend):
             api_key=self._api_key,
             api_base=self._endpoint,
             api_version=self._api_version,
-            max_completion_tokens=300,
             max_retries=self.MAX_RETRIES,
             **kwargs,
         )
