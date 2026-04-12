@@ -33,10 +33,11 @@ M-flow takes a different approach: the graph is not a preprocessing step — it 
 Similar and relevant sometimes overlap, but they are fundamentally different. Consider the query **"Why did the migration fail?"**
 
 **Traditional retrieval** — matches by surface similarity:
-```
-Query: "Why did the migration fail?"
-  ↓ embed → cosine similarity
-  ✗ "Database migration best practices checklist"     ← keywords match, wrong answer
+
+```mermaid
+flowchart LR
+    Q["Query: Why did the\nmigration fail?"] -->|"embed → cosine similarity"| C1["Chunk: Database migration\nbest practices checklist"]
+    C1 -->|"✗ wrong answer"| R["keywords match,\nbut answers a\ndifferent question"]
 ```
 
 **M-flow retrieval** — traces through the knowledge graph:
