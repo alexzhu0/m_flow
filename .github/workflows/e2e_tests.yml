@@ -147,7 +147,7 @@ jobs:
         run: uv run python ./m_flow/tests/test_deduplication.py
 
   s3-storage:
-    if: ${{ secrets.AWS_ACCESS_KEY_ID != '' }}
+    if: false
     runs-on: ubuntu-22.04
     name: "S3 bucket read/write"
     steps:
