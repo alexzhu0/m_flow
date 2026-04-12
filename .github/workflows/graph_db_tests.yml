@@ -24,7 +24,6 @@ jobs:
 
   # ── Unified graph backend matrix ───────────────────────────────────────
   graph-backend-suite:
-    if: ${{ inputs.databases == 'all' || contains(inputs.databases, matrix.backend) }}
     timeout-minutes: 25
     runs-on: ubuntu-22.04
     name: "${{ matrix.backend }} — core + weighted-edge validation"

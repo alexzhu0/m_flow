@@ -30,9 +30,6 @@ jobs:
 
   # ── Tier 1: SQLite-based stack (Kuzu or Neo4j + LanceDB + SQLite) ─────
   sqlite-stack:
-    if: >-
-      ${{ inputs.databases == 'all'
-       || contains(inputs.databases, format('{0}/lance/sqlite', matrix.graph_engine)) }}
     timeout-minutes: 20
     runs-on: ubuntu-22.04
     name: "${{ matrix.graph_engine }} + LanceDB + SQLite temporal pipeline"

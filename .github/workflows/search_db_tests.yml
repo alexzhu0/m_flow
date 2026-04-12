@@ -29,9 +29,6 @@ jobs:
 
   # ── SQLite-based search matrix (Kuzu or Neo4j + LanceDB + SQLite) ──────
   sqlite-search-matrix:
-    if: >-
-      ${{ inputs.databases == 'all'
-       || contains(inputs.databases, format('{0}/lance/sqlite', matrix.graph_backend)) }}
     timeout-minutes: 20
     runs-on: ubuntu-22.04
     name: "Search — ${{ matrix.graph_backend }} / LanceDB / SQLite"
