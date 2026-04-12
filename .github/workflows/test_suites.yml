@@ -117,6 +117,7 @@ jobs:
     secrets: inherit
 
   s3-storage:
+    if: false  # requires AWS S3 bucket + credentials — re-enable when AWS_S3_DEV_USER_KEY_ID is configured
     name: "S3 file-storage tests"
     needs: [core-tests, e2e]
     uses: ./.github/workflows/test_s3_file_storage.yml
@@ -142,6 +143,7 @@ jobs:
     secrets: inherit
 
   distributed:
+    if: false  # requires Modal.com account + MODAL_TOKEN_ID/SECRET — re-enable when Modal is configured
     name: "Distributed M-flow (Modal)"
     needs: [core-tests, e2e, graph-db]
     uses: ./.github/workflows/distributed_test.yml
