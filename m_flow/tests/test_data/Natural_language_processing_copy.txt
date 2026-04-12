@@ -1,1 +1,1 @@
-M-flow sample text copy for testing data deduplication.
+M-flow sample text for unit testing purposes.

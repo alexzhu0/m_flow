@@ -127,15 +127,12 @@ async def main():
     remaining_tables = await db_conn.table_names()
     assert len(remaining_tables) == 0, f"LanceDB has {len(remaining_tables)} tables after cleanup"
 
-    # Verify relational database is removed
+    # Verify relational database is clean (delete_database resets to empty schema)
     from m_flow.adapters.relational import get_db_adapter
 
     rel_engine = get_db_adapter()
-    db_dir = os.path.dirname(rel_engine.db_path)
-    db_file = os.path.basename(rel_engine.db_path)
-    storage = get_file_storage(db_dir)
-
-    assert not await storage.file_exists(db_file), "SQLite database persists after cleanup"
+    data_after = await rel_engine.get_all_data_from_table("data")
+    assert len(data_after) == 0, f"Relational DB not empty after cleanup: {len(data_after)} records"
 
     # Verify graph database is removed
     from m_flow.adapters.graph import get_graph_config
