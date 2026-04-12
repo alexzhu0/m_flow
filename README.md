@@ -8,7 +8,6 @@ M-flow 是一款重构检索架构、侧重推理与联想的记忆引擎。
 
 [Quick Start](#quick-start) ·
 [Architecture](docs/RETRIEVAL_ARCHITECTURE.md) ·
-[架构详解（中文）](docs/RETRIEVAL_ARCHITECTURE_ZH.md) ·
 [Examples](examples/) ·
 [OpenClaw Skill](https://clawhub.ai/flowelement-alexunbridled/mflow-memory) ·
 [Contact](mailto:contact@xinliuyuansu.com)
