@@ -13,8 +13,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 # Configure environment before imports
-os.environ["MFLOW_VECTOR_PARTITION_HANDLER"] = "custom_lancedb_handler"
-os.environ["MFLOW_GRAPH_PARTITION_HANDLER"] = "custom_kuzu_handler"
+os.environ["MFLOW_VECTOR_DATASET_DATABASE_HANDLER"] = "custom_lancedb_handler"
+os.environ["MFLOW_GRAPH_DATASET_DATABASE_HANDLER"] = "custom_kuzu_handler"
 
 import m_flow
 from m_flow.adapters.dataset_database_handler import DatasetStoreHandlerInterface

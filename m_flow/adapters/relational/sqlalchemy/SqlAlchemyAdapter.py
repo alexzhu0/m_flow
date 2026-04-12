@@ -408,6 +408,14 @@ class SQLAlchemyAdapter:
                         for tbl in meta.sorted_tables:
                             await conn.execute(text(f'DROP TABLE IF EXISTS {schema}."{tbl.name}" CASCADE'))
                         meta.clear()
+                # Clear engine cache (mirrors SQLite branch behaviour)
+                from m_flow.adapters.relational.create_relational_engine import (
+                    create_relational_engine,
+                )
+
+                create_relational_engine.cache_clear()
+                logger.info("Relational engine cache cleared (PostgreSQL)")
+
                 # Recreate tables for PostgreSQL
                 await self.create_database()
         except Exception as err:

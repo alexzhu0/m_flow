@@ -113,7 +113,7 @@ from m_flow.adapters.graph import get_graph_provider
 from m_flow.knowledge.graph_ops.m_flow_graph.MemoryGraphElements import Edge
 from m_flow.knowledge.graph_ops.utils.resolve_edges_to_text import resolve_edges_to_text
 from m_flow.retrieval.base_graph_retriever import BaseGraphRetriever
-from m_flow.retrieval.utils.completion import generate_completion, compress_text
+from m_flow.retrieval.utils.completion import generate_completion, summarize_text
 from m_flow.retrieval.utils.session_cache import (
     save_conversation_history,
     get_conversation_history,
@@ -286,7 +286,7 @@ class EpisodicRetriever(BaseGraphRetriever):
         if session_save:
             conversation_history = await get_conversation_history(session_id=session_id)
             context_summary, completion = await asyncio.gather(
-                compress_text(context_text),
+                summarize_text(context_text),
                 generate_completion(
                     query=query,
                     context=context_text,

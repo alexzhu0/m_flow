@@ -10,7 +10,7 @@ from m_flow.knowledge.graph_ops.utils.convert_node_to_memory_node import get_all
 from m_flow.retrieval.base_graph_retriever import BaseGraphRetriever
 from m_flow.retrieval.utils.fine_grained_triplet_search import fine_grained_triplet_search
 from m_flow.retrieval.utils.triplet_output_assembler import assemble_episode_summaries
-from m_flow.retrieval.utils.completion import generate_completion, compress_text
+from m_flow.retrieval.utils.completion import generate_completion, summarize_text
 from m_flow.retrieval.utils.session_cache import (
     save_conversation_history,
     get_conversation_history,
@@ -206,7 +206,7 @@ class UnifiedTripletSearch(BaseGraphRetriever):
             conversation_history = await get_conversation_history(session_id=session_id)
 
             context_summary, completion = await asyncio.gather(
-                compress_text(context_text),
+                summarize_text(context_text),
                 generate_completion(
                     query=query,
                     context=context_text,
