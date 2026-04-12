@@ -16,6 +16,7 @@ import pytest
 
 import m_flow
 from m_flow.adapters.relational import get_db_adapter
+from m_flow.adapters.relational.create_relational_engine import create_relational_engine
 from m_flow.shared.logging_utils import get_logger
 
 if TYPE_CHECKING:
@@ -186,6 +187,8 @@ async def test_deduplication_postgres() -> None:
             "db_provider": "postgres",
         }
     )
+
+    create_relational_engine.cache_clear()
 
     await run_deduplication_test()
 

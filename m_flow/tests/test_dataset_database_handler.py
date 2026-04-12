@@ -70,7 +70,7 @@ class CustomKuzuHandler(DatasetStoreHandlerInterface):
     @classmethod
     async def create_dataset(cls, dataset_id: str, user: Any) -> dict[str, str]:
         """Create isolated Kuzu configuration for a dataset."""
-        user_db_dir = Path("databases") / str(user.id)
+        user_db_dir = SYSTEM_STORAGE / "databases" / str(user.id)
         user_db_dir.mkdir(parents=True, exist_ok=True)
 
         db_path = user_db_dir / GRAPH_DB_NAME

@@ -113,7 +113,7 @@ async def detect_format(data_documents: list[Data]) -> list[Document]:
         doc_type = _DOC_TYPE_MAP.get(data.extension, TextDocument)
 
         # Build metadata JSON
-        meta_json = json.dumps(data.external_metadata, indent=4)
+        meta_json = json.dumps(data.external_metadata, indent=4, default=str)
 
         # Create document instance
         doc = doc_type(

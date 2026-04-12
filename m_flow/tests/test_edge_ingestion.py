@@ -84,17 +84,17 @@ async def test_edge_ingestion():
     # =========================================
     # Validate edge_text property
     # =========================================
-    contains_edges = [e for e in edges if e[2] == "contains"]
-    assert len(contains_edges) > 0, "Must have at least one 'contains' edge"
+    involves_entity_edges = [e for e in edges if e[2] == "involves_entity"]
+    assert len(involves_entity_edges) > 0, "Must have at least one 'involves_entity' edge"
 
-    props = contains_edges[0][3]
+    props = involves_entity_edges[0][3]
     assert "edge_text" in props, "Edge must have edge_text property"
 
     edge_text = props["edge_text"]
     assert _validate_edge_text_format(edge_text), f"Invalid edge_text format: {edge_text}"
 
     # Verify entity names appear in edge texts
-    all_texts = [e[3].get("edge_text", "").lower() for e in contains_edges]
+    all_texts = [e[3].get("edge_text", "").lower() for e in involves_entity_edges]
     known_entities = ["dave", "ana", "bob", "dexter", "apples", "m_flow"]
     found = any(any(entity in txt for entity in known_entities) for txt in all_texts)
     assert found, f"Should find known entities in edge texts: {all_texts[:3]}"
@@ -102,7 +102,7 @@ async def test_edge_ingestion():
     # =========================================
     # Validate structural edges
     # =========================================
-    assert type_counts.get("contains", 0) >= 1, "Must have 'contains' edges"
+    assert type_counts.get("involves_entity", 0) >= 1, "Must have 'involves_entity' edges"
     assert type_counts.get("is_a", 0) >= 1, "Must have 'is_a' edges"
 
     # Structural edge consistency
@@ -110,8 +110,8 @@ async def test_edge_ingestion():
         f"made_from ({type_counts.get('made_from', 0)}) != is_part_of ({type_counts.get('is_part_of', 0)})"
     )
 
-    assert type_counts.get("contains", 0) == type_counts.get("is_a", 0), (
-        f"contains ({type_counts.get('contains', 0)}) != is_a ({type_counts.get('is_a', 0)})"
+    assert type_counts.get("involves_entity", 0) == type_counts.get("is_a", 0), (
+        f"involves_entity ({type_counts.get('involves_entity', 0)}) != is_a ({type_counts.get('is_a', 0)})"
     )
 
     # =========================================

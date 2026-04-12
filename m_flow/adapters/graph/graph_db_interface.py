@@ -56,7 +56,7 @@ def _track_changes(fn):
                     nid = UUID(str(node.id))
                     ledger_rows.append(
                         GraphRelationshipLedger(
-                            id=uuid5(NAMESPACE_OID, f"{now_ts}"),
+                            id=uuid5(NAMESPACE_OID, f"{now_ts}:{node.id}"),
                             source_node_id=nid,
                             destination_node_id=nid,
                             creator_function=f"{caller}.node",
@@ -70,7 +70,7 @@ def _track_changes(fn):
                     rel = str(edge[2])
                     ledger_rows.append(
                         GraphRelationshipLedger(
-                            id=uuid5(NAMESPACE_OID, f"{now_ts}"),
+                            id=uuid5(NAMESPACE_OID, f"{now_ts}:{edge[0]}:{edge[1]}:{rel}"),
                             source_node_id=src,
                             destination_node_id=dst,
                             creator_function=f"{caller}.{rel}",
