@@ -5,6 +5,8 @@ name: integration-gate | Docker Compose Smoke Test
 on:
   workflow_call:
 
+permissions: {contents: read}
+
 jobs:
   compose-smoke-test:
     name: Build, start, and verify docker compose stack
@@ -16,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
 
       - name: Prepare Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f  # v3
 
       - name: Build all images
         run: docker compose -f docker-compose.yml build

@@ -29,6 +29,8 @@ on:
       - 'examples/python/weighted_edges_example.py'
       - '.github/workflows/weighted_edges_tests.yml'
 
+permissions: {contents: read}
+
 env: {RUNTIME__LOG_LEVEL: ERROR, ENV: 'dev'}
 
 concurrency:
@@ -44,7 +46,7 @@ jobs:
     name: "Static analysis — weighted-edge sources"
     defaults: {run: {shell: bash}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         name: "Clone M-Flow repository"
         with: {fetch-depth: 0}
 
@@ -53,12 +55,12 @@ jobs:
         with: {python-version: '3.11'}
 
       - name: "Ruff lint pass"
-        uses: astral-sh/ruff-action@v2
+        uses: astral-sh/ruff-action@0448d28b97107c864cdac36fccec40207dd11e35  # v2
         with:
           args: "check m_flow/knowledge/graph_ops/** m_flow/tests/unit/interfaces/graph/test_weighted_edges.py examples/python/weighted_edges_example.py"
 
       - name: "Ruff format pass"
-        uses: astral-sh/ruff-action@v2
+        uses: astral-sh/ruff-action@0448d28b97107c864cdac36fccec40207dd11e35  # v2
         with:
           args: "format --check m_flow/knowledge/graph_ops/** m_flow/tests/unit/interfaces/graph/test_weighted_edges.py examples/python/weighted_edges_example.py"
 
@@ -78,7 +80,7 @@ jobs:
       LLM_MODEL: gpt-5-mini
       LLM_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         name: "Clone M-Flow repository"
         with: {fetch-depth: 0}
 
@@ -115,7 +117,7 @@ jobs:
       EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
       EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         name: "Clone M-Flow repository"
         with: {fetch-depth: 0}
 
@@ -163,7 +165,7 @@ jobs:
       EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
       EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         name: "Clone M-Flow repository"
         with: {fetch-depth: 0}
 

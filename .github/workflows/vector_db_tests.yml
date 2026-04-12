@@ -20,6 +20,8 @@ on:
     secrets:
       POSTGRES_PASSWORD: {required: false}
 
+permissions: {contents: read}
+
 concurrency:
   group: mflow-vecdb-${{ github.ref }}
   cancel-in-progress: true
@@ -57,7 +59,7 @@ jobs:
   #     EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
   #     EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
   #       with: {fetch-depth: 0}
   #     - uses: ./.github/actions/m_flow_setup
   #       with: {python-version: "${{ inputs.python-version }}"}
@@ -96,7 +98,7 @@ jobs:
           --health-retries 5
         ports: ["5432:5432"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         name: "Clone M-Flow repository"
         with: {fetch-depth: 0}
 
@@ -125,7 +127,7 @@ jobs:
       EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
       EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         name: "Clone M-Flow repository"
         with: {fetch-depth: 0}
 

@@ -14,11 +14,11 @@ jobs:
     name: "Assert uv.lock is up-to-date"
     steps:
       - name: Fetch repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         with: {fetch-depth: 0}
 
       - name: Provision uv toolchain
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@e4db8464a088ece1b920f60402e813ea4de65b8f  # v4
         with: {enable-cache: true}
 
       - name: Verify lockfile consistency

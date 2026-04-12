@@ -57,6 +57,6 @@ jobs:
 
       # ── 4. Feed GitHub Code Scanning ─────────────────────
       - name: Upload SARIF to Code Scanning dashboard
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c  # v3
         with:
           sarif_file: results.sarif
