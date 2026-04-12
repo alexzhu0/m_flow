@@ -35,9 +35,9 @@ async def run():
         title="Algorithms",
         credits=4,
         enrolled=[
-            (Edge(relationship_name="enrolled_in", weight=92), alice),   # with grade
+            (Edge(relationship_name="enrolled_in", weight=92), alice),  # with grade
             (Edge(relationship_name="enrolled_in", weight=88), bob),
-            carol,                                                        # no weight
+            carol,  # no weight
         ],
     )
     calculus = Course(

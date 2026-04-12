@@ -1,6 +1,7 @@
 """
 快速检索测试 - 不调用 LLM，直接使用 episodic_triplet_search
 """
+
 import asyncio
 import os
 import time
@@ -41,51 +42,51 @@ def extract_triplet_text(triplets) -> str:
     for edge in triplets:
         # node1
         if edge.node1:
-            for key in ['name', 'summary', 'search_text', 'description', 'aliases_text']:
+            for key in ["name", "summary", "search_text", "description", "aliases_text"]:
                 val = edge.node1.attributes.get(key)
                 if val:
                     texts.append(str(val))
         # node2
         if edge.node2:
-            for key in ['name', 'summary', 'search_text', 'description', 'aliases_text']:
+            for key in ["name", "summary", "search_text", "description", "aliases_text"]:
                 val = edge.node2.attributes.get(key)
                 if val:
                     texts.append(str(val))
         # edge
-        edge_text = edge.attributes.get('edge_text')
+        edge_text = edge.attributes.get("edge_text")
         if edge_text:
             texts.append(str(edge_text))
-    
-    return ' '.join(texts).lower()
+
+    return " ".join(texts).lower()
 
 
 async def test_single_query(query: str, keywords: list, top_k: int = 5):
     """测试单个查询"""
     start = time.time()
-    
+
     triplets = await episodic_triplet_search(query, top_k=top_k)
-    
+
     elapsed = time.time() - start
-    
+
     # 提取文本
     combined = extract_triplet_text(triplets)
-    
+
     # 关键词匹配
     matched = [kw for kw in keywords if kw.lower() in combined]
     missed = [kw for kw in keywords if kw.lower() not in combined]
-    
+
     match_rate = len(matched) / len(keywords) if keywords else 0
     success = match_rate >= 0.5
-    
+
     return {
-        'query': query,
-        'success': success,
-        'match_rate': match_rate,
-        'matched': matched,
-        'missed': missed,
-        'triplet_count': len(triplets),
-        'elapsed': elapsed,
-        'preview': combined[:150] if combined else '(empty)',
+        "query": query,
+        "success": success,
+        "match_rate": match_rate,
+        "matched": matched,
+        "missed": missed,
+        "triplet_count": len(triplets),
+        "elapsed": elapsed,
+        "preview": combined[:150] if combined else "(empty)",
     }
 
 
@@ -93,31 +94,33 @@ async def main():
     print("=" * 70)
     print("快速检索测试 - 直接 triplet search（无 LLM）")
     print("=" * 70)
-    
+
     total = len(TEST_QUERIES)
     success_count = 0
     total_time = 0
-    
+
     for i, (query, keywords) in enumerate(TEST_QUERIES, 1):
         result = await test_single_query(query, keywords)
-        total_time += result['elapsed']
-        
-        if result['success']:
+        total_time += result["elapsed"]
+
+        if result["success"]:
             success_count += 1
             status = "✅"
         else:
             status = "❌"
-        
+
         print(f"\n[{i}/{total}] {query}")
-        print(f"   {status} {result['elapsed']:.2f}s | {result['triplet_count']} triplets | 匹配 {len(result['matched'])}/{len(keywords)}")
+        print(
+            f"   {status} {result['elapsed']:.2f}s | {result['triplet_count']} triplets | 匹配 {len(result['matched'])}/{len(keywords)}"
+        )
         print(f"   匹配: {result['matched']}")
-        if result['missed']:
+        if result["missed"]:
             print(f"   缺失: {result['missed']}")
         print(f"   预览: {result['preview'][:100]}...")
-    
+
     print("\n" + "=" * 70)
-    print(f"测试结果: {success_count}/{total} 成功 ({success_count/total*100:.0f}%)")
-    print(f"总耗时: {total_time:.1f}s | 平均: {total_time/total:.2f}s/查询")
+    print(f"测试结果: {success_count}/{total} 成功 ({success_count / total * 100:.0f}%)")
+    print(f"总耗时: {total_time:.1f}s | 平均: {total_time / total:.2f}s/查询")
     print("=" * 70)
 
 

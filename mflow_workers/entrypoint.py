@@ -2,6 +2,7 @@
 分布式处理入口点
 启动工作器并执行示例任务
 """
+
 from __future__ import annotations
 
 import asyncio

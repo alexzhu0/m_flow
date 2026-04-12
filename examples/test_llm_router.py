@@ -49,9 +49,7 @@ async def count_episodes():
     """Count episodes in graph."""
     graph_engine = await get_graph_provider()
     try:
-        result = await graph_engine.query(
-            "MATCH (n:Node) WHERE n.type = 'Episode' RETURN count(n)"
-        )
+        result = await graph_engine.query("MATCH (n:Node) WHERE n.type = 'Episode' RETURN count(n)")
         return result[0][0] if result else 0
     except Exception as e:
         print(f"Error counting episodes: {e}")
@@ -140,9 +138,7 @@ async def run_test():
     print("=" * 70)
     graph_engine = await get_graph_provider()
     try:
-        result = await graph_engine.query(
-            "MATCH (n:Node) WHERE n.type = 'Episode' RETURN n.id, n.name, n.properties"
-        )
+        result = await graph_engine.query("MATCH (n:Node) WHERE n.type = 'Episode' RETURN n.id, n.name, n.properties")
         for row in result:
             ep_id, ep_name, props = row
             summary = ""

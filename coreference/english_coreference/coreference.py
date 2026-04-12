@@ -28,7 +28,7 @@ class EntityTracker:
     def __init__(self, max_history: int = 10) -> None:
         """
         Initialize EntityTracker with bounded history.
-        
+
         Args:
             max_history: Maximum number of entities to keep in each stack.
                         Higher values improve resolution accuracy but use more memory.
@@ -68,7 +68,6 @@ class EntityTracker:
         if sentence_id - 1 < len(self.sentence_texts):
             return self.sentence_texts[sentence_id - 1]
         return None
-
 
     def add(self, entity: Entity) -> None:
         if entity.type in {"PER", "PER_TITLE"}:
@@ -308,45 +307,146 @@ class CoreferenceResolver:
     GENERIC = {"someone", "anyone", "people", "others"}
 
     EVENT_TRIGGERS = {
-        "cause", "caused", "lead", "led", "result", "resulted", "mean", "meant",
-        "make", "made", "makes", "trigger", "triggered", "spark", "sparked",
-        "improve", "improved", "increase", "increased", "create", "created",
-        "affect", "affected", "boost", "boosted", "reduce", "reduced",
-        "reassure", "reassured", "frustrate", "frustrated",
-        "hurt", "hurts", "harmed", "harm",
-        "annoy", "annoyed", "upset", "force", "forced",
-        "delay", "delayed", "surprise", "surprised",
-        "strengthen", "strengthened",
-        "embarrass", "embarrassed",
-        "extend", "extended", "align", "aligned",
-        "restore", "restored", "shock", "shocked", "prompt", "prompted",
-        "ignore", "ignored", "end", "ended", "alarm", "alarmed",
-        "confuse", "confused",
+        "cause",
+        "caused",
+        "lead",
+        "led",
+        "result",
+        "resulted",
+        "mean",
+        "meant",
+        "make",
+        "made",
+        "makes",
+        "trigger",
+        "triggered",
+        "spark",
+        "sparked",
+        "improve",
+        "improved",
+        "increase",
+        "increased",
+        "create",
+        "created",
+        "affect",
+        "affected",
+        "boost",
+        "boosted",
+        "reduce",
+        "reduced",
+        "reassure",
+        "reassured",
+        "frustrate",
+        "frustrated",
+        "hurt",
+        "hurts",
+        "harmed",
+        "harm",
+        "annoy",
+        "annoyed",
+        "upset",
+        "force",
+        "forced",
+        "delay",
+        "delayed",
+        "surprise",
+        "surprised",
+        "strengthen",
+        "strengthened",
+        "embarrass",
+        "embarrassed",
+        "extend",
+        "extended",
+        "align",
+        "aligned",
+        "restore",
+        "restored",
+        "shock",
+        "shocked",
+        "prompt",
+        "prompted",
+        "ignore",
+        "ignored",
+        "end",
+        "ended",
+        "alarm",
+        "alarmed",
+        "confuse",
+        "confused",
     }
     COMMUNICATION_VERBS = {
-        "called", "call", "emailed", "email", "texted", "text", "messaged",
-        "message", "contacted", "contact", "phoned", "phone", "asked", "ask",
+        "called",
+        "call",
+        "emailed",
+        "email",
+        "texted",
+        "text",
+        "messaged",
+        "message",
+        "contacted",
+        "contact",
+        "phoned",
+        "phone",
+        "asked",
+        "ask",
     }
     EVENT_REPORT_VERBS = {
-        "announce", "announced", "decide", "decided", "reject", "rejected",
-        "approve", "approved", "agree", "agreed", "delay", "delayed",
-        "postpone", "postponed", "confirm", "confirmed", "reach", "reached",
-        "deny", "denied", "warn", "warned",
-        "state", "stated", "note", "noted", "dismiss", "dismissed",
-        "resign", "resigned", "close", "closed", "issue", "issued",
+        "announce",
+        "announced",
+        "decide",
+        "decided",
+        "reject",
+        "rejected",
+        "approve",
+        "approved",
+        "agree",
+        "agreed",
+        "delay",
+        "delayed",
+        "postpone",
+        "postponed",
+        "confirm",
+        "confirmed",
+        "reach",
+        "reached",
+        "deny",
+        "denied",
+        "warn",
+        "warned",
+        "state",
+        "stated",
+        "note",
+        "noted",
+        "dismiss",
+        "dismissed",
+        "resign",
+        "resigned",
+        "close",
+        "closed",
+        "issue",
+        "issued",
     }
     COMM_VERBS = {"email", "emailed", "forward", "forwarded", "send", "sent", "message", "messaged"}
     HARD_EVENT_VERBS = {"crash", "crashed", "fail", "break", "collapse", "fall", "reopen", "reopened"}
     SPEECH_VERBS = {"said", "told", "thought", "believed", "argued", "claimed", "noted", "reported", "stated"}
     GENERIC_ORG_NOUNS = {
-        "company", "firm", "organization", "org", "team", "group",
-        "department", "committee", "board", "agency", "startup",
+        "company",
+        "firm",
+        "organization",
+        "org",
+        "team",
+        "group",
+        "department",
+        "committee",
+        "board",
+        "agency",
+        "startup",
     }
 
     def __init__(self, max_history: int = 10) -> None:
         """
         Initialize CoreferenceResolver.
-        
+
         Args:
             max_history: Maximum number of historical entities to keep in tracker stacks.
                         Higher values improve resolution accuracy for longer conversations
@@ -409,7 +509,7 @@ class CoreferenceResolver:
         for r in sorted(replacements, key=lambda x: x.start, reverse=True):
             if r.replacement.strip().lower() == r.pronoun:
                 continue
-            out_text = out_text[:r.start] + r.replacement + out_text[r.end:]
+            out_text = out_text[: r.start] + r.replacement + out_text[r.end :]
 
         return out_text, replacements
 
@@ -418,9 +518,7 @@ class CoreferenceResolver:
         self.tracker.clear()
         self._stream_started = True
 
-    def resolve_incremental(
-        self, sentence: str, paragraph_reset: bool = False
-    ) -> Tuple[str, List[Replacement]]:
+    def resolve_incremental(self, sentence: str, paragraph_reset: bool = False) -> Tuple[str, List[Replacement]]:
         """
         Stream resolution: input sentence by sentence and preserve context
         """
@@ -454,12 +552,11 @@ class CoreferenceResolver:
         for r in sorted(replacements, key=lambda x: x.start, reverse=True):
             if r.replacement.strip().lower() == r.pronoun:
                 continue
-            out_text = out_text[:r.start] + r.replacement + out_text[r.end:]
+            out_text = out_text[: r.start] + r.replacement + out_text[r.end :]
 
         return out_text, replacements
-    def _resolve_sentence(
-        self, sent, sid: int
-    ) -> List[Replacement]:
+
+    def _resolve_sentence(self, sent, sid: int) -> List[Replacement]:
         repls: List[Replacement] = []
         sent_text = sent.text
         quote_spans = self._quote_spans(sent_text)
@@ -469,9 +566,14 @@ class CoreferenceResolver:
             if tok.is_space:
                 continue
             p = tok.text.lower()
-            if not p or p not in (self.PERSON_PRONOUNS | self.PLURAL_PERSON_PRONOUNS |
-                                  self.OBJECT_PRONOUNS | self.POSSESSIVE_PRONOUNS |
-                                  self.DEICTIC | self.GENERIC):
+            if not p or p not in (
+                self.PERSON_PRONOUNS
+                | self.PLURAL_PERSON_PRONOUNS
+                | self.OBJECT_PRONOUNS
+                | self.POSSESSIVE_PRONOUNS
+                | self.DEICTIC
+                | self.GENERIC
+            ):
                 continue
             if p == "that":
                 if tok.dep_ in {"nsubj", "nsubjpass", "obj", "dobj"} and tok.head.dep_ in {"relcl", "acl", "ccomp"}:
@@ -488,9 +590,7 @@ class CoreferenceResolver:
                     continue
             if self._is_inside_quotes(sent.doc.text, gpos):
                 # Within quotes: if explicit entity found inside, allow local resolution
-                local_rep = self._resolve_inside_quote(
-                    p, tok.idx - sent.start_char, sent_text, sid, quote_spans
-                )
+                local_rep = self._resolve_inside_quote(p, tok.idx - sent.start_char, sent_text, sid, quote_spans)
                 if local_rep and local_rep.strip().lower() != p:
                     repls.append(
                         Replacement(
@@ -524,8 +624,13 @@ class CoreferenceResolver:
             elif p == "it" and tok.dep_ in {"nsubj", "nsubjpass"}:
                 role_hint = "SUBJ"
             replacement = self._find_replacement(
-                p, sid, tok.idx - sent.start_char, sent_text,
-                role_hint=role_hint, force_possessive=is_possessive, gender_hint=gender_hint
+                p,
+                sid,
+                tok.idx - sent.start_char,
+                sent_text,
+                role_hint=role_hint,
+                force_possessive=is_possessive,
+                gender_hint=gender_hint,
             )
             if replacement and replacement.strip().lower() != p:
                 repls.append(
@@ -588,7 +693,7 @@ class CoreferenceResolver:
                 break
         if span is None:
             return None
-        left = sent[span[0]:pos]
+        left = sent[span[0] : pos]
         if not left.strip():
             return None
         # Build local entity stack from left side within quotes
@@ -621,7 +726,14 @@ class CoreferenceResolver:
                     obj_text = e.text
                     break
         if obj_text:
-            pronoun_like = self.PERSON_PRONOUNS | self.PLURAL_PERSON_PRONOUNS | self.OBJECT_PRONOUNS | self.POSSESSIVE_PRONOUNS | self.DEICTIC | self.GENERIC
+            pronoun_like = (
+                self.PERSON_PRONOUNS
+                | self.PLURAL_PERSON_PRONOUNS
+                | self.OBJECT_PRONOUNS
+                | self.POSSESSIVE_PRONOUNS
+                | self.DEICTIC
+                | self.GENERIC
+            )
             if obj_text.strip().lower() in pronoun_like:
                 obj_text = None
         if not obj_text:
@@ -635,11 +747,28 @@ class CoreferenceResolver:
         self.tracker.event_stack.append(ev)
 
     COMMON_MALE_NAMES = {"john", "bob", "tom", "jerry", "mike", "smith", "daniel", "mark", "noah", "liam", "alex"}
-    COMMON_FEMALE_NAMES = {"mary", "alice", "sarah", "lee", "ms", "mrs", "miss", "emily", "lena", "mia", "emma", "ava", "zoe", "iris", "olivia", "nina"}
+    COMMON_FEMALE_NAMES = {
+        "mary",
+        "alice",
+        "sarah",
+        "lee",
+        "ms",
+        "mrs",
+        "miss",
+        "emily",
+        "lena",
+        "mia",
+        "emma",
+        "ava",
+        "zoe",
+        "iris",
+        "olivia",
+        "nina",
+    }
 
     def _extract_gendered_person(self, compound_text: str, gender: str) -> Optional[str]:
         """Extract person of specified gender from conjoined persons
-        
+
         e.g.: "Alice and Bob" + gender="F" -> "Alice"
               "Alice and Bob" + gender="M" -> "Bob"
         """
@@ -654,10 +783,10 @@ class CoreferenceResolver:
                 if ", " in parts[0]:
                     sub_parts = [p.strip() for p in parts[0].split(", ") if p.strip()]
                     parts = sub_parts + [parts[1]]
-        
+
         if not parts:
             return None
-        
+
         # Find person matching gender
         for part in parts:
             name = part.lower().strip()
@@ -665,7 +794,7 @@ class CoreferenceResolver:
                 return part
             if gender == "M" and name in self.COMMON_MALE_NAMES:
                 return part
-        
+
         return None
 
     def _prefer_specific_org(self, sid: int, pos: int) -> Optional[Entity]:
@@ -683,7 +812,7 @@ class CoreferenceResolver:
         low = text.lower()
         for p in ("its ", "their ", "his ", "her ", "my ", "our ", "your "):
             if low.startswith(p):
-                return text[len(p):]
+                return text[len(p) :]
         return text
 
     def _find_replacement(
@@ -700,7 +829,7 @@ class CoreferenceResolver:
         tracker = tracker or self.tracker
         # Event trigger: this/that + verb
         if p in {"this", "that"}:
-            right = sent[pos:pos + 50].lower()
+            right = sent[pos : pos + 50].lower()
             if any(t in right for t in self.EVENT_TRIGGERS):
                 ev = tracker.get_event_before(sid, pos)
                 if ev:
@@ -719,7 +848,11 @@ class CoreferenceResolver:
             # Ambiguity protection: do not replace when multiple persons in same sentence
             if tracker.has_multiple_persons_before(sid, pos):
                 if gender_hint:
-                    cand = [e for e in tracker.person_stack if e.sentence_id == sid and e.start < pos and e.gender == gender_hint]
+                    cand = [
+                        e
+                        for e in tracker.person_stack
+                        if e.sentence_id == sid and e.start < pos and e.gender == gender_hint
+                    ]
                     if len({c.norm or c.text for c in cand}) != 1:
                         return None
                 else:
@@ -728,7 +861,9 @@ class CoreferenceResolver:
             return ent.text + "'s" if ent else None
         if p in {"its", "their"} and force_possessive:
             if p == "its":
-                if (" this " in sent.lower() or " that " in sent.lower()) and any(t in sent.lower() for t in self.EVENT_TRIGGERS):
+                if (" this " in sent.lower() or " that " in sent.lower()) and any(
+                    t in sent.lower() for t in self.EVENT_TRIGGERS
+                ):
                     return None
             if p == "their":
                 persons = tracker.get_persons_text_before(sid, pos)
@@ -754,12 +889,18 @@ class CoreferenceResolver:
             before = sent[:pos].lower()
             if sent.lower().startswith("who ") and role_hint == "SUBJ":
                 return None
-            if ('"' not in sent) and any(v in before for v in {" said ", " told ", " wrote ", " reported ", " claimed ", " stated ", " noted "}):
+            if ('"' not in sent) and any(
+                v in before for v in {" said ", " told ", " wrote ", " reported ", " claimed ", " stated ", " noted "}
+            ):
                 return None
             if role_hint == "SUBJ" and "questioned" in sent.lower() and "witness" in sent.lower():
                 return None
             if gender_hint:
-                gender_items = [e for e in tracker.person_stack if e.sentence_id == sid and e.start < pos and e.gender == gender_hint]
+                gender_items = [
+                    e
+                    for e in tracker.person_stack
+                    if e.sentence_id == sid and e.start < pos and e.gender == gender_hint
+                ]
                 if len({g.norm or g.text for g in gender_items}) == 1:
                     return gender_items[-1].text
             if ";" in sent:
@@ -768,31 +909,49 @@ class CoreferenceResolver:
                     return None
             if role_hint == "SUBJ":
                 same = [e for e in tracker.person_stack if e.sentence_id == sid and e.start < pos]
-                if len({e.norm or e.text for e in same}) >= 2 and (", and " in before or "; " in before or " and " in before):
+                if len({e.norm or e.text for e in same}) >= 2 and (
+                    ", and " in before or "; " in before or " and " in before
+                ):
                     return None
             if tracker.has_multiple_persons_before(sid, pos):
                 if " and " in before and not gender_hint:
                     return None
                 if role_hint == "SUBJ":
-                    subj = [e for e in tracker.person_stack if e.sentence_id == sid and e.start < pos and e.role == "SUBJ"]
+                    subj = [
+                        e for e in tracker.person_stack if e.sentence_id == sid and e.start < pos and e.role == "SUBJ"
+                    ]
                     if len({s.norm or s.text for s in subj}) == 1:
                         pass
                     else:
                         return None
                 if gender_hint:
-                    same_sent = [e for e in tracker.person_stack if e.sentence_id == sid and e.start < pos and e.gender == gender_hint]
+                    same_sent = [
+                        e
+                        for e in tracker.person_stack
+                        if e.sentence_id == sid and e.start < pos and e.gender == gender_hint
+                    ]
                     if same_sent:
                         if len({c.norm or c.text for c in same_sent}) != 1:
                             return None
                 else:
                     return None
             # "told" structure: X told Y that he... usually ambiguous, conservatively do not replace
-            if role_hint == "SUBJ" and " told " in before and len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2:
+            if (
+                role_hint == "SUBJ"
+                and " told " in before
+                and len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2
+            ):
                 return None
             # Conservatively do not replace when multiple persons in because-clause
-            if " because " in before and len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2:
+            if (
+                " because " in before
+                and len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2
+            ):
                 return None
-            if " briefed " in before and len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2:
+            if (
+                " briefed " in before
+                and len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2
+            ):
                 return None
             if role_hint == "OBJ" and "thanked" in sent.lower():
                 if len({e.norm or e.text for e in tracker.person_stack if e.sentence_id == sid and e.start < pos}) >= 2:
@@ -929,7 +1088,14 @@ class CoreferenceResolver:
         if p in self.OBJECT_PRONOUNS:
             # Conservatively do not replace "it" after report/speech verbs
             before = sent[:pos].lower()
-            pronoun_like = self.PERSON_PRONOUNS | self.PLURAL_PERSON_PRONOUNS | self.OBJECT_PRONOUNS | self.POSSESSIVE_PRONOUNS | self.DEICTIC | self.GENERIC
+            pronoun_like = (
+                self.PERSON_PRONOUNS
+                | self.PLURAL_PERSON_PRONOUNS
+                | self.OBJECT_PRONOUNS
+                | self.POSSESSIVE_PRONOUNS
+                | self.DEICTIC
+                | self.GENERIC
+            )
             if any(v in before for v in self.SPEECH_VERBS | self.COMM_VERBS):
                 if before.count('"') % 2 == 0 and '"' in before:
                     return "the above"
@@ -951,7 +1117,9 @@ class CoreferenceResolver:
             if lower_sent.startswith(("it was ", "it seems ", "it is ")) and " that " in lower_sent:
                 return None
             if not self._is_inside_quotes(sent, pos):
-                if ('"' in before or "“" in before or "”" in before) and any(v in before for v in self.SPEECH_VERBS | self.COMM_VERBS):
+                if ('"' in before or "“" in before or "”" in before) and any(
+                    v in before for v in self.SPEECH_VERBS | self.COMM_VERBS
+                ):
                     return "the above"
             prev = tracker.get_prev_sentence_text(sid)
             if prev and ('"' in prev or "“" in prev or "”" in prev):
@@ -994,7 +1162,10 @@ class CoreferenceResolver:
                 subj_objs = [e for e in objs_before if e.role == "SUBJ"]
                 if subj_objs:
                     return self._obj_text(subj_objs[-1])
-                if any(v in sent.lower() for v in ("revised", "revise", "amended", "amend", "updated", "update", "reviewed", "review")):
+                if any(
+                    v in sent.lower()
+                    for v in ("revised", "revise", "amended", "amend", "updated", "update", "reviewed", "review")
+                ):
                     ev = tracker.get_event_before(sid, pos)
                     if ev:
                         return ev.text
@@ -1003,16 +1174,29 @@ class CoreferenceResolver:
                     ev = tracker.get_event_before(sid, pos)
                     if ev and obj.text.lower() in {"debate", "discussion", "meeting", "talks", "conversation"}:
                         return ev.text
-                    if any(v in sent.lower() for v in ("revised", "revise", "amended", "amend", "updated", "update", "reviewed", "review")):
+                    if any(
+                        v in sent.lower()
+                        for v in ("revised", "revise", "amended", "amend", "updated", "update", "reviewed", "review")
+                    ):
                         objs_before = tracker._filter_before(tracker.object_stack, sid, pos)
                         for e in reversed(objs_before):
-                            if e.text.lower() not in {"debate", "discussion", "meeting", "talks", "conversation", "hearing"}:
+                            if e.text.lower() not in {
+                                "debate",
+                                "discussion",
+                                "meeting",
+                                "talks",
+                                "conversation",
+                                "hearing",
+                            }:
                                 return self._obj_text(e)
                     return self._obj_text(obj)
                 subj_objs = [e for e in tracker.object_stack if e.sentence_id <= sid and e.role == "SUBJ"]
                 if subj_objs:
                     return self._obj_text(subj_objs[-1])
-                if any(v in sent.lower() for v in ("revised", "revise", "amended", "amend", "updated", "update", "reviewed", "review")):
+                if any(
+                    v in sent.lower()
+                    for v in ("revised", "revise", "amended", "amend", "updated", "update", "reviewed", "review")
+                ):
                     ev = tracker.get_event_before(sid, pos)
                     if ev:
                         return ev.text
@@ -1086,14 +1270,21 @@ class CoreferenceResolver:
                     return obj_single.text
                 if obj_single and (" and " in obj_single.text.lower() or "," in obj_single.text):
                     return obj_single.text
-            right = sent[pos + len(p):].lstrip()
+            right = sent[pos + len(p) :].lstrip()
             if right:
                 # If immediately followed by noun/article, usually a determiner structure, skip replacement
                 first = right.split(" ", 1)[0].strip(".,;:!?()[]{}").lower()
                 if first in {"a", "an", "the"}:
                     return None
                 if first.isalpha():
-                    if p in {"these", "those"} and first in {"changes", "updates", "revisions", "actions", "steps", "measures"}:
+                    if p in {"these", "those"} and first in {
+                        "changes",
+                        "updates",
+                        "revisions",
+                        "actions",
+                        "steps",
+                        "measures",
+                    }:
                         if sid == 0:
                             return None
                         objs = tracker.get_objects_text_before(sid, pos)
@@ -1106,7 +1297,41 @@ class CoreferenceResolver:
                         if locs:
                             return locs
                         return "the above"
-                    if p in {"this", "that"} and (first.endswith("ed") or first in {"cause", "causes", "caused", "trigger", "triggers", "triggered", "prompt", "prompted", "clarify", "clarified", "reduce", "reduced", "extend", "extended", "align", "aligned", "shock", "shocked", "embarrass", "embarrassed", "confuse", "confused", "alarm", "alarmed", "annoy", "annoyed", "hurt", "reassure", "reassured"}):
+                    if p in {"this", "that"} and (
+                        first.endswith("ed")
+                        or first
+                        in {
+                            "cause",
+                            "causes",
+                            "caused",
+                            "trigger",
+                            "triggers",
+                            "triggered",
+                            "prompt",
+                            "prompted",
+                            "clarify",
+                            "clarified",
+                            "reduce",
+                            "reduced",
+                            "extend",
+                            "extended",
+                            "align",
+                            "aligned",
+                            "shock",
+                            "shocked",
+                            "embarrass",
+                            "embarrassed",
+                            "confuse",
+                            "confused",
+                            "alarm",
+                            "alarmed",
+                            "annoy",
+                            "annoyed",
+                            "hurt",
+                            "reassure",
+                            "reassured",
+                        }
+                    ):
                         ev = tracker.get_event_before(sid, pos)
                         if ev:
                             return ev.text
@@ -1130,8 +1355,6 @@ class StreamCorefSession:
         """Reset session context"""
         self.resolver.reset_stream()
 
-    def add_sentence(
-        self, sentence: str, paragraph_reset: bool = False
-    ) -> Tuple[str, List[Replacement]]:
+    def add_sentence(self, sentence: str, paragraph_reset: bool = False) -> Tuple[str, List[Replacement]]:
         """Resolve sentence by sentence while preserving context"""
         return self.resolver.resolve_incremental(sentence, paragraph_reset=paragraph_reset)

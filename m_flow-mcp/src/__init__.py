@@ -16,7 +16,7 @@ Usage:
 Available MCP Tools (11):
     - memorize         : Convert data to knowledge graph (data, dataset_name)
     - save_interaction : Save user-agent interaction records (data)
-    - search           : Search knowledge graph (search_query, recall_mode, top_k, datasets, 
+    - search           : Search knowledge graph (search_query, recall_mode, top_k, datasets,
                          system_prompt, enable_hybrid_search)
     - list_data        : List datasets and data items (dataset_id)
     - delete           : Delete data items (data_id, dataset_id, mode)

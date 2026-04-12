@@ -2,6 +2,7 @@
 分布式计算测试模块
 验证Modal分布式任务执行
 """
+
 from __future__ import annotations
 
 from modal import App

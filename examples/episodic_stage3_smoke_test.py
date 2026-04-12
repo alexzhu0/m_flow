@@ -33,6 +33,7 @@ async def test_imports():
             get_episodic_memory_fragment,
             _score_triplet,
         )
+
         print("  ✓ episodic_triplet_search 导入成功")
     except ImportError as e:
         print(f"  ✗ episodic_triplet_search 导入失败: {e}")
@@ -44,6 +45,7 @@ async def test_imports():
             EpisodicRetriever,
             _inject_text_for_episodic_nodes,
         )
+
         print("  ✓ EpisodicRetriever 导入成功")
     except ImportError as e:
         print(f"  ✗ EpisodicRetriever 导入失败: {e}")
@@ -52,6 +54,7 @@ async def test_imports():
     # 3. 导入 RecallMode.EPISODIC
     try:
         from m_flow.search.types import RecallMode
+
         assert hasattr(RecallMode, "EPISODIC"), "RecallMode 没有 EPISODIC 属性"
         assert RecallMode.EPISODIC.value == "EPISODIC"
         print("  ✓ RecallMode.EPISODIC 导入成功")
@@ -70,9 +73,7 @@ async def test_retriever_interface():
     from m_flow.retrieval.base_graph_retriever import BaseGraphRetriever
 
     # 检查继承
-    assert issubclass(
-        EpisodicRetriever, BaseGraphRetriever
-    ), "EpisodicRetriever 应继承 BaseGraphRetriever"
+    assert issubclass(EpisodicRetriever, BaseGraphRetriever), "EpisodicRetriever 应继承 BaseGraphRetriever"
     print("  ✓ EpisodicRetriever 继承 BaseGraphRetriever")
 
     # 检查初始化参数
@@ -90,9 +91,7 @@ async def test_retriever_interface():
     assert hasattr(retriever, "get_context"), "缺少 get_context 方法"
     assert hasattr(retriever, "get_completion"), "缺少 get_completion 方法"
     assert hasattr(retriever, "get_triplets"), "缺少 get_triplets 方法"
-    assert hasattr(
-        retriever, "convert_retrieved_objects_to_context"
-    ), "缺少 convert_retrieved_objects_to_context 方法"
+    assert hasattr(retriever, "convert_retrieved_objects_to_context"), "缺少 convert_retrieved_objects_to_context 方法"
     print("  ✓ EpisodicRetriever 所有必要方法存在")
 
     return True

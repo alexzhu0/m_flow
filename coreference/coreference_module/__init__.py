@@ -14,14 +14,14 @@ Usage:
 
 1. Quick usage (coreference resolution):
     from coreference_module import resolve
-    
+
     text = "小明去北京。他在那里工作。"
     result = resolve(text)
     print(result)  # "小明去北京。小明在北京工作。"
 
 2. Detailed usage (with replacement records):
     from coreference_module import CoreferenceResolver
-    
+
     resolver = CoreferenceResolver()
     resolved, replacements = resolver.resolve_text("小明去北京。他在那里工作。")
     print(resolved)
@@ -30,7 +30,7 @@ Usage:
 
 3. Structured output (for Memory Engine):
     from coreference_module import CoreferenceResolver
-    
+
     resolver = CoreferenceResolver()
     output = resolver.resolve_text_structured("去年我去了北京。那时候天气很好。")
     print(output.resolved_text)    # resolved text
@@ -40,23 +40,23 @@ Usage:
 4. Time normalization:
     from coreference_module import normalize_time
     from datetime import datetime
-    
+
     result = normalize_time("昨天", datetime(2026, 1, 12))
     print(result.start_dt, result.end_dt, result.precision)
 
 5. Entity extraction:
     from coreference_module import NERService, extract_mentions
-    
+
     # Method 1: Service class
     service = NERService()
     mentions = service.extract_mentions("小明在学校读书")
-    
+
     # Method 2: Convenience function
     mentions = extract_mentions("小明在学校读书")
 
 6. Entity canonicalization:
     from coreference_module import create_canonicalizer
-    
+
     alias_map = {'PER_NAME': {'小张': '张三'}}
     canonicalizer = create_canonicalizer(alias_map)
     result = canonicalizer.canonicalize('小张', 'PER_NAME')
@@ -123,7 +123,6 @@ __all__ = [
     "ChineseTokenizer",
     "Token",
     "Mention",
-    
     # === Coreference Resolution ===
     "CoreferenceResolver",
     "StreamCorefSession",
@@ -136,19 +135,16 @@ __all__ = [
     "resolve",
     "resolve_with_details",
     "split_sentences",
-    
     # === NER Service ===
     "NERService",
     "NERResult",
     "MentionWithCanonical",
     "extract_mentions",
     "extract_entities",
-    
     # === Time Normalization ===
     "TimeNormalizer",
     "TimeSpanResult",
     "normalize_time",
-    
     # === Entity Canonicalization ===
     "BaseCanonicalizer",
     "DictCanonicalizer",

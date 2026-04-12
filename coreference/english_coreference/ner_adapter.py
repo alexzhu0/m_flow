@@ -26,24 +26,117 @@ class Entity:
 
 class EnglishNerAdapter:
     ABSTRACT_OBJECT_WORDS = {
-        "plan", "decision", "issue", "message", "agreement", "result", "impact",
-        "policy", "process", "proposal", "strategy", "schedule", "delay",
-        "change", "adjustment", "problem", "solution", "idea", "feedback",
-        "risk", "priority", "constraint", "goal", "assumption", "conclusion",
+        "plan",
+        "decision",
+        "issue",
+        "message",
+        "agreement",
+        "result",
+        "impact",
+        "policy",
+        "process",
+        "proposal",
+        "strategy",
+        "schedule",
+        "delay",
+        "change",
+        "adjustment",
+        "problem",
+        "solution",
+        "idea",
+        "feedback",
+        "risk",
+        "priority",
+        "constraint",
+        "goal",
+        "assumption",
+        "conclusion",
     }
     PERSON_TITLES = {
-        "mr", "mrs", "ms", "dr", "prof", "ceo", "cfo", "cto", "manager", "lead",
-        "director", "president", "chairman", "founder", "investor", "mentor",
-        "client", "auditor", "lawyer", "editor", "author", "coach", "player",
-        "journalist", "mayor", "minister", "delegate", "doctor", "patient",
-        "engineer", "engineers", "designer", "designers", "analyst", "analysts", "trader", "traders", "professor", "student", "auditor",
-        "teacher", "analyst", "buyer", "nurse", "vendor", "surgeon", "witness", "witnesses", "judge", "advisor",
+        "mr",
+        "mrs",
+        "ms",
+        "dr",
+        "prof",
+        "ceo",
+        "cfo",
+        "cto",
+        "manager",
+        "lead",
+        "director",
+        "president",
+        "chairman",
+        "founder",
+        "investor",
+        "mentor",
+        "client",
+        "auditor",
+        "lawyer",
+        "editor",
+        "author",
+        "coach",
+        "player",
+        "journalist",
+        "mayor",
+        "minister",
+        "delegate",
+        "doctor",
+        "patient",
+        "engineer",
+        "engineers",
+        "designer",
+        "designers",
+        "analyst",
+        "analysts",
+        "trader",
+        "traders",
+        "professor",
+        "student",
+        "auditor",
+        "teacher",
+        "analyst",
+        "buyer",
+        "nurse",
+        "vendor",
+        "surgeon",
+        "witness",
+        "witnesses",
+        "judge",
+        "advisor",
     }
     COMMON_MALE_NAMES = {"john", "bob", "tom", "jerry", "mike", "smith", "daniel", "mark", "noah", "liam", "alex"}
-    COMMON_FEMALE_NAMES = {"mary", "alice", "sarah", "lee", "ms", "mrs", "miss", "emily", "lena", "mia", "emma", "ava", "zoe", "iris", "olivia", "nina"}
+    COMMON_FEMALE_NAMES = {
+        "mary",
+        "alice",
+        "sarah",
+        "lee",
+        "ms",
+        "mrs",
+        "miss",
+        "emily",
+        "lena",
+        "mia",
+        "emma",
+        "ava",
+        "zoe",
+        "iris",
+        "olivia",
+        "nina",
+    }
     ORG_HEADS = {
-        "company", "team", "group", "department", "committee", "board", "firm",
-        "organization", "org", "corp", "startup", "agency", "clinic",
+        "company",
+        "team",
+        "group",
+        "department",
+        "committee",
+        "board",
+        "firm",
+        "organization",
+        "org",
+        "corp",
+        "startup",
+        "agency",
+        "clinic",
     }
     GROUP_HEADS = {"team", "group", "department", "committee", "board"}
 
@@ -69,11 +162,11 @@ class EnglishNerAdapter:
 
     def _gender_from_text(self, text: str) -> str:
         t = text.strip().lower()
-        
+
         # Conjunction (X and Y) may contain different genders, return empty gender
         if " and " in t or ", " in t:
             return ""
-        
+
         if t.startswith("mr ") or t.startswith("mr.") or t == "mr":
             return "M"
         if t.startswith("mrs ") or t.startswith("mrs.") or t == "mrs":
@@ -103,7 +196,7 @@ class EnglishNerAdapter:
             # Remove articles (the) and common company suffixes
             for p in ("the ",):
                 if low.startswith(p):
-                    low = low[len(p):]
+                    low = low[len(p) :]
             for suf in (" inc", " ltd", " corp", " corporation", " llc"):
                 if low.endswith(suf):
                     low = low[: -len(suf)]
@@ -111,7 +204,7 @@ class EnglishNerAdapter:
         if etype == "OBJ":
             for art in ("the ", "a ", "an "):
                 if low.startswith(art):
-                    low = low[len(art):]
+                    low = low[len(art) :]
             parts = [p for p in low.replace(".", "").split() if p]
             if parts:
                 return parts[-1]
@@ -165,7 +258,13 @@ class EnglishNerAdapter:
             if w in text:
                 return "OBJ"
         for t in self.PERSON_TITLES:
-            if text.startswith(t + " ") or text == t or text.startswith("the " + t) or text.startswith("a " + t) or text.startswith("an " + t):
+            if (
+                text.startswith(t + " ")
+                or text == t
+                or text.startswith("the " + t)
+                or text.startswith("a " + t)
+                or text.startswith("an " + t)
+            ):
                 return "PER_TITLE"
         for h in self.ORG_HEADS:
             if text.endswith(" " + h) or text == h:

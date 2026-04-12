@@ -30,9 +30,9 @@ async def test_imports():
         from m_flow.adapters.graph.kuzu.adapter import KuzuAdapter
 
         # 检查新方法存在
-        assert hasattr(
-            KuzuAdapter, "get_nodeset_id_filtered_graph_data"
-        ), "KuzuAdapter 缺少 get_nodeset_id_filtered_graph_data"
+        assert hasattr(KuzuAdapter, "get_nodeset_id_filtered_graph_data"), (
+            "KuzuAdapter 缺少 get_nodeset_id_filtered_graph_data"
+        )
         print("  ✓ KuzuAdapter.get_nodeset_id_filtered_graph_data 存在")
     except (ImportError, AssertionError) as e:
         print(f"  ✗ KuzuAdapter 导入失败: {e}")
@@ -45,19 +45,15 @@ async def test_imports():
 
         # 检查 project_graph_from_db 新增 strict_nodeset_filtering 参数
         sig = inspect.signature(MemoryGraph.project_graph_from_db)
-        assert (
-            "strict_nodeset_filtering" in sig.parameters
-        ), "project_graph_from_db 缺少 strict_nodeset_filtering 参数"
+        assert "strict_nodeset_filtering" in sig.parameters, "project_graph_from_db 缺少 strict_nodeset_filtering 参数"
         print("  ✓ MemoryGraph.project_graph_from_db 支持 strict_nodeset_filtering")
 
         # 检查 _extract_typed_subgraph 新增参数
         sig2 = inspect.signature(MemoryGraph._extract_typed_subgraph)
-        assert (
-            "relevant_ids_to_filter" in sig2.parameters
-        ), "_extract_typed_subgraph 缺少 relevant_ids_to_filter 参数"
-        assert (
-            "strict_nodeset_filtering" in sig2.parameters
-        ), "_extract_typed_subgraph 缺少 strict_nodeset_filtering 参数"
+        assert "relevant_ids_to_filter" in sig2.parameters, "_extract_typed_subgraph 缺少 relevant_ids_to_filter 参数"
+        assert "strict_nodeset_filtering" in sig2.parameters, (
+            "_extract_typed_subgraph 缺少 strict_nodeset_filtering 参数"
+        )
         print("  ✓ MemoryGraph._extract_typed_subgraph 支持 relevant_ids_to_filter 和 strict")
     except (ImportError, AssertionError) as e:
         print(f"  ✗ MemoryGraph 导入失败: {e}")
@@ -73,9 +69,7 @@ async def test_imports():
 
         # 检查新增 max_relevant_ids 参数
         sig = inspect.signature(episodic_triplet_search)
-        assert (
-            "max_relevant_ids" in sig.parameters
-        ), "episodic_triplet_search 缺少 max_relevant_ids 参数"
+        assert "max_relevant_ids" in sig.parameters, "episodic_triplet_search 缺少 max_relevant_ids 参数"
         print(f"  ✓ episodic_triplet_search 支持 max_relevant_ids (默认: {MAX_RELEVANT_IDS})")
     except (ImportError, AssertionError) as e:
         print(f"  ✗ episodic_triplet_search 导入失败: {e}")
@@ -118,14 +112,12 @@ async def test_m_flow_graph_strict_mode():
     source = inspect.getsource(MemoryGraph._extract_typed_subgraph)
 
     # 验证关键逻辑存在
-    assert (
-        "strict_nodeset_filtering" in source
-    ), "_extract_typed_subgraph 源码中缺少 strict_nodeset_filtering"
+    assert "strict_nodeset_filtering" in source, "_extract_typed_subgraph 源码中缺少 strict_nodeset_filtering"
     print("  ✓ _extract_typed_subgraph 包含 strict_nodeset_filtering 逻辑")
 
-    assert (
-        "get_nodeset_id_filtered_graph_data" in source
-    ), "_extract_typed_subgraph 源码中缺少 get_nodeset_id_filtered_graph_data 调用"
+    assert "get_nodeset_id_filtered_graph_data" in source, (
+        "_extract_typed_subgraph 源码中缺少 get_nodeset_id_filtered_graph_data 调用"
+    )
     print("  ✓ _extract_typed_subgraph 调用 get_nodeset_id_filtered_graph_data")
 
     assert "if strict_nodeset_filtering" in source, "_extract_typed_subgraph 缺少 strict 模式判断"
@@ -146,19 +138,13 @@ async def test_episodic_search_strict_and_limit():
 
     # 验证 get_episodic_memory_fragment 使用 strict
     source1 = inspect.getsource(get_episodic_memory_fragment)
-    assert (
-        "strict_nodeset_filtering=True" in source1
-    ), "get_episodic_memory_fragment 没有启用 strict"
+    assert "strict_nodeset_filtering=True" in source1, "get_episodic_memory_fragment 没有启用 strict"
     print("  ✓ get_episodic_memory_fragment 启用 strict_nodeset_filtering=True")
 
     # 验证 episodic_triplet_search 的上限裁剪
     source2 = inspect.getsource(episodic_triplet_search)
-    assert (
-        "max_relevant_ids" in source2
-    ), "episodic_triplet_search 没有 max_relevant_ids 参数"
-    assert (
-        "[:max_relevant_ids]" in source2
-    ), "episodic_triplet_search 没有进行上限裁剪"
+    assert "max_relevant_ids" in source2, "episodic_triplet_search 没有 max_relevant_ids 参数"
+    assert "[:max_relevant_ids]" in source2, "episodic_triplet_search 没有进行上限裁剪"
     print("  ✓ episodic_triplet_search 包含 relevant_ids 上限裁剪")
 
     # 验证验收日志

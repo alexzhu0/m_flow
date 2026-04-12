@@ -2,6 +2,7 @@
 图数据保存工作器
 分布式处理模块，用于批量保存节点和边到图数据库
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -69,7 +70,7 @@ def _check_deadlock(err: Exception) -> bool:
 async def graph_persistence_worker():
     """
     图数据保存工作器主函数
-    
+
     从队列中批量获取节点和边数据，写入图数据库
     """
     print("启动图数据保存工作器")

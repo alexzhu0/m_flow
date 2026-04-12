@@ -18,14 +18,18 @@ async def run():
     root = pathlib.Path(__file__).parent
     endpoint = os.getenv("NEPTUNE_ENDPOINT", "neptune-graph://<GRAPH_ID>")
 
-    m_flow.config.set_graph_db_config({
-        "graph_database_provider": "neptune_analytics",
-        "graph_database_url": endpoint,
-    })
-    m_flow.config.set_vector_db_config({
-        "vector_db_provider": "neptune_analytics",
-        "vector_db_url": endpoint,
-    })
+    m_flow.config.set_graph_db_config(
+        {
+            "graph_database_provider": "neptune_analytics",
+            "graph_database_url": endpoint,
+        }
+    )
+    m_flow.config.set_vector_db_config(
+        {
+            "vector_db_provider": "neptune_analytics",
+            "vector_db_url": endpoint,
+        }
+    )
     m_flow.config.data_root_directory(str(root / "data_storage"))
     m_flow.config.system_root_directory(str(root / "mflow/system"))
 
@@ -35,9 +39,7 @@ async def run():
     await m_flow.add([SAMPLE], DATASET)
     await m_flow.memorize([DATASET])
 
-    results = await m_flow.search(
-        query_type=RecallMode.TRIPLET_COMPLETION, query_text="Neptune Analytics features"
-    )
+    results = await m_flow.search(query_type=RecallMode.TRIPLET_COMPLETION, query_text="Neptune Analytics features")
     print("Results:")
     for r in results:
         print(f"  · {r}")

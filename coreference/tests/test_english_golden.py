@@ -1,6 +1,7 @@
 """
 Golden regression tests for English coreference resolution.
 """
+
 import pytest
 from english_coreference.coreference import CoreferenceResolver
 
@@ -42,6 +43,7 @@ class TestEnglishNonResolution:
 class TestEnglishStream:
     def test_stream(self):
         from english_coreference.coreference import StreamCorefSession
+
         session = StreamCorefSession()
         session.add_sentence("John went home.")
         r, _ = session.add_sentence("He was tired.")

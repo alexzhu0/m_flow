@@ -35,6 +35,7 @@ print("=" * 70)
 print("\n[A1] FacetPoint 可 import...")
 try:
     from m_flow.core.domain.models import FacetPoint
+
     print(f"  ✅ FacetPoint 导入成功: {FacetPoint}")
 except ImportError as e:
     print(f"  ❌ FacetPoint 导入失败: {e}")
@@ -44,6 +45,7 @@ except ImportError as e:
 print("\n[A2] Facet.metadata.index_fields 包含 anchor_text...")
 try:
     from m_flow.core.domain.models import Facet
+
     index_fields = Facet.model_fields.get("metadata")
     if index_fields and index_fields.default:
         fields = index_fields.default.get("index_fields", [])
@@ -53,7 +55,7 @@ try:
             print(f"  ❌ index_fields 不包含 anchor_text: {fields}")
             sys.exit(1)
     else:
-        print(f"  ❌ 无法获取 Facet.metadata.index_fields")
+        print("  ❌ 无法获取 Facet.metadata.index_fields")
         sys.exit(1)
 except Exception as e:
     print(f"  ❌ 检查 Facet 失败: {e}")
@@ -63,15 +65,15 @@ except Exception as e:
 print("\n[A3] Facet 有 anchor_text 和 has_point 字段...")
 try:
     if "anchor_text" in Facet.model_fields:
-        print(f"  ✅ Facet 有 anchor_text 字段")
+        print("  ✅ Facet 有 anchor_text 字段")
     else:
-        print(f"  ❌ Facet 没有 anchor_text 字段")
+        print("  ❌ Facet 没有 anchor_text 字段")
         sys.exit(1)
-    
+
     if "has_point" in Facet.model_fields:
-        print(f"  ✅ Facet 有 has_point 字段")
+        print("  ✅ Facet 有 has_point 字段")
     else:
-        print(f"  ❌ Facet 没有 has_point 字段")
+        print("  ❌ Facet 没有 has_point 字段")
         sys.exit(1)
 except Exception as e:
     print(f"  ❌ 检查 Facet 字段失败: {e}")
@@ -82,13 +84,13 @@ print("\n[A4] episodic_triplet_search 的投影字段包含 anchor_text...")
 try:
     import inspect
     from m_flow.retrieval.utils.episodic_triplet_search import get_episodic_memory_fragment
-    
+
     # 读取函数源码检查
     source = inspect.getsource(get_episodic_memory_fragment)
     if '"anchor_text"' in source or "'anchor_text'" in source:
-        print(f"  ✅ episodic_triplet_search 投影字段包含 anchor_text")
+        print("  ✅ episodic_triplet_search 投影字段包含 anchor_text")
     else:
-        print(f"  ❌ episodic_triplet_search 投影字段不包含 anchor_text")
+        print("  ❌ episodic_triplet_search 投影字段不包含 anchor_text")
         sys.exit(1)
 except Exception as e:
     print(f"  ❌ 检查 episodic_triplet_search 失败: {e}")
@@ -107,7 +109,7 @@ print("\n[B1] 构造 Facet + FacetPoint + has_point 边...")
 try:
     from m_flow.core import Edge
     from m_flow.core.domain.utils import generate_node_id
-    
+
     # 创建 FacetPoint
     facet_point = FacetPoint(
         id=generate_node_id("FacetPoint:test:point1"),
@@ -115,13 +117,13 @@ try:
         search_text="响应时间 450ms",
         description="实测响应延迟 450ms，符合 < 500ms 的目标",
     )
-    
+
     # 创建 Edge
     edge = Edge(
         relationship_type="has_point",
         edge_text="Facet --has_point--> FacetPoint",
     )
-    
+
     # 创建 Facet (带 has_point)
     facet = Facet(
         id=generate_node_id("Facet:test:tech"),
@@ -132,13 +134,14 @@ try:
         description="完整的技术方案描述...",
         has_point=[(edge, facet_point)],
     )
-    
+
     print(f"  ✅ Facet 创建成功: {facet.name}")
     print(f"     anchor_text: {facet.anchor_text}")
     print(f"     has_point: {len(facet.has_point)} 个点")
 except Exception as e:
     print(f"  ❌ 创建 Facet 失败: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 
@@ -148,25 +151,26 @@ try:
     # 检查 has_point 的内容
     if facet.has_point:
         edge_obj, point_obj = facet.has_point[0]
-        print(f"  ✅ has_point 关系结构正确")
+        print("  ✅ has_point 关系结构正确")
         print(f"     Edge.relationship_type: {edge_obj.relationship_type}")
         print(f"     Edge.edge_text: {edge_obj.edge_text}")
         print(f"     FacetPoint.name: {point_obj.name}")
         print(f"     FacetPoint.search_text: {point_obj.search_text}")
-        
+
         # 验证 Edge 的 relationship_type 是 has_point
         if edge_obj.relationship_type == "has_point":
-            print(f"  ✅ relationship_type == 'has_point'")
+            print("  ✅ relationship_type == 'has_point'")
         else:
             print(f"  ❌ relationship_type != 'has_point': {edge_obj.relationship_type}")
             sys.exit(1)
     else:
-        print(f"  ❌ facet.has_point 为空")
+        print("  ❌ facet.has_point 为空")
         sys.exit(1)
-        
+
 except Exception as e:
     print(f"  ❌ 验证失败: {e}")
     import traceback
+
     traceback.print_exc()
     sys.exit(1)
 

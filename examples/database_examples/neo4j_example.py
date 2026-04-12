@@ -22,12 +22,14 @@ async def run():
     neo4j_user = os.getenv("NEO4J_USER", "neo4j")
     neo4j_pass = os.getenv("NEO4J_PASSWORD", "password")
 
-    m_flow.config.set_graph_db_config({
-        "graph_database_url": neo4j_uri,
-        "graph_database_provider": "neo4j",
-        "graph_database_username": neo4j_user,
-        "graph_database_password": neo4j_pass,
-    })
+    m_flow.config.set_graph_db_config(
+        {
+            "graph_database_url": neo4j_uri,
+            "graph_database_provider": "neo4j",
+            "graph_database_username": neo4j_user,
+            "graph_database_password": neo4j_pass,
+        }
+    )
     m_flow.config.data_root_directory(str(root / "data_storage"))
     m_flow.config.system_root_directory(str(root / "mflow/system"))
 
@@ -37,9 +39,7 @@ async def run():
     await m_flow.add([SAMPLE], DATASET)
     await m_flow.memorize([DATASET])
 
-    results = await m_flow.search(
-        query_type=RecallMode.TRIPLET_COMPLETION, query_text="Neo4j capabilities"
-    )
+    results = await m_flow.search(query_type=RecallMode.TRIPLET_COMPLETION, query_text="Neo4j capabilities")
     print("Results:")
     for r in results:
         print(f"  · {r}")

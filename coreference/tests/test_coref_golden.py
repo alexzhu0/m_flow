@@ -3,6 +3,7 @@ Golden regression tests for Chinese coreference resolution.
 Each test captures CURRENT correct behavior.
 If any test fails after refactoring, the refactoring introduced a regression.
 """
+
 import pytest
 from coreference_module import resolve, CoreferenceResolver
 
@@ -99,7 +100,7 @@ class TestNonResolution:
 
     def test_inside_quotes(self):
         """Pronouns inside quotes should not be resolved."""
-        r = _resolve('\u5f20\u4e09\u8bf4\uff1a\u201c\u4ed6\u4f1a\u6765\u3002\u201d')
+        r = _resolve("\u5f20\u4e09\u8bf4\uff1a\u201c\u4ed6\u4f1a\u6765\u3002\u201d")
         # "他" inside quotes should be preserved
         assert "\u4ed6" in r
 
@@ -166,6 +167,7 @@ class TestSafety:
 class TestStreamResolution:
     def test_stream_basic(self):
         from coreference_module.coreference import StreamCorefSession
+
         session = StreamCorefSession()
         r1, _ = session.add_sentence("小明去北京。")
         r2, _ = session.add_sentence("他在那里工作。")
@@ -173,6 +175,7 @@ class TestStreamResolution:
 
     def test_stream_reset(self):
         from coreference_module.coreference import StreamCorefSession
+
         session = StreamCorefSession()
         session.add_sentence("小明去北京。")
         session.reset()
@@ -188,8 +191,8 @@ class TestStructuredOutput:
     def test_structured_has_fields(self):
         resolver = CoreferenceResolver()
         output = resolver.resolve_text_structured("小明去北京。他在那里工作。")
-        assert hasattr(output, 'resolved_text')
-        assert hasattr(output, 'replacements')
-        assert hasattr(output, 'mentions')
-        assert hasattr(output, 'time_extractions')
+        assert hasattr(output, "resolved_text")
+        assert hasattr(output, "replacements")
+        assert hasattr(output, "mentions")
+        assert hasattr(output, "time_extractions")
         assert "小明" in output.resolved_text

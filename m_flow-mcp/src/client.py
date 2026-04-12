@@ -2,6 +2,7 @@
 MCP客户端示例
 演示如何通过MCP协议调用M-flow工具
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -33,9 +34,9 @@ async def demo():
             await session.call_tool("prune", arguments={})
 
             # 添加示例数据
-            await session.call_tool("memorize", arguments={
-                "data": "人工智能（AI）是计算机科学的一个分支，致力于创建智能机器。"
-            })
+            await session.call_tool(
+                "memorize", arguments={"data": "人工智能（AI）是计算机科学的一个分支，致力于创建智能机器。"}
+            )
 
             # 等待后台处理完成
             await asyncio.sleep(5)
@@ -43,10 +44,7 @@ async def demo():
             # 搜索
             result = await session.call_tool(
                 "search",
-                arguments={
-                    "search_query": "什么是人工智能?",
-                    "recall_mode": "TRIPLET_COMPLETION"
-                },
+                arguments={"search_query": "什么是人工智能?", "recall_mode": "TRIPLET_COMPLETION"},
             )
 
             print(f"搜索结果: {result.content}")

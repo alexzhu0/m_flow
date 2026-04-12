@@ -20,6 +20,7 @@ class RoleHint:
     end: int
     role: str  # "subject" | "object"
 
+
 @dataclass
 class SRLArg:
     start: int
@@ -149,18 +150,18 @@ class SyntaxAdapter:
             return None
         group = max(candidates, key=lambda g: max(offsets[i][1] for i in g))
         group = sorted(group, key=lambda i: offsets[i][0])
-        
+
         # Filter out conjunctions and punctuation to avoid errors like duplicate conjunctions
         conjunctions = {"和", "与", "及", "或", "跟", "同", "、", "，", ","}
         names = [tokens[i] for i in group if tokens[i] not in conjunctions]
-        
+
         # Deduplicate
         unique_names = []
         for n in names:
             if n not in unique_names:
                 unique_names.append(n)
         names = unique_names
-        
+
         if len(names) < 2:
             return None
         if all(n in {"公司", "机构", "部门", "团队"} for n in names):
@@ -226,18 +227,21 @@ class SyntaxAdapter:
         if self._hanlp_dep is not None:
             return
         import hanlp
+
         self._hanlp_dep = hanlp.load(hanlp.pretrained.dep.CTB9_DEP_ELECTRA_SMALL)
 
     def _ensure_hanlp_srl(self) -> None:
         if self._hanlp_srl is not None:
             return
         import hanlp
+
         self._hanlp_srl = hanlp.load(hanlp.pretrained.srl.CPB3_SRL_ELECTRA_SMALL)
 
     def _ensure_ltp(self) -> None:
         if self._ltp is not None:
             return
         from ltp import LTP
+
         self._ltp = LTP()
 
     def _get_offsets(self, tokens: List[str], sentence: str) -> List[tuple[int, int]]:
@@ -259,7 +263,9 @@ class SyntaxAdapter:
                 return i
         return None
 
-    def _ensure_parsed(self, sentence: str) -> tuple[Optional[List[str]], Optional[List[Optional[str]]], Optional[List[tuple[int, int]]]]:
+    def _ensure_parsed(
+        self, sentence: str
+    ) -> tuple[Optional[List[str]], Optional[List[Optional[str]]], Optional[List[tuple[int, int]]]]:
         if self._cache_sentence == sentence and self._cache_tokens and self._cache_offsets and self._cache_roles:
             return self._cache_tokens, self._cache_roles, self._cache_offsets
         if self.backend == "hanlp":
@@ -270,14 +276,28 @@ class SyntaxAdapter:
             return self._cache_tokens, self._cache_roles, self._cache_offsets
         return None, None, None
 
-    def _ensure_dep(self, sentence: str) -> tuple[Optional[List[str]], Optional[List[tuple[int, int]]], Optional[List[int]], Optional[List[str]]]:
-        if self._cache_sentence == sentence and self._cache_tokens and self._cache_offsets and self._cache_heads and self._cache_rels:
+    def _ensure_dep(
+        self, sentence: str
+    ) -> tuple[Optional[List[str]], Optional[List[tuple[int, int]]], Optional[List[int]], Optional[List[str]]]:
+        if (
+            self._cache_sentence == sentence
+            and self._cache_tokens
+            and self._cache_offsets
+            and self._cache_heads
+            and self._cache_rels
+        ):
             return self._cache_tokens, self._cache_offsets, self._cache_heads, self._cache_rels
         if self.backend == "hanlp":
             _ = self._hanlp_role(sentence, 0)
         elif self.backend == "ltp":
             _ = self._ltp_role(sentence, 0)
-        if self._cache_sentence == sentence and self._cache_tokens and self._cache_offsets and self._cache_heads and self._cache_rels:
+        if (
+            self._cache_sentence == sentence
+            and self._cache_tokens
+            and self._cache_offsets
+            and self._cache_heads
+            and self._cache_rels
+        ):
             return self._cache_tokens, self._cache_offsets, self._cache_heads, self._cache_rels
         return None, None, None, None
 
@@ -387,7 +407,13 @@ class SyntaxAdapter:
                     text = arg[3] if len(arg) >= 4 and isinstance(arg[3], str) else None
                 if role is None or start is None or end is None:
                     if role is not None and text:
-                        mapped = "subject" if str(role) in {"A0", "ARG0"} else "object" if str(role) in {"A1", "A2", "ARG1", "ARG2"} else None
+                        mapped = (
+                            "subject"
+                            if str(role) in {"A0", "ARG0"}
+                            else "object"
+                            if str(role) in {"A1", "A2", "ARG1", "ARG2"}
+                            else None
+                        )
                         if mapped == "subject" and text not in sub_tokens:
                             sub_tokens.append(text)
                         if mapped == "object" and text not in obj_tokens:
@@ -416,7 +442,7 @@ class SyntaxAdapter:
                     e = s
                 if e >= len(tokens):
                     e = len(tokens) - 1
-                text = "".join(tokens[s:e + 1])
+                text = "".join(tokens[s : e + 1])
                 if mapped == "subject" and text not in sub_tokens:
                     sub_tokens.append(text)
                 if mapped == "object" and text not in obj_tokens:
@@ -488,7 +514,13 @@ class SyntaxAdapter:
                     text = arg[3] if len(arg) >= 4 and isinstance(arg[3], str) else None
                 if role is None or start is None or end is None:
                     if role is not None and text:
-                        mapped = "subject" if str(role) in {"A0", "ARG0"} else "object" if str(role) in {"A1", "A2", "ARG1", "ARG2"} else None
+                        mapped = (
+                            "subject"
+                            if str(role) in {"A0", "ARG0"}
+                            else "object"
+                            if str(role) in {"A1", "A2", "ARG1", "ARG2"}
+                            else None
+                        )
                         if mapped == "subject" and text not in sub_tokens:
                             sub_tokens.append(text)
                         if mapped == "object" and text not in obj_tokens:
@@ -517,7 +549,7 @@ class SyntaxAdapter:
                     e = s
                 if e >= len(token_texts):
                     e = len(token_texts) - 1
-                text = "".join(token_texts[s:e + 1])
+                text = "".join(token_texts[s : e + 1])
                 if mapped == "subject" and text not in sub_tokens:
                     sub_tokens.append(text)
                 if mapped == "object" and text not in obj_tokens:

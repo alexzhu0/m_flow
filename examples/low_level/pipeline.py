@@ -14,6 +14,7 @@ from m_flow.storage import persist_memory_nodes
 
 # --- Domain models ---
 
+
 class Author(MemoryNode):
     name: str
     metadata: dict = {"index_fields": ["name"]}
@@ -38,6 +39,7 @@ class Book(MemoryNode):
 
 
 # --- Ingestion logic ---
+
 
 def parse_catalog(raw_data: List[Any]):
     """Convert raw JSON catalog into MemoryNode instances."""

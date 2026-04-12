@@ -90,9 +90,7 @@ async def memory_node_saving_worker():
 
                 if batched_points:
                     for collection_name, memory_nodes in batched_points.items():
-                        print(
-                            f"Adding {len(memory_nodes)} data points to '{collection_name}' collection."
-                        )
+                        print(f"Adding {len(memory_nodes)} data points to '{collection_name}' collection.")
 
                         @retry(
                             retry=retry_if_exception_type(VectorDatabaseDeadlockError),

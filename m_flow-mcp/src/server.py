@@ -4,6 +4,7 @@ M-flow MCP服务器
 Model Context Protocol服务器实现，将M-flow知识图谱功能暴露给AI助手。
 支持stdio、SSE和HTTP传输模式。
 """
+
 from __future__ import annotations
 
 import argparse
@@ -124,6 +125,7 @@ async def memorize(
             except Exception as e:
                 _log.error("记忆化处理失败: %s", e)
                 import traceback
+
                 _log.debug(traceback.format_exc())
 
     asyncio.create_task(_task(data, dataset_name))
@@ -210,17 +212,15 @@ async def search(
     # 参数验证：检查 recall_mode 是否有效
     VALID_MODES = {"CHUNKS_LEXICAL", "TRIPLET_COMPLETION", "CYPHER", "EPISODIC", "PROCEDURAL"}
     if recall_mode.upper() not in VALID_MODES:
-        return [types.TextContent(
-            type="text",
-            text=f"❌ 无效的召回模式: {recall_mode}\n有效值: {', '.join(sorted(VALID_MODES))}"
-        )]
+        return [
+            types.TextContent(
+                type="text", text=f"❌ 无效的召回模式: {recall_mode}\n有效值: {', '.join(sorted(VALID_MODES))}"
+            )
+        ]
 
     # 参数验证：检查 top_k 是否为有效正整数
     if top_k < 1 or top_k > 100:
-        return [types.TextContent(
-            type="text",
-            text=f"❌ 无效的 top_k 值: {top_k}\n有效范围: 1-100"
-        )]
+        return [types.TextContent(type="text", text=f"❌ 无效的 top_k 值: {top_k}\n有效范围: 1-100")]
 
     async def _exec_search(
         query: str,
@@ -254,9 +254,7 @@ async def search(
                 return str(results)
 
     try:
-        result = await _exec_search(
-            search_query, recall_mode, top_k, datasets, system_prompt, enable_hybrid_search
-        )
+        result = await _exec_search(search_query, recall_mode, top_k, datasets, system_prompt, enable_hybrid_search)
         return [types.TextContent(type="text", text=result)]
     except Exception as e:
         _log.error("搜索失败: %s", e)
@@ -304,22 +302,26 @@ async def list_data(dataset_id: str = None) -> list:
                     return [types.TextContent(type="text", text=f"❌ 数据集不存在: {dataset_id}")]
 
                 items = await fetch_dataset_items(ds.id)
-                lines.extend([
-                    f"📁 数据集: {ds.name}",
-                    f"   ID: {ds.id}",
-                    f"   创建时间: {ds.created_at}",
-                    f"   数据项: {len(items)}",
-                    "",
-                ])
+                lines.extend(
+                    [
+                        f"📁 数据集: {ds.name}",
+                        f"   ID: {ds.id}",
+                        f"   创建时间: {ds.created_at}",
+                        f"   数据项: {len(items)}",
+                        "",
+                    ]
+                )
 
                 for i, item in enumerate(items, 1):
-                    lines.extend([
-                        f"   📄 数据项 #{i}:",
-                        f"      ID: {item.id}",
-                        f"      名称: {item.name or '未命名'}",
-                        f"      创建时间: {item.created_at}",
-                        "",
-                    ])
+                    lines.extend(
+                        [
+                            f"   📄 数据项 #{i}:",
+                            f"      ID: {item.id}",
+                            f"      名称: {item.name or '未命名'}",
+                            f"      创建时间: {item.created_at}",
+                            "",
+                        ]
+                    )
             else:
                 _log.info("列出所有数据集")
                 datasets = await _client.list_datasets()
@@ -336,23 +338,29 @@ async def list_data(dataset_id: str = None) -> list:
 
                 for i, ds in enumerate(datasets, 1):
                     if isinstance(ds, dict):
-                        lines.extend([
-                            f"{i}. 📁 {ds.get('name', '未命名')}",
-                            f"   ID: {ds.get('id')}",
-                            f"   创建时间: {ds.get('created_at', 'N/A')}",
-                        ])
+                        lines.extend(
+                            [
+                                f"{i}. 📁 {ds.get('name', '未命名')}",
+                                f"   ID: {ds.get('id')}",
+                                f"   创建时间: {ds.get('created_at', 'N/A')}",
+                            ]
+                        )
                     else:
-                        lines.extend([
-                            f"{i}. 📁 {ds.name}",
-                            f"   ID: {ds.id}",
-                            f"   创建时间: {ds.created_at}",
-                        ])
+                        lines.extend(
+                            [
+                                f"{i}. 📁 {ds.name}",
+                                f"   ID: {ds.id}",
+                                f"   创建时间: {ds.created_at}",
+                            ]
+                        )
                     lines.append("")
 
-                lines.extend([
-                    "🗑️  删除数据:",
-                    '   delete(data_id="...", dataset_id="...")',
-                ])
+                lines.extend(
+                    [
+                        "🗑️  删除数据:",
+                        '   delete(data_id="...", dataset_id="...")',
+                    ]
+                )
 
             _log.info("数据列表完成")
             return [types.TextContent(type="text", text="\n".join(lines))]
@@ -390,10 +398,7 @@ async def delete(data_id: str, dataset_id: str, mode: str = "soft") -> list:
     VALID_MODES = {"soft", "hard"}
     mode_lower = mode.lower()
     if mode_lower not in VALID_MODES:
-        return [types.TextContent(
-            type="text",
-            text=f"❌ 无效的删除模式: {mode}\n有效值: soft, hard"
-        )]
+        return [types.TextContent(type="text", text=f"❌ 无效的删除模式: {mode}\n有效值: soft, hard")]
 
     from uuid import UUID
 
@@ -476,10 +481,7 @@ async def prune(
             if cache:
                 cleared.append("缓存")
 
-            return [types.TextContent(
-                type="text",
-                text=f"✅ 已清除: {', '.join(cleared) if cleared else '无'}"
-            )]
+            return [types.TextContent(type="text", text=f"✅ 已清除: {', '.join(cleared) if cleared else '无'}")]
         except NotImplementedError:
             msg = "❌ API 模式不支持 prune 操作，请使用直接模式运行 MCP 服务器"
             _log.error(msg)
@@ -546,8 +548,7 @@ async def learn(
     """
     with redirect_stdout(sys.stderr):
         try:
-            _log.info("开始学习: datasets=%s, episodes=%s, background=%s",
-                      datasets, episode_ids, run_in_background)
+            _log.info("开始学习: datasets=%s, episodes=%s, background=%s", datasets, episode_ids, run_in_background)
 
             result = await _client.learn(
                 datasets=datasets,
@@ -556,20 +557,19 @@ async def learn(
             )
 
             _log.info("学习完成: %s", result)
-            return [types.TextContent(
-                type="text",
-                text=f"✅ 学习完成\n{json.dumps(result, ensure_ascii=False, indent=2, cls=JSONEncoder)}"
-            )]
+            return [
+                types.TextContent(
+                    type="text",
+                    text=f"✅ 学习完成\n{json.dumps(result, ensure_ascii=False, indent=2, cls=JSONEncoder)}",
+                )
+            ]
         except NotImplementedError as e:
             msg = f"⚠️ {str(e)}\n请使用直接模式运行 MCP 服务器"
             _log.warning(msg)
             return [types.TextContent(type="text", text=msg)]
         except Exception as e:
             _log.error("学习失败: %s", e)
-            return [types.TextContent(
-                type="text",
-                text=f"❌ 学习失败: {str(e)}"
-            )]
+            return [types.TextContent(type="text", text=f"❌ 学习失败: {str(e)}")]
 
 
 @_mcp.tool()
@@ -604,10 +604,7 @@ async def update_data(
                 UUID(data_id)
                 UUID(dataset_id)
             except ValueError as e:
-                return [types.TextContent(
-                    type="text",
-                    text=f"❌ 无效的 UUID 格式: {str(e)}"
-                )]
+                return [types.TextContent(type="text", text=f"❌ 无效的 UUID 格式: {str(e)}")]
 
             _log.info("更新数据: data_id=%s, dataset_id=%s", data_id, dataset_id)
 
@@ -618,16 +615,10 @@ async def update_data(
             )
 
             _log.info("更新完成: %s", result)
-            return [types.TextContent(
-                type="text",
-                text="✅ 数据已更新"
-            )]
+            return [types.TextContent(type="text", text="✅ 数据已更新")]
         except Exception as e:
             _log.error("更新失败: %s", e)
-            return [types.TextContent(
-                type="text",
-                text=f"❌ 更新失败: {str(e)}"
-            )]
+            return [types.TextContent(type="text", text=f"❌ 更新失败: {str(e)}")]
 
 
 @_mcp.tool()
@@ -657,8 +648,7 @@ async def ingest(
     """
     with redirect_stdout(sys.stderr):
         try:
-            _log.info("开始入库: dataset=%s, data_length=%d, skip_memorize=%s",
-                      dataset_name, len(data), skip_memorize)
+            _log.info("开始入库: dataset=%s, data_length=%d, skip_memorize=%s", dataset_name, len(data), skip_memorize)
 
             # MCP 工具输入通常是单条文本，禁用 content_routing 或跳过 memorize
             result = await _client.ingest(
@@ -669,16 +659,10 @@ async def ingest(
             )
 
             _log.info("入库完成: %s", result)
-            return [types.TextContent(
-                type="text",
-                text=f"✅ 数据已入库到 {dataset_name}"
-            )]
+            return [types.TextContent(type="text", text=f"✅ 数据已入库到 {dataset_name}")]
         except Exception as e:
             _log.error("入库失败: %s", e)
-            return [types.TextContent(
-                type="text",
-                text=f"❌ 入库失败: {str(e)}"
-            )]
+            return [types.TextContent(type="text", text=f"❌ 入库失败: {str(e)}")]
 
 
 @_mcp.tool()
@@ -717,17 +701,13 @@ async def query(
     # 参数验证：检查 mode 是否有效
     VALID_MODES = {"episodic", "triplet", "chunks", "procedural", "cypher"}
     if mode.lower() not in VALID_MODES:
-        return [types.TextContent(
-            type="text",
-            text=f"❌ 无效的查询模式: {mode}\n有效值: {', '.join(sorted(VALID_MODES))}"
-        )]
+        return [
+            types.TextContent(type="text", text=f"❌ 无效的查询模式: {mode}\n有效值: {', '.join(sorted(VALID_MODES))}")
+        ]
 
     # 参数验证：检查 top_k 是否有效
     if top_k < 1 or top_k > 100:
-        return [types.TextContent(
-            type="text",
-            text=f"❌ 无效的 top_k 值: {top_k}\n有效范围: 1-100"
-        )]
+        return [types.TextContent(type="text", text=f"❌ 无效的 top_k 值: {top_k}\n有效范围: 1-100")]
 
     with redirect_stdout(sys.stderr):
         try:
@@ -741,20 +721,14 @@ async def query(
             )
 
             _log.info("查询完成")
-            return [types.TextContent(
-                type="text",
-                text=answer
-            )]
+            return [types.TextContent(type="text", text=answer)]
         except NotImplementedError as e:
             msg = f"⚠️ {str(e)}\n请使用直接模式运行 MCP 服务器"
             _log.warning(msg)
             return [types.TextContent(type="text", text=msg)]
         except Exception as e:
             _log.error("查询失败: %s", e)
-            return [types.TextContent(
-                type="text",
-                text=f"❌ 查询失败: {str(e)}"
-            )]
+            return [types.TextContent(type="text", text=f"❌ 查询失败: {str(e)}")]
 
 
 # ============================================================

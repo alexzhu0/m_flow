@@ -1,4 +1,5 @@
 """M-Flow Alembic environment — async-first migration runner."""
+
 from __future__ import annotations
 
 import asyncio

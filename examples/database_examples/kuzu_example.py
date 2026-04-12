@@ -26,9 +26,7 @@ async def run():
     await m_flow.add([SAMPLE], DATASET)
     await m_flow.memorize([DATASET])
 
-    results = await m_flow.search(
-        query_type=RecallMode.TRIPLET_COMPLETION, query_text="graph database"
-    )
+    results = await m_flow.search(query_type=RecallMode.TRIPLET_COMPLETION, query_text="graph database")
     print("Results:")
     for r in results:
         print(f"  · {r}")

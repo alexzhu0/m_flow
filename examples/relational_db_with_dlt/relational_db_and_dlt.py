@@ -12,6 +12,7 @@ from m_flow.api.v1.search import RecallMode
 
 class PatchedCredentials(SqlalchemyCredentials):
     """Work around dlt's credential validation for local SQLite."""
+
     def __init__(self, connection_string=None):
         super().__init__()
         if connection_string:
@@ -21,10 +22,12 @@ class PatchedCredentials(SqlalchemyCredentials):
 
 # --- dlt pipeline: fetch Pokémon data from PokéAPI ---
 
+
 @dlt.resource(write_disposition="replace")
 def pokemon_list(limit: int = 5):
     """Fetch a short list of Pokémon names from the API."""
     import requests
+
     resp = requests.get(f"https://pokeapi.co/api/v2/pokemon?limit={limit}").json()
     yield resp.get("results", [])
 
@@ -33,6 +36,7 @@ def pokemon_list(limit: int = 5):
 def pokemon_details(pokemons):
     """Enrich each Pokémon with type and stat details."""
     import requests
+
     for p in pokemons:
         detail = requests.get(p["url"]).json()
         yield {
@@ -71,6 +75,7 @@ async def apply_fk_fixes(db_path: str):
         return
 
     import sqlite3
+
     conn = sqlite3.connect(db_path)
     with open(fix_sql) as f:
         conn.executescript(f.read())
@@ -83,11 +88,13 @@ async def ingest_into_mflow(db_path: str):
     await m_flow.prune.prune_data()
     await m_flow.prune.prune_system(metadata=True)
 
-    m_flow.config.set_relational_db_config({
-        "db_path": os.path.dirname(db_path),
-        "db_name": os.path.basename(db_path).replace(".sqlite", ""),
-        "db_provider": "sqlite",
-    })
+    m_flow.config.set_relational_db_config(
+        {
+            "db_path": os.path.dirname(db_path),
+            "db_name": os.path.basename(db_path).replace(".sqlite", ""),
+            "db_provider": "sqlite",
+        }
+    )
 
     await m_flow.add(db_path, dataset_name="pokemon_db")
     await m_flow.memorize(datasets=["pokemon_db"])
@@ -98,7 +105,8 @@ async def query_graph():
     """Run sample queries against the graph."""
     for q in ["What types of Pokémon exist?", "Which Pokémon is the heaviest?"]:
         results = await m_flow.search(
-            query_type=RecallMode.TRIPLET_COMPLETION, query_text=q,
+            query_type=RecallMode.TRIPLET_COMPLETION,
+            query_text=q,
         )
         print(f"\nQ: {q}")
         for r in results:

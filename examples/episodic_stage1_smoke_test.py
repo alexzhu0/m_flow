@@ -140,7 +140,7 @@ async def main():
     expected_node_types = {"Episode", "Facet", "Entity"}
     actual_node_types = set(node_types)
 
-    print(f"\n节点类型检查:")
+    print("\n节点类型检查:")
     print(f"  期望: {expected_node_types}")
     print(f"  实际: {actual_node_types}")
     if expected_node_types == actual_node_types:
@@ -153,7 +153,7 @@ async def main():
     expected_edge_rels = {"has_facet", "involves_entity"}
     actual_edge_rels = set(edge_rels)
 
-    print(f"\n边关系检查:")
+    print("\n边关系检查:")
     print(f"  期望: {expected_edge_rels}")
     print(f"  实际: {actual_edge_rels}")
     if expected_edge_rels == actual_edge_rels:
@@ -162,7 +162,7 @@ async def main():
         print("  ❌ FAIL")
 
     # 检查 edge_text 是否存在
-    print(f"\nedge_text 存在性检查:")
+    print("\nedge_text 存在性检查:")
     all_have_edge_text = all(e[3].get("edge_text") for e in edges)
     for e in edges:
         rel = e[2]
@@ -176,7 +176,7 @@ async def main():
         print("  ❌ FAIL - 部分边缺少 edge_text")
 
     # 检查 relationship_name 是否在 props 中
-    print(f"\nrelationship_name in props 检查:")
+    print("\nrelationship_name in props 检查:")
     all_have_rel_name = all(e[3].get("relationship_name") for e in edges)
     for e in edges:
         rel = e[2]

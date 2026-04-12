@@ -106,11 +106,7 @@ def _create_company_nodes(
     companies: Iterable[Mapping[str, Any]],
     category: OrgCategory,
 ) -> dict[str, Company]:
-    return {
-        c["name"]: Company(name=c["name"], departments=[], is_type=category)
-        for c in companies
-        if c.get("name")
-    }
+    return {c["name"]: Company(name=c["name"], departments=[], is_type=category) for c in companies if c.get("name")}
 
 
 def _link_departments(
@@ -142,9 +138,7 @@ def _link_employees(
         target = dept_nodes.get(dept_name)
         if not target:
             continue
-        target.employees = [
-            person_nodes[n] for n in _deduplicate(member_names) if n in person_nodes
-        ]
+        target.employees = [person_nodes[n] for n in _deduplicate(member_names) if n in person_nodes]
 
 
 def assemble_companies(records: Iterable[Mapping[str, Any]]) -> list[Company]:

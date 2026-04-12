@@ -1,6 +1,7 @@
 """
 Golden regression tests for time normalization.
 """
+
 import pytest
 from datetime import datetime
 from coreference_module import normalize_time

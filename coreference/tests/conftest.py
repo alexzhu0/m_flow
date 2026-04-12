@@ -3,6 +3,7 @@ Shared fixtures for regression tests.
 These tests capture the CURRENT behavior as the golden standard.
 Any refactoring must preserve these exact outputs.
 """
+
 import sys
 import os
 import pytest
@@ -15,6 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 def zh_resolver():
     """Chinese coreference resolver (session-scoped, expensive to init)."""
     from coreference_module import CoreferenceResolver
+
     return CoreferenceResolver()
 
 
@@ -22,6 +24,7 @@ def zh_resolver():
 def fresh_zh_resolver():
     """Fresh Chinese resolver (reset per test)."""
     from coreference_module import CoreferenceResolver
+
     r = CoreferenceResolver()
     r.reset()
     return r
@@ -31,6 +34,7 @@ def fresh_zh_resolver():
 def en_resolver():
     """English coreference resolver (session-scoped)."""
     from english_coreference.coreference import CoreferenceResolver
+
     return CoreferenceResolver()
 
 
@@ -38,4 +42,5 @@ def en_resolver():
 def tokenizer():
     """Chinese tokenizer."""
     from coreference_module import ChineseTokenizer
+
     return ChineseTokenizer()

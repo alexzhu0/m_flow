@@ -21,18 +21,24 @@ _VIZ = _ROOT / ".artifacts" / "graph_visualization.html"
 
 # -- Domain ontology -------------------------------------------------------
 
+
 class ResearchArea(MemoryNode):
     """A high-level research discipline."""
+
     name: str = "Research Area"
+
 
 class Topic(MemoryNode):
     """A concrete topic belonging to a research area."""
+
     name: str
     belongs_to: ResearchArea
     metadata: dict = {"index_fields": ["name"]}
 
+
 class Framework(MemoryNode):
     """An open-source framework used within topics."""
+
     name: str
     applicable_topics: List[Topic] = []
     belongs_to: ResearchArea
@@ -66,7 +72,7 @@ async def run() -> None:
     for q, mode in queries:
         hits = await search(query_text=q, query_type=mode)
         print(f"\n[{mode.value}] {q}")
-        for h in (hits if isinstance(hits, list) else [hits]):
+        for h in hits if isinstance(hits, list) else [hits]:
             print(f"  {h}")
 
 

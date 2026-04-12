@@ -214,9 +214,7 @@ class MflowClient:
 
         with redirect_stdout(sys.stderr):
             current_user = await get_seed_user()
-            return await self._engine.delete(
-                data_id=data_id, dataset_id=dataset_id, mode=mode, user=current_user
-            )
+            return await self._engine.delete(data_id=data_id, dataset_id=dataset_id, mode=mode, user=current_user)
 
     async def prune_data(self) -> Dict[str, Any]:
         """Wipe all user data from the knowledge graph.
@@ -259,14 +257,10 @@ class MflowClient:
             raise NotImplementedError("System pruning is unavailable in remote mode")
 
         with redirect_stdout(sys.stderr):
-            await self._engine.prune.prune_system(
-                graph=graph, vector=vector, metadata=metadata, cache=cache
-            )
+            await self._engine.prune.prune_system(graph=graph, vector=vector, metadata=metadata, cache=cache)
             return {"status": "success", "message": "System stores cleared"}
 
-    async def get_workflow_status(
-        self, dataset_ids: List[UUID], workflow_name: str
-    ) -> str:
+    async def get_workflow_status(self, dataset_ids: List[UUID], workflow_name: str) -> str:
         """Return human-readable status for a running pipeline.
 
         Args:
@@ -305,10 +299,7 @@ class MflowClient:
         with redirect_stdout(sys.stderr):
             current_user = await get_seed_user()
             rows = await get_datasets(current_user.id)
-            return [
-                {"id": str(r.id), "name": r.name, "created_at": str(r.created_at)}
-                for r in rows
-            ]
+            return [{"id": str(r.id), "name": r.name, "created_at": str(r.created_at)} for r in rows]
 
     async def learn(
         self,
@@ -377,9 +368,7 @@ class MflowClient:
         from m_flow import update as _update
 
         with redirect_stdout(sys.stderr):
-            result = await _update(
-                data_id=_UUID(data_id), data=data, dataset_id=_UUID(dataset_id)
-            )
+            result = await _update(data_id=_UUID(data_id), data=data, dataset_id=_UUID(dataset_id))
             return {"status": "success", "result": str(result)}
 
     async def ingest(
@@ -461,9 +450,7 @@ class MflowClient:
         from m_flow import query as _query
 
         with redirect_stdout(sys.stderr):
-            answer = await _query(
-                question=question, datasets=datasets, mode=mode, top_k=top_k
-            )
+            answer = await _query(question=question, datasets=datasets, mode=mode, top_k=top_k)
             if hasattr(answer, "answer") and answer.answer:
                 return answer.answer
             if hasattr(answer, "context"):

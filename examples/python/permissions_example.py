@@ -50,7 +50,8 @@ async def run_permissions_demo():
 
     # ── 2. Create users and ingest data ─────────────────────────────
     ai_pdf = os.path.join(
-        pathlib.Path(__file__).parent, "../data/artificial_intelligence.pdf",
+        pathlib.Path(__file__).parent,
+        "../data/artificial_intelligence.pdf",
     )
 
     print("Creating alice@example.com (user_1)")
@@ -100,7 +101,10 @@ async def run_permissions_demo():
     # ── 5. Grant cross-user read permission ─────────────────────────
     print("\nuser_2 grants user_1 read access to QUANTUM")
     await authorized_give_permission_on_datasets(
-        alice.id, [quantum_ds_id], "read", bob.id,
+        alice.id,
+        [quantum_ds_id],
+        "read",
+        bob.id,
     )
 
     cross_hits = await m_flow.search(
@@ -139,16 +143,16 @@ async def run_permissions_demo():
     print("\nAttempting role-level grant on personal QUANTUM dataset:")
     try:
         await authorized_give_permission_on_datasets(
-            researcher_role, [quantum_ds_id], "read", bob.id,
+            researcher_role,
+            [quantum_ds_id],
+            "read",
+            bob.id,
         )
     except PermissionDeniedError:
         print("  Denied — QUANTUM is not part of MflowLab")
 
     # Re-create the dataset inside the tenant context
-    print(
-        "\nRecreating QUANTUM as QUANTUM_MFLOW_LAB inside MflowLab tenant "
-        "so the role grant can succeed"
-    )
+    print("\nRecreating QUANTUM as QUANTUM_MFLOW_LAB inside MflowLab tenant so the role grant can succeed")
     bob = await get_user(bob.id)
     await m_flow.add([QUANTUM_TEXT], ds_name="QUANTUM_MFLOW_LAB", user=bob)
     tenant_q_result = await m_flow.memorize(["QUANTUM_MFLOW_LAB"], user=bob)
@@ -156,7 +160,10 @@ async def run_permissions_demo():
 
     print("\nuser_2 grants Researcher role read access on tenant QUANTUM dataset")
     await authorized_give_permission_on_datasets(
-        researcher_role, [tenant_q_ds_id], "read", bob.id,
+        researcher_role,
+        [tenant_q_ds_id],
+        "read",
+        bob.id,
     )
 
     role_hits = await m_flow.search(

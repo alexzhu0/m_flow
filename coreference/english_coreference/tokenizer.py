@@ -36,8 +36,7 @@ class EnglishTokenizer:
             self._nlp = spacy.load(self._model_name)
         except Exception as exc:  # pragma: no cover
             raise RuntimeError(
-                f"spaCy model '{self._model_name}' not found. "
-                "Run: python -m spacy download en_core_web_sm"
+                f"spaCy model '{self._model_name}' not found. Run: python -m spacy download en_core_web_sm"
             ) from exc
 
     def sentence_split(self, text: str) -> List[str]:
@@ -110,7 +109,13 @@ class EnglishTokenizer:
             low_np = np.text.lower()
             if low_np.startswith("mr ") or low_np.startswith("mr."):
                 gender = "M"
-            elif low_np.startswith("ms ") or low_np.startswith("ms.") or low_np.startswith("mrs ") or low_np.startswith("mrs.") or low_np.startswith("miss "):
+            elif (
+                low_np.startswith("ms ")
+                or low_np.startswith("ms.")
+                or low_np.startswith("mrs ")
+                or low_np.startswith("mrs.")
+                or low_np.startswith("miss ")
+            ):
                 gender = "F"
             if _overlap(np.start_char, np.end_char):
                 _fill_role(np.start_char, np.end_char, role, gender)

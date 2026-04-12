@@ -188,11 +188,11 @@ TEST_DOCUMENT = """
 async def main():
     # 检查命令行参数
     should_reset = "--reset" in sys.argv
-    
+
     print("=" * 60)
     print("测试 Episodic Memory：写入20个chunks")
     print("=" * 60)
-    
+
     # 1. 重置数据库（可选）
     if should_reset:
         print("\n[1] 重置数据库...")
@@ -201,12 +201,12 @@ async def main():
         print("  ✓ 数据库已重置")
     else:
         print("\n[1] 跳过数据库重置（使用 --reset 参数可重置）")
-    
+
     # 2. 添加文档
     print("\n[2] 添加测试文档...")
     await m_flow.add(TEST_DOCUMENT, dataset_name="customer_service_project")
     print("  ✓ 文档已添加")
-    
+
     # 3. 运行 memorize（包含 episodic 写入）
     print("\n[3] 运行 memorize（包含 episodic 写入）...")
     print("  这将触发：")
@@ -215,23 +215,25 @@ async def main():
     print("    - 文本摘要 (summarization)")
     print("    - Episodic Memory 写入")
     print("  请稍候，这可能需要1-2分钟...")
-    
+
     try:
         await m_flow.memorize(chunk_size=200)
         print("  ✓ memorize 完成！")
     except Exception as e:
         print(f"  ✗ memorize 出错: {e}")
         import traceback
+
         traceback.print_exc()
         return
-    
+
     # 4. 验证写入结果
     print("\n[4] 验证写入结果...")
-    
+
     # 检查图数据库中的节点
     from m_flow.adapters.graph import get_graph_provider
+
     graph_engine = await get_graph_provider()
-    
+
     # 查询 Episode 节点
     try:
         episode_query = """
@@ -245,7 +247,7 @@ async def main():
             print(f"    - {ep[1]}")
     except Exception as e:
         print(f"  查询 Episode 失败: {e}")
-    
+
     # 查询 Facet 节点
     try:
         facet_query = """
@@ -257,25 +259,26 @@ async def main():
         print(f"\n  Facets 数量: {len(facets)}")
         for f in facets[:5]:  # 只显示前5个
             print(f"    - {f[1]}")
-        
+
         # 显示 Facet Descriptions
         print("\n  === Facet Descriptions (凝练版) ===")
         import json as json_mod
+
         for f in facets:
-            name = f[1] if f[1] else 'N/A'
-            props_str = f[2] if len(f) > 2 else '{}'
+            name = f[1] if f[1] else "N/A"
+            props_str = f[2] if len(f) > 2 else "{}"
             try:
                 props = json_mod.loads(props_str) if isinstance(props_str, str) else props_str
             except:
                 props = {}
-            desc = props.get('description', 'N/A') if isinstance(props, dict) else 'N/A'
+            desc = props.get("description", "N/A") if isinstance(props, dict) else "N/A"
             desc_len = len(str(desc)) if desc else 0
             print(f"\n  📌 {name}")
             print(f"     描述: {desc}")
             print(f"     字数: {desc_len}")
     except Exception as e:
         print(f"  查询 Facet 失败: {e}")
-    
+
     # 查询 ContentFragment 节点
     try:
         chunk_query = """
@@ -288,12 +291,12 @@ async def main():
         print(f"\n  ContentFragments 数量: {chunk_count}")
     except Exception as e:
         print(f"  查询 ContentFragment 失败: {e}")
-    
+
     # 5. 测试 Episodic 检索精度
     print("\n[5] 测试 Episodic 检索精度...")
-    
+
     from m_flow.retrieval.utils.episodic_triplet_search import episodic_triplet_search
-    
+
     test_cases = [
         {
             "query": "这个项目的技术方案是什么？",
@@ -308,52 +311,55 @@ async def main():
             "expected": ["成本", "收益", "ROI", "节省", "万元"],
         },
     ]
-    
+
     for test in test_cases:
         query = test["query"]
         expected = test["expected"]
-        
+
         print(f"\n  Query: {query}")
         print(f"  期望关键词: {expected}")
-        
+
         try:
             triplets = await episodic_triplet_search(query=query, top_k=5)
-            
+
             if not triplets:
                 print("    ⚠ 无结果")
                 continue
-            
+
             print(f"    ✓ 返回 {len(triplets)} 个 triplets:")
-            
+
             for rank, edge in enumerate(triplets, 1):
                 n1 = edge.node1
                 n2 = edge.node2
-                
+
                 n1_type = n1.attributes.get("type", "?")
                 n1_name = n1.attributes.get("name", "?")[:30]
                 n2_type = n2.attributes.get("type", "?")
                 n2_name = n2.attributes.get("name", "?")[:40]
                 rel_type = edge.attributes.get("relationship_type") or edge.attributes.get("relationship_name", "?")
-                
+
                 # 分数
                 n1_dist = n1.attributes.get("vector_distance", 1.0)
                 n2_dist = n2.attributes.get("vector_distance", 1.0)
                 e_dist = edge.attributes.get("vector_distance", 1.0)
                 total = n1_dist + n2_dist + e_dist
-                
+
                 # 关键词匹配
-                all_text = f"{n1_name} {n2_name} {n2.attributes.get('search_text', '')} {n2.attributes.get('description', '')}"
+                all_text = (
+                    f"{n1_name} {n2_name} {n2.attributes.get('search_text', '')} {n2.attributes.get('description', '')}"
+                )
                 matched = [k for k in expected if k.lower() in all_text.lower()]
-                
+
                 marker = "🎯" if len(matched) >= 2 else "✓" if matched else "○"
                 print(f"      {marker} Rank {rank}: [{n1_type}] --[{rel_type}]--> [{n2_type}] {n2_name}")
                 print(f"         分数: {total:.3f} | 匹配: {matched if matched else '无'}")
-                
+
         except Exception as e:
             print(f"    ✗ 检索失败: {e}")
             import traceback
+
             traceback.print_exc()
-    
+
     print("\n" + "=" * 60)
     print("测试完成！")
     print("=" * 60)

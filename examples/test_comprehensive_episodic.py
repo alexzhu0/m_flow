@@ -1,6 +1,7 @@
 """
 综合测试：新解决方案的入库质量、合并/新建、并发性能、检索精度
 """
+
 import asyncio
 import os
 import time
@@ -29,7 +30,7 @@ TEST_EVENTS = [
 2. 项目目标：部署智能客服系统，预计降低成本60%，响应时间降至30秒内
 3. 技术方案：采用GPT-4o-mini作为对话引擎，Kuzu作为知识图谱存储
 4. 预算批准：总投资40万元，包含软件授权、开发、部署、培训
-5. 时间节点：11月底完成开发，12月上线试运行"""
+5. 时间节点：11月底完成开发，12月上线试运行""",
     },
     {
         "id": "智能客服项目",
@@ -43,7 +44,7 @@ TEST_EVENTS = [
 2. 知识库导入：已导入产品FAQ共1500条，常见问题200个
 3. 意图识别准确率达到92%，情感分析功能上线
 4. 存在问题：复杂多轮对话场景准确率仅75%，需优化
-5. 下周计划：优化上下文管理，引入RAG检索增强"""
+5. 下周计划：优化上下文管理，引入RAG检索增强""",
     },
     {
         "id": "智能客服项目",
@@ -61,9 +62,8 @@ TEST_EVENTS = [
 技术指标：
 - 意图识别准确率：96%
 - 问题解决率：85%
-- 转人工率：15%"""
+- 转人工率：15%""",
     },
-    
     # ========== 数据中台项目 ==========
     {
         "id": "数据中台项目",
@@ -76,7 +76,7 @@ TEST_EVENTS = [
 2. 现状：各业务系统数据孤岛，重复建设严重
 3. 架构：采用湖仓一体架构，Databricks + Delta Lake
 4. 预算：总投资180万元，分两期实施
-5. 收益预期：数据复用率提升200%，报表产出效率提升5倍"""
+5. 收益预期：数据复用率提升200%，报表产出效率提升5倍""",
     },
     {
         "id": "数据中台项目",
@@ -92,9 +92,8 @@ TEST_EVENTS = [
 3. 自助分析：上线数据集市，支持SQL和拖拽式分析
 4. 数据服务：API网关日调用量达100万次
 
-遗留问题：实时数据同步延迟约5分钟，二期需优化"""
+遗留问题：实时数据同步延迟约5分钟，二期需优化""",
     },
-    
     # ========== 员工培训计划 ==========
     {
         "id": "员工培训计划",
@@ -111,9 +110,8 @@ TEST_EVENTS = [
 - Q3：项目管理认证培训，针对PM和技术骨干
 - Q4：领导力发展计划，针对管理层
 
-预算：培训经费50万元，外部讲师费用20万元"""
+预算：培训经费50万元，外部讲师费用20万元""",
     },
-    
     # ========== 办公自动化升级 ==========
     {
         "id": "办公自动化项目",
@@ -135,9 +133,8 @@ TEST_EVENTS = [
 - 2026年2-3月：系统开发和数据迁移
 - 2026年4月：试运行和全员培训
 
-预算：软件订阅费30万/年，实施费用15万"""
+预算：软件订阅费30万/年，实施费用15万""",
     },
-    
     # ========== 安全合规项目 ==========
     {
         "id": "安全合规项目",
@@ -155,7 +152,7 @@ TEST_EVENTS = [
 整改要求：
 - 高危问题须在30天内完成整改
 - 中危问题须在60天内完成整改
-- 整改完成后提交复测申请"""
+- 整改完成后提交复测申请""",
     },
     {
         "id": "安全合规项目",
@@ -174,9 +171,8 @@ TEST_EVENTS = [
    - 日志系统升级（全量审计日志）
    - 遗留1个需等待系统升级窗口
 
-复测申请已提交，预计1月中旬完成复测"""
+复测申请已提交，预计1月中旬完成复测""",
     },
-    
     # ========== 新产品发布 ==========
     {
         "id": "新产品发布",
@@ -197,9 +193,8 @@ TEST_EVENTS = [
 - 日活用户目标：30万
 - 用户留存率目标：40%（7日留存）
 
-发布会现场：媒体到场50+家，直播观看量20万"""
+发布会现场：媒体到场50+家，直播观看量20万""",
     },
-    
     # ========== 供应链优化 ==========
     {
         "id": "供应链优化",
@@ -217,9 +212,8 @@ TEST_EVENTS = [
 - 上线供应商协同平台，实现信息实时共享
 - 建设智能仓储系统，AGV机器人自动拣货
 
-投资预算：总投资300万元，预计18个月回本"""
+投资预算：总投资300万元，预计18个月回本""",
     },
-    
     # ========== 客户成功案例 ==========
     {
         "id": "客户成功案例",
@@ -239,9 +233,8 @@ TEST_EVENTS = [
 - 业务量：月放款量增长50%
 
 客户评价："系统上线后，我们的零售贷款业务实现了质的飞跃。"
-——银行零售业务总监 陈总"""
+——银行零售业务总监 陈总""",
     },
-    
     # ========== 研发效能提升 ==========
     {
         "id": "研发效能提升",
@@ -258,9 +251,8 @@ TEST_EVENTS = [
 效能指标：
 - 发布频率：从每月1次提升至每周3次
 - 变更失败率：从15%降至3%
-- 开发满意度：从65分提升至88分"""
+- 开发满意度：从65分提升至88分""",
     },
-    
     # ========== 市场营销活动 ==========
     {
         "id": "双十一营销活动",
@@ -280,9 +272,8 @@ TEST_EVENTS = [
 渠道分析：
 - 直播带货：贡献30% GMV
 - 私域社群：贡献25% GMV
-- 公域投放：ROI达到1:5"""
+- 公域投放：ROI达到1:5""",
     },
-    
     # ========== 技术架构升级 ==========
     {
         "id": "微服务架构升级",
@@ -302,9 +293,8 @@ TEST_EVENTS = [
 改造成果：
 - 系统可用性：从99.5%提升至99.99%
 - 发布效率：单个服务可独立发布
-- 扩容速度：从2小时缩短至5分钟"""
+- 扩容速度：从2小时缩短至5分钟""",
     },
-    
     # ========== 人才招聘 ==========
     {
         "id": "人才招聘计划",
@@ -328,9 +318,8 @@ TEST_EVENTS = [
 - 社会招聘：50%（猎头+招聘网站）
 - 内推：10%（内推奖金5000元）
 
-预算：招聘费用200万元，平均获取成本2.5万/人"""
+预算：招聘费用200万元，平均获取成本2.5万/人""",
     },
-    
     # ========== 财务报告 ==========
     {
         "id": "财务季度报告",
@@ -350,9 +339,8 @@ TEST_EVENTS = [
 - 销售费用：20%
 - 研发投入：18%
 - 管理费用：12%
-- 其他：5%"""
+- 其他：5%""",
     },
-    
     # ========== 合作伙伴 ==========
     {
         "id": "战略合作签约",
@@ -373,9 +361,8 @@ TEST_EVENTS = [
 商业目标：
 - 年度联合销售额：5000万元
 - 联合客户数：50家
-- 认证解决方案：3个"""
+- 认证解决方案：3个""",
     },
-    
     # ========== 用户反馈 ==========
     {
         "id": "用户反馈分析",
@@ -398,7 +385,7 @@ TEST_EVENTS = [
 - 系统偶尔卡顿
 - 某些功能文档不完善
 
-NPS评分：45（行业平均30）"""
+NPS评分：45（行业平均30）""",
     },
 ]
 
@@ -406,11 +393,11 @@ NPS评分：45（行业平均30）"""
 async def main():
     import m_flow
     from m_flow.api.v1.search import RecallMode
-    
+
     print("=" * 80)
     print("新解决方案综合测试")
     print("=" * 80)
-    
+
     # ==================== 1. 清空数据库 ====================
     print("\n[1] 清空数据库...")
     try:
@@ -419,10 +406,10 @@ async def main():
         print("    ✅ 数据库已清空")
     except Exception as e:
         print(f"    ⚠️  清空警告: {e}")
-    
+
     # ==================== 2. 分批写入（测试合并/新建）====================
     print("\n[2] 分批写入20条事件...")
-    
+
     # 按 batch 分组
     batches: Dict[int, List[dict]] = {}
     for event in TEST_EVENTS:
@@ -430,65 +417,68 @@ async def main():
         if batch_num not in batches:
             batches[batch_num] = []
         batches[batch_num].append(event)
-    
+
     total_start = time.time()
-    
+
     for batch_num in sorted(batches.keys()):
         events = batches[batch_num]
         print(f"\n    Batch {batch_num}: {len(events)} 条事件")
-        
+
         batch_start = time.time()
-        
+
         for event in events:
             event_id = event["id"]
             content = event["content"]
-            
+
             # 使用 event_id 作为文档名，使得相同 event_id 的内容能被路由到同一个 episode
             await m_flow.add(content, dataset_name=f"episode_{event_id}")
-        
+
         # 运行 memorize
         await m_flow.memorize()
-        
+
         batch_elapsed = time.time() - batch_start
         print(f"        耗时: {batch_elapsed:.1f}s")
-    
+
     total_elapsed = time.time() - total_start
     print(f"\n    总耗时: {total_elapsed:.1f}s")
-    
+
     # ==================== 3. 检查入库质量 ====================
     print("\n[3] 检查入库质量...")
-    
+
     # 初始化计数变量
     episode_count = 0
     facet_count = 0
     point_count = 0
     entity_count = 0
-    
+
     try:
         from m_flow.adapters.graph import get_graph_provider
+
         graph_engine = await get_graph_provider()
-        
+
         # 统计 Episode
         result = await graph_engine.query("MATCH (n:Node) WHERE n.properties.type = 'Episode' RETURN count(n) as cnt")
         episode_count = result[0]["cnt"] if result else 0
-        
+
         # 统计 Facet
         result = await graph_engine.query("MATCH (n:Node) WHERE n.properties.type = 'Facet' RETURN count(n) as cnt")
         facet_count = result[0]["cnt"] if result else 0
-        
+
         # 统计 FacetPoint
-        result = await graph_engine.query("MATCH (n:Node) WHERE n.properties.type = 'FacetPoint' RETURN count(n) as cnt")
+        result = await graph_engine.query(
+            "MATCH (n:Node) WHERE n.properties.type = 'FacetPoint' RETURN count(n) as cnt"
+        )
         point_count = result[0]["cnt"] if result else 0
-        
+
         # 统计 Entity
         result = await graph_engine.query("MATCH (n:Node) WHERE n.properties.type = 'Entity' RETURN count(n) as cnt")
         entity_count = result[0]["cnt"] if result else 0
-        
+
         print(f"    Episodes: {episode_count}")
         print(f"    Facets: {facet_count}")
         print(f"    FacetPoints: {point_count}")
         print(f"    Entities: {entity_count}")
-        
+
         # 检查合并效果（智能客服项目应该只有1个episode，但有3批内容）
         result = await graph_engine.query("""
             MATCH (n:Node) 
@@ -496,13 +486,13 @@ async def main():
             RETURN n.properties.name as name, n.properties.summary as summary
             LIMIT 5
         """)
-        
+
         print("\n    前5个 Episodes:")
         for r in result:
             name = r.get("name", "")[:50]
             summary = (r.get("summary") or "")[:80]
             print(f"      - {name}: {summary}...")
-        
+
         # 检查 FacetPoints 质量
         result = await graph_engine.query("""
             MATCH (n:Node) 
@@ -510,53 +500,50 @@ async def main():
             RETURN n.properties.search_text as search_text
             LIMIT 10
         """)
-        
+
         print("\n    前10个 FacetPoints:")
         for r in result:
             st = r.get("search_text", "")[:60]
             print(f"      - {st}")
-            
+
     except Exception as e:
         print(f"    ⚠️  质量检查异常: {e}")
         import traceback
+
         traceback.print_exc()
-    
+
     # ==================== 4. 检索精度测试 ====================
     print("\n[4] 检索精度测试...")
-    
+
     test_queries = [
         # 具体数值查询
         ("智能客服系统的投资成本是多少？", ["40万"]),
         ("数据中台的预算是多少？", ["180万"]),
         ("双十一GMV是多少？", ["1.2亿"]),
         ("员工培训预算多少？", ["50万", "培训"]),
-        
         # 技术方案查询
         ("智能客服用了什么技术？", ["GPT-4o", "Kuzu"]),
         ("数据中台采用什么架构？", ["湖仓一体", "Databricks", "Delta Lake"]),
         ("DevOps平台有什么成果？", ["CI/CD", "容器化"]),
-        
         # 效果指标查询
         ("智能客服上线后效果如何？", ["响应时间", "满意度", "成本"]),
         ("安全测评发现了什么问题？", ["SQL注入", "XSS", "漏洞"]),
         ("微服务改造的效果？", ["可用性", "99.99%"]),
-        
         # 时间相关查询
         ("智能客服什么时候上线的？", ["12月", "上线"]),
         ("等保测评是什么时候？", ["11月"]),
-        
         # 综合查询
         ("有哪些和AI相关的项目？", ["智能客服", "AI", "GPT"]),
         ("财务状况怎么样？", ["营收", "利润", "8000万"]),
     ]
-    
+
     passed = 0
     failed = 0
-    
+
     for query, expected_keywords in test_queries:
         try:
             results = await m_flow.search(query_type=RecallMode.EPISODIC, query_text=query)
-            
+
             # 检查前3个结果中是否包含期望的关键词
             top_results_text = ""
             for r in results[:3]:
@@ -569,27 +556,29 @@ async def main():
                         top_results_text += str(payload) + " "
                 else:
                     top_results_text += str(r) + " "
-            
+
             # 检查是否命中
             hits = [kw for kw in expected_keywords if kw in top_results_text]
             hit_ratio = len(hits) / len(expected_keywords)
-            
+
             if hit_ratio >= 0.5:  # 至少命中一半关键词
-                print(f"    ✅ \"{query[:30]}...\" - 命中 {len(hits)}/{len(expected_keywords)}")
+                print(f'    ✅ "{query[:30]}..." - 命中 {len(hits)}/{len(expected_keywords)}')
                 passed += 1
             else:
-                print(f"    ❌ \"{query[:30]}...\" - 命中 {len(hits)}/{len(expected_keywords)}, 期望: {expected_keywords}")
+                print(
+                    f'    ❌ "{query[:30]}..." - 命中 {len(hits)}/{len(expected_keywords)}, 期望: {expected_keywords}'
+                )
                 failed += 1
-                
+
         except Exception as e:
-            print(f"    ❌ \"{query[:30]}...\" - 错误: {e}")
+            print(f'    ❌ "{query[:30]}..." - 错误: {e}')
             failed += 1
-    
+
     # ==================== 5. 总结 ====================
     print("\n" + "=" * 80)
     print("测试总结")
     print("=" * 80)
-    
+
     print(f"""
     📊 入库统计:
        - Episodes: {episode_count} (预期: ~15-17，因为有合并)
@@ -599,16 +588,16 @@ async def main():
        - 总耗时: {total_elapsed:.1f}s
     
     🎯 检索精度:
-       - 通过: {passed}/{passed+failed} ({100*passed//(passed+failed)}%)
-       - 失败: {failed}/{passed+failed}
+       - 通过: {passed}/{passed + failed} ({100 * passed // (passed + failed)}%)
+       - 失败: {failed}/{passed + failed}
     """)
-    
+
     if episode_count < 20:
         print(f"    ✅ 合并生效：20条事件生成了 {episode_count} 个 Episodes")
-    
+
     if point_count > 0:
         print(f"    ✅ FacetPoint 新方案生效：共生成 {point_count} 个细粒度点")
-    
+
     print("=" * 80)
 
 

@@ -111,6 +111,7 @@ async def main():
                 props = row[1] if row[1] else {}
                 if isinstance(props, str):
                     import json
+
                     try:
                         props = json.loads(props)
                     except:
@@ -118,7 +119,7 @@ async def main():
                 if props.get("anchor_text"):
                     has_anchor_text = True
                     anchor_val = props.get("anchor_text", "")
-                    print(f"  ✅ Facet 节点有 anchor_text:")
+                    print("  ✅ Facet 节点有 anchor_text:")
                     print(f"     - {row[0][:40]}... anchor_text: {anchor_val[:60]}...")
                     break
             if not has_anchor_text:

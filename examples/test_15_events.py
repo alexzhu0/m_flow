@@ -1,6 +1,7 @@
 """
 Test script: Write 15 different episodic events to m_flow memory bank.
 """
+
 import asyncio
 import os
 import sys
@@ -31,7 +32,7 @@ LanceDB作为向量数据库，支持本地部署，查询性能p99<100ms。Kuzu
 
 项目负责人：张三
 报告日期：2024年12月20日
-"""
+""",
     },
     {
         "title": "Q4销售业绩报告",
@@ -53,7 +54,7 @@ Q4总销售额达到1.2亿元，同比增长25%，环比增长15%。华东区贡
 
 报告人：李经理
 日期：2025年1月5日
-"""
+""",
     },
     {
         "title": "年度产品规划会议",
@@ -78,7 +79,7 @@ Q4总销售额达到1.2亿元，同比增长25%，环比增长15%。华东区贡
 - C系列国际版：10人团队，为期4个月
 
 主持人：产品VP赵总
-"""
+""",
     },
     {
         "title": "技术架构升级方案",
@@ -112,7 +113,7 @@ Q4总销售额达到1.2亿元，同比增长25%，环比增长15%。华东区贡
 
 预算：500万元
 负责人：技术VP陈工
-"""
+""",
     },
     {
         "title": "人力资源年度报告",
@@ -140,7 +141,7 @@ Q4总销售额达到1.2亿元，同比增长25%，环比增长15%。华东区贡
 - 推行OKR管理模式
 
 HR负责人：刘总监
-"""
+""",
     },
     {
         "title": "市场推广活动总结",
@@ -171,7 +172,7 @@ HR负责人：刘总监
 3. 客服响应需加强
 
 市场部负责人：周经理
-"""
+""",
     },
     {
         "title": "客户满意度调研报告",
@@ -206,7 +207,7 @@ HR负责人：刘总监
 - 希望增加培训（22%提及）
 
 调研负责人：客户成功部
-"""
+""",
     },
     {
         "title": "数据安全合规审计",
@@ -237,7 +238,7 @@ HR负责人：刘总监
 - SOC 2 Type II：进行中
 
 安全负责人：安全部王工
-"""
+""",
     },
     {
         "title": "供应链优化项目",
@@ -268,7 +269,7 @@ HR负责人：刘总监
 - 订单履约率：95%→99%
 
 项目负责人：供应链总监孙总
-"""
+""",
     },
     {
         "title": "新办公室装修计划",
@@ -305,7 +306,7 @@ HR负责人：刘总监
 - 总计：600万
 
 行政负责人：行政部钱经理
-"""
+""",
     },
     {
         "title": "AI研发中心成立",
@@ -341,7 +342,7 @@ HR负责人：刘总监
 - Q4：AI功能集成到主产品
 
 发起人：CTO吴总
-"""
+""",
     },
     {
         "title": "国际化战略规划",
@@ -379,7 +380,7 @@ HR负责人：刘总监
 - 文化差异：本地顾问团队
 
 战略负责人：CEO郑总
-"""
+""",
     },
     {
         "title": "年度财务报告",
@@ -414,7 +415,7 @@ HR负责人：刘总监
 - 营销预算：0.9亿
 
 CFO：财务VP何总
-"""
+""",
     },
     {
         "title": "员工关怀计划",
@@ -449,7 +450,7 @@ CFO：财务VP何总
 人均福利成本：8600元
 
 HR负责人：刘总监
-"""
+""",
     },
     {
         "title": "技术债务清理计划",
@@ -489,8 +490,8 @@ HR负责人：刘总监
 - Bug率降低40%
 
 技术负责人：架构师林工
-"""
-    }
+""",
+    },
 ]
 
 
@@ -498,35 +499,36 @@ async def main():
     print("=" * 60)
     print("写入 15 个事件到 m_flow 记忆库")
     print("=" * 60)
-    
+
     # Reset and setup
     print("\n[1/3] 清空数据库...")
     await m_flow.prune.prune_data()
     await m_flow.prune.prune_system(metadata=True)
-    
+
     # Add all events
     print(f"\n[2/3] 添加 {len(EVENTS)} 个事件...")
     for i, event in enumerate(EVENTS, 1):
         print(f"  - 添加事件 {i}/{len(EVENTS)}: {event['title']}")
         await m_flow.add(event["content"])
-    
+
     # Memorize
     print("\n[3/3] 处理记忆 (memorize)...")
     print("  这可能需要几分钟，请耐心等待...")
     await m_flow.memorize()
-    
+
     print("\n" + "=" * 60)
     print("✅ 完成！15 个事件已写入记忆库")
     print("=" * 60)
-    
+
     # Quick stats
     from m_flow.adapters.graph import get_graph_provider
+
     graph_engine = await get_graph_provider()
-    
+
     try:
         episodes = await graph_engine.query("MATCH (n:Episode) RETURN count(n) as cnt")
         facets = await graph_engine.query("MATCH (n:Facet) RETURN count(n) as cnt")
-        print(f"\n📊 统计:")
+        print("\n📊 统计:")
         print(f"  - Episodes: {episodes[0]['cnt'] if episodes else 0}")
         print(f"  - Facets: {facets[0]['cnt'] if facets else 0}")
     except:

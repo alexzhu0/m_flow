@@ -69,7 +69,8 @@ async def run_custom_pipeline_demo():
     query = "What is artificial intelligence?"
     print(f"Querying M-Flow: '{query}'")
     hits = await m_flow.search(
-        query_type=RecallMode.TRIPLET_COMPLETION, query_text=query,
+        query_type=RecallMode.TRIPLET_COMPLETION,
+        query_text=query,
     )
 
     print("Results:")

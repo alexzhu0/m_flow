@@ -12,6 +12,7 @@ import m_flow
 
 # --- Domain: Music library with weighted relationships ---
 
+
 class Song(MemoryNode):
     title: str
     genre: str
@@ -24,9 +25,9 @@ class Playlist(MemoryNode):
 
 class Listener(MemoryNode):
     name: str
-    favorites: SkipValidation[Any]     # (Edge, list[Song]) with play_count weight
-    playlists: SkipValidation[Any]     # (Edge, list[Playlist])
-    follows: SkipValidation[Any]       # (Edge, list["Listener"])
+    favorites: SkipValidation[Any]  # (Edge, list[Song]) with play_count weight
+    playlists: SkipValidation[Any]  # (Edge, list[Playlist])
+    follows: SkipValidation[Any]  # (Edge, list["Listener"])
 
 
 async def run():

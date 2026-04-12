@@ -1,6 +1,7 @@
 """
 Modal容器镜像配置
 """
+
 from __future__ import annotations
 
 import pathlib

@@ -74,7 +74,7 @@ async def main():
         is_part_of=doc,
         contains=[entity1, entity2],
     )
-    print(f"✓ 创建 ContentFragment x2")
+    print("✓ 创建 ContentFragment x2")
 
     # 创建 FragmentDigest
     summary1 = FragmentDigest(
@@ -88,7 +88,7 @@ async def main():
         text="促销带来销量提升但毛利下降约 2pct。",
         made_from=chunk2,
     )
-    print(f"✓ 创建 FragmentDigest x2")
+    print("✓ 创建 FragmentDigest x2")
 
     # 2. 调用 write_episodic_memories
     print("\n" + "-" * 60)
@@ -131,7 +131,7 @@ async def main():
             other_count += 1
             print(f"  [{item_type}] id={item.id}")
 
-    print(f"\n统计:")
+    print("\n统计:")
     print(f"  FragmentDigest: {summaries_count} (应为 2)")
     print(f"  MemorySpace: {nodesets_count} (应为 1)")
     print(f"  Episode: {episodes_count} (应为 1)")
@@ -175,13 +175,13 @@ async def main():
         has_involves_entity = "involves_entity" in edge_types
         has_memory_spaces = "memory_spaces" in edge_types
 
-        print(f"\n边类型检查:")
+        print("\n边类型检查:")
         print(f"  involves_entity: {'✅' if has_involves_entity else '❌'}")
         print(f"  memory_spaces: {'✅' if has_memory_spaces else '❌'}")
 
         # 检查 Entity 是否也 memory_spaces（Stage 3.0 关键修正）
         entity_in_nodes = any(type(n).__name__ == "Entity" for n in nodes)
-        print(f"\n实体关联检查:")
+        print("\n实体关联检查:")
         print(f"  Entity 在 nodes 中: {'✅' if entity_in_nodes else '❌'}")
 
         all_pass = (

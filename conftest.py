@@ -5,6 +5,7 @@ Ensures proper Python path setup for test discovery.
 This file uses pytest_configure which is one of the earliest hooks,
 executed before any test collection begins.
 """
+
 import sys
 from pathlib import Path
 
@@ -16,19 +17,20 @@ if str(project_root) not in sys.path:
 
 def pytest_configure(config):
     """
-    Called after command line options have been parsed and all plugins 
+    Called after command line options have been parsed and all plugins
     and initial conftest files been loaded.
-    
+
     This is one of the earliest hooks, executed before test collection.
     """
     # Ensure project root is in sys.path
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
-    
+
     # Pre-import m_flow to ensure it's recognized as the correct package
     # This prevents path resolution issues during test collection
     try:
         import m_flow
+
         # Verify m_flow is loaded from the correct location
         expected_path = str(project_root / "m_flow" / "__init__.py")
         actual_path = str(Path(m_flow.__file__).resolve())

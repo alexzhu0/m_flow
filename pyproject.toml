@@ -279,7 +279,9 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "m_flow/tests/**" = ["S101", "PLR2004", "E712"]
-"examples/**" = ["T201"]
+"examples/**" = ["T201", "E712", "E722", "F841"]
+"coreference/**" = ["F841", "F601"]
+"m_flow-mcp/**" = ["E701"]
 
 # ---------------------------------------------------------------------------
 # Testing

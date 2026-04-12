@@ -64,6 +64,7 @@ async def run_migration_demo():
     graph_engine = await get_graph_provider()
     print("Migrating relational data into the graph store …")
     from m_flow.ingestion.pipeline_tasks import migrate_relational_database
+
     await migrate_relational_database(graph_engine, schema=db_schema)
     print("Migration complete.")
 

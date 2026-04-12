@@ -2,6 +2,7 @@
 Branch coverage tests for _find_replacement() and resolve_sentence().
 These capture CURRENT behavior as golden standard for refactoring safety.
 """
+
 import pytest
 from coreference_module import CoreferenceResolver
 
@@ -50,13 +51,13 @@ class TestEventPronoun:
     def test_zhejianshi(self):
         """这件事 should be resolved to event summary."""
         out, reps = _resolve_with_reps("小明迟到了。这件事让老师很生气。")
-        event_reps = [r for r in reps if r['pronoun'] == '这件事']
+        event_reps = [r for r in reps if r["pronoun"] == "这件事"]
         assert len(event_reps) > 0, "这件事 should be resolved"
 
     def test_single_char_event(self):
         """Single-char 这 with trigger verb should be resolved."""
         out, reps = _resolve_with_reps("他考试作弊。这让大家很失望。")
-        event_reps = [r for r in reps if r['pronoun'] == '这']
+        event_reps = [r for r in reps if r["pronoun"] == "这"]
         assert len(event_reps) > 0, "这 with trigger should be resolved"
 
 
@@ -67,7 +68,7 @@ class TestFormalDeictic:
     def test_gai_gongsi(self):
         """该公司 should be resolved (formal deictic)."""
         out, reps = _resolve_with_reps("公司决定裁员。该公司已发布公告。")
-        formal_reps = [r for r in reps if r['pronoun'] == '该公司']
+        formal_reps = [r for r in reps if r["pronoun"] == "该公司"]
         assert len(formal_reps) > 0, "该公司 should be resolved"
 
 
@@ -78,7 +79,7 @@ class TestDuifang:
     def test_duifang_resolved(self):
         """对方 in dialogue context should be resolved."""
         out, reps = _resolve_with_reps("张三对李四说了一句话。对方很生气。")
-        duifang_reps = [r for r in reps if r['pronoun'] == '对方']
+        duifang_reps = [r for r in reps if r["pronoun"] == "对方"]
         assert len(duifang_reps) > 0, "对方 should be resolved in speech context"
 
 
@@ -109,7 +110,7 @@ class TestDescriptivePhrase:
     def test_nage_ren_resolved(self):
         """那个人 with unique candidate should be resolved."""
         out, reps = _resolve_with_reps("小明来了。那个人很友好。")
-        desc_reps = [r for r in reps if r['pronoun'] == '那个人']
+        desc_reps = [r for r in reps if r["pronoun"] == "那个人"]
         assert len(desc_reps) > 0, "那个人 should be resolved when unique candidate"
 
 
@@ -180,7 +181,7 @@ class TestFormalDeicticStandalone:
     def test_shangshu_compound_resolved(self):
         """上述方案 as formal deictic should be resolved when antecedent exists."""
         out, reps = _resolve_with_reps("方案已提交。上述方案需要审核。")
-        formal_reps = [rep for rep in reps if '上述' in rep['pronoun']]
+        formal_reps = [rep for rep in reps if "上述" in rep["pronoun"]]
         assert len(formal_reps) > 0 or "上述方案" in out  # either resolved or kept
 
     def test_shangshu_standalone_resolved(self):

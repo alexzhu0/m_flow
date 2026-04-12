@@ -10,6 +10,7 @@ Usage:
     cd mflow-main/m_flow-mcp
     python src/test_e2e_real.py
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -143,31 +144,40 @@ class E2ERealTest:
 
                 # Search EPISODIC
                 print("  [4] Search EPISODIC: 'Where was Einstein born?'")
-                result = await sess.call_tool("search", arguments={
-                    "search_query": "Where was Einstein born?",
-                    "recall_mode": "EPISODIC",
-                    "top_k": 5,
-                })
+                result = await sess.call_tool(
+                    "search",
+                    arguments={
+                        "search_query": "Where was Einstein born?",
+                        "recall_mode": "EPISODIC",
+                        "top_k": 5,
+                    },
+                )
                 text = self.get_text(result)
                 print(f"      Result ({len(text)} chars): {text[:120]}...")
                 ep_ok = self.assert_contains(text, ["ulm", "germany", "einstein"], "EPISODIC search")
 
                 # Search CHUNKS_LEXICAL
                 print("  [5] Search CHUNKS_LEXICAL: 'Einstein'")
-                result = await sess.call_tool("search", arguments={
-                    "search_query": "Einstein relativity",
-                    "recall_mode": "CHUNKS_LEXICAL",
-                    "top_k": 3,
-                })
+                result = await sess.call_tool(
+                    "search",
+                    arguments={
+                        "search_query": "Einstein relativity",
+                        "recall_mode": "CHUNKS_LEXICAL",
+                        "top_k": 3,
+                    },
+                )
                 text = self.get_text(result)
                 print(f"      Result ({len(text)} chars): {text[:120]}...")
                 lex_ok = self.assert_contains(text, ["einstein", "relativity"], "LEXICAL search")
 
                 # Query
                 print("  [6] Query: 'What did Einstein develop?'")
-                result = await sess.call_tool("query", arguments={
-                    "question": "What did Einstein develop?",
-                })
+                result = await sess.call_tool(
+                    "query",
+                    arguments={
+                        "question": "What did Einstein develop?",
+                    },
+                )
                 text = self.get_text(result)
                 print(f"      Result ({len(text)} chars): {text[:120]}...")
                 q_ok = self.assert_contains(text, ["relativity", "einstein"], "query")
@@ -176,7 +186,10 @@ class E2ERealTest:
                     self.results["ingest_search_loop"] = {"status": "PASS"}
                     print("  PASS")
                 else:
-                    self.results["ingest_search_loop"] = {"status": "PARTIAL", "detail": f"ep={ep_ok} lex={lex_ok} q={q_ok}"}
+                    self.results["ingest_search_loop"] = {
+                        "status": "PARTIAL",
+                        "detail": f"ep={ep_ok} lex={lex_ok} q={q_ok}",
+                    }
                     print(f"  PARTIAL: ep={ep_ok} lex={lex_ok} q={q_ok}")
 
         except Exception as e:
@@ -201,25 +214,29 @@ class E2ERealTest:
 
                 # Try to extract dataset_id from the list
                 import re
-                ids = re.findall(r'ID:\s*([0-9a-f-]{36})', text)
+
+                ids = re.findall(r"ID:\s*([0-9a-f-]{36})", text)
                 if len(ids) >= 2:
                     dataset_id = ids[0]
                     print(f"      Dataset ID: {dataset_id}")
                     # Get data items
                     result2 = await sess.call_tool("list_data", arguments={"dataset_id": dataset_id})
                     text2 = self.get_text(result2)
-                    data_ids = re.findall(r'ID:\s*([0-9a-f-]{36})', text2)
+                    data_ids = re.findall(r"ID:\s*([0-9a-f-]{36})", text2)
                     if len(data_ids) >= 2:
                         data_id = data_ids[1]
                         print(f"      Data ID: {data_id}")
 
                         # Delete
                         print(f"  [2] Delete data_id={data_id[:8]}...")
-                        result = await sess.call_tool("delete", arguments={
-                            "data_id": data_id,
-                            "dataset_id": dataset_id,
-                            "mode": "hard",
-                        })
+                        result = await sess.call_tool(
+                            "delete",
+                            arguments={
+                                "data_id": data_id,
+                                "dataset_id": dataset_id,
+                                "mode": "hard",
+                            },
+                        )
                         text = self.get_text(result)
                         print(f"      Result: {text[:80]}")
 
@@ -252,9 +269,12 @@ class E2ERealTest:
 
                 # Ingest
                 print("  [2] Ingest: 'The capital of France is Paris.'")
-                await sess.call_tool("ingest", arguments={
-                    "data": "The capital of France is Paris. It is known for the Eiffel Tower.",
-                })
+                await sess.call_tool(
+                    "ingest",
+                    arguments={
+                        "data": "The capital of France is Paris. It is known for the Eiffel Tower.",
+                    },
+                )
 
                 print("  [3] Waiting for memorize...")
                 ok = await self.wait_memorize(sess)
@@ -263,11 +283,14 @@ class E2ERealTest:
 
                 # Search to verify
                 print("  [4] Search: 'capital of France'")
-                result = await sess.call_tool("search", arguments={
-                    "search_query": "capital of France",
-                    "recall_mode": "EPISODIC",
-                    "top_k": 3,
-                })
+                result = await sess.call_tool(
+                    "search",
+                    arguments={
+                        "search_query": "capital of France",
+                        "recall_mode": "EPISODIC",
+                        "top_k": 3,
+                    },
+                )
                 text = self.get_text(result)
                 print(f"      Result: {text[:100]}...")
                 ok1 = self.assert_contains(text, ["paris", "france", "eiffel"], "initial search")
@@ -357,11 +380,14 @@ class E2ERealTest:
                 for mode in ["EPISODIC", "TRIPLET_COMPLETION", "CHUNKS_LEXICAL"]:
                     print(f"  [4] Search {mode}: '{question}'")
                     try:
-                        result = await sess.call_tool("search", arguments={
-                            "search_query": question,
-                            "recall_mode": mode,
-                            "top_k": 5,
-                        })
+                        result = await sess.call_tool(
+                            "search",
+                            arguments={
+                                "search_query": question,
+                                "recall_mode": mode,
+                                "top_k": 5,
+                            },
+                        )
                         text = self.get_text(result)
                         has_answer = self.assert_contains(text, ["musk", "elon", "tesla"], f"{mode}")
                         if has_answer:
@@ -373,7 +399,10 @@ class E2ERealTest:
                         print(f"      {mode}: ERROR - {e}")
 
                 if modes_ok >= 2:
-                    self.results["multimode_consistency"] = {"status": "PASS", "detail": f"{modes_ok}/3 modes found answer"}
+                    self.results["multimode_consistency"] = {
+                        "status": "PASS",
+                        "detail": f"{modes_ok}/3 modes found answer",
+                    }
                     print(f"  PASS ({modes_ok}/3 modes)")
                 elif modes_ok >= 1:
                     self.results["multimode_consistency"] = {"status": "PARTIAL", "detail": f"{modes_ok}/3 modes"}
@@ -420,10 +449,14 @@ class E2ERealTest:
             detail = f" ({r['detail']})" if "detail" in r else ""
             error = f" [{r['error'][:60]}]" if "error" in r else ""
             print(f"  [{icon}] {name}: {s}{detail}{error}")
-            if s == "PASS": passed += 1
-            elif s == "FAIL": failed += 1
-            elif s == "PARTIAL": partial += 1
-            elif s == "SKIP": skipped += 1
+            if s == "PASS":
+                passed += 1
+            elif s == "FAIL":
+                failed += 1
+            elif s == "PARTIAL":
+                partial += 1
+            elif s == "SKIP":
+                skipped += 1
 
         total = passed + failed + partial + skipped
         print(f"\n  Total: {total} | Pass: {passed} | Partial: {partial} | Fail: {failed} | Skip: {skipped}")

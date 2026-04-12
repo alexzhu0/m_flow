@@ -9,8 +9,10 @@ from m_flow.storage import persist_memory_nodes
 
 # --- Domain models ---
 
+
 class Cuisines(MemoryNode):
     name: str = "Cuisines"
+
 
 cuisine_root = Cuisines()
 
@@ -25,6 +27,7 @@ class Cuisine(MemoryNode):
 class Ingredients(MemoryNode):
     name: str = "Ingredients"
 
+
 ingredient_root = Ingredients()
 
 
@@ -37,6 +40,7 @@ class Ingredient(MemoryNode):
 
 class Diets(MemoryNode):
     name: str = "Diets"
+
 
 diet_root = Diets()
 
@@ -87,19 +91,29 @@ DIETS = [
 ]
 
 RECIPES = [
-    Recipe(name="Margherita Pizza", cuisine=CUISINES[0],
-           ingredients=[INGREDIENTS[0], INGREDIENTS[1], INGREDIENTS[2]], prep_time_minutes=30),
-    Recipe(name="Salmon Sushi Bowl", cuisine=CUISINES[1],
-           ingredients=[INGREDIENTS[3], INGREDIENTS[4], INGREDIENTS[5]], prep_time_minutes=20),
-    Recipe(name="Veggie Burrito", cuisine=CUISINES[2],
-           ingredients=[INGREDIENTS[5], INGREDIENTS[6], INGREDIENTS[0]], prep_time_minutes=15),
+    Recipe(
+        name="Margherita Pizza",
+        cuisine=CUISINES[0],
+        ingredients=[INGREDIENTS[0], INGREDIENTS[1], INGREDIENTS[2]],
+        prep_time_minutes=30,
+    ),
+    Recipe(
+        name="Salmon Sushi Bowl",
+        cuisine=CUISINES[1],
+        ingredients=[INGREDIENTS[3], INGREDIENTS[4], INGREDIENTS[5]],
+        prep_time_minutes=20,
+    ),
+    Recipe(
+        name="Veggie Burrito",
+        cuisine=CUISINES[2],
+        ingredients=[INGREDIENTS[5], INGREDIENTS[6], INGREDIENTS[0]],
+        prep_time_minutes=15,
+    ),
 ]
 
 USERS = [
-    UserProfile(name="Alice", preferred_cuisines=[CUISINES[0], CUISINES[1]],
-                dietary_needs=[DIETS[0]]),
-    UserProfile(name="Bob", preferred_cuisines=[CUISINES[2]],
-                dietary_needs=[DIETS[1]]),
+    UserProfile(name="Alice", preferred_cuisines=[CUISINES[0], CUISINES[1]], dietary_needs=[DIETS[0]]),
+    UserProfile(name="Bob", preferred_cuisines=[CUISINES[2]], dietary_needs=[DIETS[1]]),
 ]
 
 

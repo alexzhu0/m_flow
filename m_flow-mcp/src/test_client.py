@@ -4,6 +4,7 @@ M-flow MCP服务器测试客户端
 
 测试MCP服务器的所有工具和功能
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -84,8 +85,17 @@ class MCPTestClient:
             async with self.session() as sess:
                 tools = await sess.list_tools()
                 expected = {
-                    "memorize", "save_interaction", "search", "prune", "memorize_status",
-                    "list_data", "delete", "learn", "update_data", "ingest", "query"
+                    "memorize",
+                    "save_interaction",
+                    "search",
+                    "prune",
+                    "memorize_status",
+                    "list_data",
+                    "delete",
+                    "learn",
+                    "update_data",
+                    "ingest",
+                    "query",
                 }
                 found = {t.name for t in tools.tools}
 
@@ -297,12 +307,7 @@ class MCPTestClient:
         try:
             async with self.session() as sess:
                 result = await sess.call_tool(
-                    "update_data",
-                    arguments={
-                        "data_id": "invalid",
-                        "data": "test",
-                        "dataset_id": "invalid"
-                    }
+                    "update_data", arguments={"data_id": "invalid", "data": "test", "dataset_id": "invalid"}
                 )
                 content = result.content[0].text if result.content else ""
                 if "UUID" in content or "格式" in content:
@@ -319,10 +324,7 @@ class MCPTestClient:
         print("\n🧪 测试 ingest...")
         try:
             async with self.session() as sess:
-                result = await sess.call_tool(
-                    "ingest",
-                    arguments={"data": "测试数据入库"}
-                )
+                result = await sess.call_tool("ingest", arguments={"data": "测试数据入库"})
                 content = result.content[0].text if result.content else ""
                 if "入库" in content or "已入库" in content:
                     self.results["ingest"] = {"status": "PASS"}
@@ -339,10 +341,7 @@ class MCPTestClient:
         print("\n🧪 测试 query...")
         try:
             async with self.session() as sess:
-                result = await sess.call_tool(
-                    "query",
-                    arguments={"question": "测试问题"}
-                )
+                result = await sess.call_tool("query", arguments={"question": "测试问题"})
                 if result.content:
                     self.results["query"] = {"status": "PASS"}
                     print("✅ query 通过")
@@ -357,10 +356,7 @@ class MCPTestClient:
         print("\n🧪 测试 query 无效模式...")
         try:
             async with self.session() as sess:
-                result = await sess.call_tool(
-                    "query",
-                    arguments={"question": "测试", "mode": "INVALID_MODE"}
-                )
+                result = await sess.call_tool("query", arguments={"question": "测试", "mode": "INVALID_MODE"})
                 content = result.content[0].text if result.content else ""
                 if "无效的查询模式" in content:
                     self.results["query_invalid_mode"] = {"status": "PASS"}
@@ -377,8 +373,7 @@ class MCPTestClient:
         try:
             async with self.session() as sess:
                 result = await sess.call_tool(
-                    "save_interaction",
-                    arguments={"data": "用户: 你好\n助手: 你好！有什么可以帮助你的？"}
+                    "save_interaction", arguments={"data": "用户: 你好\n助手: 你好！有什么可以帮助你的？"}
                 )
                 content = result.content[0].text if result.content else ""
                 if "后台任务已启动" in content or "交互" in content:
@@ -401,8 +396,8 @@ class MCPTestClient:
                     arguments={
                         "data_id": "00000000-0000-0000-0000-000000000000",
                         "dataset_id": "00000000-0000-0000-0000-000000000000",
-                        "mode": "INVALID_MODE"
-                    }
+                        "mode": "INVALID_MODE",
+                    },
                 )
                 content = result.content[0].text if result.content else ""
                 if "无效的删除模式" in content:
@@ -424,8 +419,8 @@ class MCPTestClient:
                     arguments={
                         "data": "仅入库不记忆化的测试数据",
                         "dataset_name": "skip_test_dataset",
-                        "skip_memorize": True
-                    }
+                        "skip_memorize": True,
+                    },
                 )
                 content = result.content[0].text if result.content else ""
                 if "入库" in content or "已入库" in content or "skip_test_dataset" in content:
@@ -444,11 +439,7 @@ class MCPTestClient:
         try:
             async with self.session() as sess:
                 result = await sess.call_tool(
-                    "learn",
-                    arguments={
-                        "datasets": ["test_dataset"],
-                        "run_in_background": False
-                    }
+                    "learn", arguments={"datasets": ["test_dataset"], "run_in_background": False}
                 )
                 content = result.content[0].text if result.content else ""
                 if "学习完成" in content or "API" in content or "直接模式" in content:
@@ -468,12 +459,7 @@ class MCPTestClient:
             async with self.session() as sess:
                 result = await sess.call_tool(
                     "query",
-                    arguments={
-                        "question": "测试问题",
-                        "datasets": ["test_dataset"],
-                        "mode": "episodic",
-                        "top_k": 5
-                    }
+                    arguments={"question": "测试问题", "datasets": ["test_dataset"], "mode": "episodic", "top_k": 5},
                 )
                 if result.content:
                     self.results["query_with_datasets"] = {"status": "PASS"}
@@ -489,10 +475,7 @@ class MCPTestClient:
         print("\n🧪 测试 query 无效 top_k...")
         try:
             async with self.session() as sess:
-                result = await sess.call_tool(
-                    "query",
-                    arguments={"question": "测试", "top_k": 200}
-                )
+                result = await sess.call_tool("query", arguments={"question": "测试", "top_k": 200})
                 content = result.content[0].text if result.content else ""
                 if "无效的 top_k" in content:
                     self.results["query_invalid_top_k"] = {"status": "PASS"}
@@ -509,12 +492,7 @@ class MCPTestClient:
         try:
             async with self.session() as sess:
                 result = await sess.call_tool(
-                    "search",
-                    arguments={
-                        "search_query": "测试",
-                        "recall_mode": "EPISODIC",
-                        "top_k": 150
-                    }
+                    "search", arguments={"search_query": "测试", "recall_mode": "EPISODIC", "top_k": 150}
                 )
                 content = result.content[0].text if result.content else ""
                 if "无效的 top_k" in content:
@@ -553,7 +531,7 @@ class MCPTestClient:
                 self.results["edges_to_string"] = {"status": "PASS"}
                 print("✅ edges_to_string 通过")
             else:
-                self.results["edges_to_string"] = {"status": "FAIL", "error": f"不匹配"}
+                self.results["edges_to_string"] = {"status": "FAIL", "error": "不匹配"}
                 print("❌ edges_to_string 失败")
         except Exception as e:
             self.results["edges_to_string"] = {"status": "FAIL", "error": str(e)}
@@ -582,29 +560,29 @@ class MCPTestClient:
         print("=" * 50)
 
         await self.setup()
-        
+
         # ===== 基础功能测试 =====
         await self.test_startup()
         await self.test_prune()
         await self.test_prune_with_params()
-        
+
         # ===== memorize 测试 =====
         await self.test_memorize("AI正在改变世界", "memorize_1")
         await self.test_memorize("NLP是计算机科学的子领域", "memorize_2")
         await self.test_memorize_with_dataset()
         await self.test_save_interaction()
-        
+
         # ===== 数据管理测试 =====
         await self.test_list_data()
         await self.test_delete()
         await self.test_delete_invalid_mode()
-        
+
         # ===== search 测试 =====
         await self.test_search()
         await self.test_search_invalid_mode()
         await self.test_search_with_datasets()
         await self.test_search_invalid_top_k()
-        
+
         # ===== 阶段 4 新增工具测试 =====
         await self.test_learn()
         await self.test_learn_with_params()
@@ -615,11 +593,11 @@ class MCPTestClient:
         await self.test_query_invalid_mode()
         await self.test_query_with_datasets()
         await self.test_query_invalid_top_k()
-        
+
         # ===== 工具函数测试 =====
         self.test_utils()
         self.test_load_class()
-        
+
         await self.cleanup()
 
         self._summary()

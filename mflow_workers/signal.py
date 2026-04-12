@@ -4,6 +4,7 @@ Sentinel tokens for multiprocess / async queue fan-out.
 These values are not graph payloads; workers compare against them to cascade
 shutdown without scattering bare string literals across worker code.
 """
+
 from __future__ import annotations
 
 from enum import Enum

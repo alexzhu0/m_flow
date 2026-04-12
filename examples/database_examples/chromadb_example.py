@@ -18,11 +18,13 @@ async def run():
     root = pathlib.Path(__file__).parent
 
     # Point M-flow at ChromaDB
-    m_flow.config.set_vector_db_config({
-        "vector_db_url": "http://localhost:8000",
-        "vector_db_key": "",
-        "vector_db_provider": "chromadb",
-    })
+    m_flow.config.set_vector_db_config(
+        {
+            "vector_db_url": "http://localhost:8000",
+            "vector_db_key": "",
+            "vector_db_provider": "chromadb",
+        }
+    )
     m_flow.config.data_root_directory(str(root / "data_storage"))
     m_flow.config.system_root_directory(str(root / "mflow/system"))
 
