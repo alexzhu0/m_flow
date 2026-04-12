@@ -41,6 +41,7 @@ env:
 
 jobs:
   mflow_nbconvert_gate:
+    if: false  # notebook runner not configured
     name: Execute ${{ inputs.notebook-location }}
     runs-on: ubuntu-22.04
     timeout-minutes: 25

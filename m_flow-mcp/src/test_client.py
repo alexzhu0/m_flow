@@ -19,7 +19,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from m_flow.adapters.exceptions import DatabaseNotCreatedError
-from m_flow.pipeline.models.WorkflowRun import RunStatus
+from m_flow.pipeline.models.PipelineRun import RunStatus
 from m_flow.shared.logging_utils import setup_logging
 from src.server import load_class, node_to_string, retrieved_edges_to_string
 

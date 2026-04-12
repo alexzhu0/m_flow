@@ -111,7 +111,7 @@ async def check_unbounded_search():
     embedding = (await vector_db.embedding_engine.embed_text([query]))[0]
 
     search_results = await vector_db.search(
-        collection_name="Concept_name",
+        collection_name="Entity_name",
         query_vector=embedding,
         limit=None,
     )
@@ -164,7 +164,7 @@ async def main():
 
     vector_db = get_vector_provider()
 
-    concept_match = (await vector_db.search("Concept_name", "Quantum computer"))[0]
+    concept_match = (await vector_db.search("Entity_name", "Quantum computer"))[0]
     concept_text = concept_match.payload["text"]
 
     # TRIPLET_COMPLETION mode

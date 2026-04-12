@@ -113,7 +113,7 @@ async def validate_unlimited_vector_search():
     query_embedding = (await vec_engine.embedding_engine.embed_text([search_query]))[0]
 
     unlimited_results = await vec_engine.search(
-        collection_name="Concept_name",
+        collection_name="Entity_name",
         query_vector=query_embedding,
         limit=None,
     )
@@ -168,7 +168,7 @@ async def main():
 
     vec_engine = get_vector_provider()
 
-    concept_results = await vec_engine.search("Concept_name", "Quantum computer")
+    concept_results = await vec_engine.search("Entity_name", "Quantum computer")
     sample_concept = concept_results[0].payload["text"]
 
     # Test TRIPLET_COMPLETION search

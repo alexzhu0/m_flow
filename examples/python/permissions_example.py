@@ -56,11 +56,11 @@ async def run_permissions_demo():
 
     print("Creating alice@example.com (user_1)")
     alice = await create_user("user_1@example.com", "example")
-    await m_flow.add([ai_pdf], ds_name="AI", user=alice)
+    await m_flow.add([ai_pdf], dataset_name="AI", user=alice)
 
     print("\nCreating bob@example.com (user_2)")
     bob = await create_user("user_2@example.com", "example")
-    await m_flow.add([QUANTUM_TEXT], ds_name="QUANTUM", user=bob)
+    await m_flow.add([QUANTUM_TEXT], dataset_name="QUANTUM", user=bob)
 
     # ── 3. Build knowledge graphs for each dataset ──────────────────
     print("\nBuilding KG for user_1 (AI) and user_2 (QUANTUM)")
@@ -154,7 +154,7 @@ async def run_permissions_demo():
     # Re-create the dataset inside the tenant context
     print("\nRecreating QUANTUM as QUANTUM_MFLOW_LAB inside MflowLab tenant so the role grant can succeed")
     bob = await get_user(bob.id)
-    await m_flow.add([QUANTUM_TEXT], ds_name="QUANTUM_MFLOW_LAB", user=bob)
+    await m_flow.add([QUANTUM_TEXT], dataset_name="QUANTUM_MFLOW_LAB", user=bob)
     tenant_q_result = await m_flow.memorize(["QUANTUM_MFLOW_LAB"], user=bob)
     tenant_q_ds_id = _first_dataset_id(tenant_q_result)
 

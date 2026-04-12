@@ -88,7 +88,7 @@ jobs:
     services:
       postgres:
         image: pgvector/pgvector:pg17
-        env: {POSTGRES_USER: m_flow, POSTGRES_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}", POSTGRES_DB: m_flow_db}
+        env: {POSTGRES_USER: m_flow, POSTGRES_PASSWORD: "m_flow", POSTGRES_DB: m_flow_db}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s

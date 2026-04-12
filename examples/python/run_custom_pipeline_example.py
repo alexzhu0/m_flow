@@ -11,7 +11,7 @@ import m_flow
 from m_flow.api.v1.search import RecallMode
 from m_flow.auth.methods import get_seed_user
 from m_flow.core.domain.operations.setup import setup
-from m_flow.pipeline import Task
+from m_flow.pipeline import Stage
 from m_flow.shared.logging_utils import setup_logging, INFO
 
 SAMPLE_TEXT = """
@@ -39,8 +39,8 @@ async def run_custom_pipeline_demo():
     current_user = await get_seed_user()
 
     ingestion_steps = [
-        Task(resolve_data_directories, include_subdirectories=True),
-        Task(ingest_data, "main_dataset", current_user),
+        Stage(resolve_data_directories, include_subdirectories=True),
+        Stage(ingest_data, "main_dataset", current_user),
     ]
 
     await m_flow.run_custom_pipeline(

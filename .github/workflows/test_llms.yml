@@ -31,26 +31,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [gemini, fastembed, openrouter]
+        tag: [fastembed]  # gemini (requires GEMINI_API_KEY) and openrouter (requires OPENROUTER_API_KEY) skipped
         include:
-          - tag: gemini
-            llm_provider: "gemini"
-            embedding_provider: "gemini"
-            embedding_model: "gemini/text-embedding-004"
-            embedding_dimensions: "768"
-            embedding_max_tokens: "8076"
           - tag: fastembed
             llm_provider: "openai"
             embedding_provider: "fastembed"
             embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
             embedding_dimensions: "384"
             embedding_max_tokens: "256"
-          - tag: openrouter
-            llm_provider: "custom"
-            embedding_provider: "openai"
-            embedding_model: "openai/text-embedding-3-large"
-            embedding_dimensions: "3072"
-            embedding_max_tokens: "8191"
+          # openrouter skipped — requires OPENROUTER_API_KEY
+          # - tag: openrouter
+          #   llm_provider: "custom"
+          #   embedding_provider: "openai"
+          #   embedding_model: "openai/text-embedding-3-large"
+          #   embedding_dimensions: "3072"
+          #   embedding_max_tokens: "8191"
     steps:
       - uses: actions/checkout@v4
         name: "Clone M-Flow source tree"
@@ -88,6 +83,7 @@ jobs:
 
   # ── AWS Bedrock authentication variants (consolidated matrix) ──────────
   bedrock-auth-matrix:
+    if: false  # requires AWS Bedrock credentials
     timeout-minutes: 20
     runs-on: ubuntu-22.04
     name: "Verify Bedrock (${{ matrix.auth_strategy }}) integration"

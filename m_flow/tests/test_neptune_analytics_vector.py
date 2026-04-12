@@ -101,7 +101,7 @@ async def run_neptune_integration_test() -> None:
 
     # Perform vector search to get a node
     engine = get_vector_provider()
-    search_hits = await engine.search("Concept_name", "Quantum computer")
+    search_hits = await engine.search("Entity_name", "Quantum computer")
     assert len(search_hits) > 0, "No search results from vector engine"
 
     target_text = search_hits[0].payload["text"]

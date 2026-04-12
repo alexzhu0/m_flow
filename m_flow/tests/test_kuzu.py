@@ -77,7 +77,7 @@ async def main():
 
         vec = get_vector_provider()
 
-        concept_hit = (await vec.search("Concept_name", "Quantum computer"))[0]
+        concept_hit = (await vec.search("Entity_name", "Quantum computer"))[0]
         query_text = concept_hit.payload["text"]
 
         # Test TRIPLET_COMPLETION mode

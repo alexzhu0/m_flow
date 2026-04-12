@@ -65,7 +65,7 @@ async def main():
 
     vec = get_vector_provider()
 
-    concept_result = (await vec.search("Concept_name", "AI"))[0]
+    concept_result = (await vec.search("Entity_name", "AI"))[0]
     concept_text = concept_result.payload["text"]
 
     # Test TRIPLET_COMPLETION mode

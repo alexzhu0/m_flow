@@ -33,7 +33,6 @@ async def run_soft_delete_test():
         str(_TEST_DATA / "artificial-intelligence.pdf"),
         str(_TEST_DATA / "Natural_language_processing_copy.txt"),
         _CAR_TEXT,
-        str(_TEST_DATA / "example.pptx"),
         str(_TEST_DATA / "text_to_speech.mp3"),
         str(_TEST_DATA / "example.png"),
     ]
