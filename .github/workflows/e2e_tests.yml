@@ -27,7 +27,6 @@ on:
 jobs:
 
   server-boot:
-    if: false  # requires full server runtime + LLM API — re-enable when deployment infra is validated
     runs-on: ubuntu-22.04
     name: "Server startup validation"
     steps:
@@ -80,7 +79,6 @@ jobs:
         run: uv run python ./m_flow/tests/test_telemetry.py
 
   telemetry-pipeline:
-    if: false  # requires real LLM API for full memorize pipeline — re-enable when API keys are validated
     runs-on: ubuntu-22.04
     name: "Telemetry with live pipeline"
     steps:
@@ -111,7 +109,6 @@ jobs:
         run: uv run python ./m_flow/tests/test_library.py
 
   dedup-validation:
-    if: false  # requires PostgreSQL + PGVector service containers — re-enable when PG infra is configured
     runs-on: ubuntu-latest
     name: "Deduplication logic (PGVector)"
     defaults:
@@ -209,7 +206,6 @@ jobs:
         run: uv run python ./m_flow/tests/test_parallel_databases.py
 
   dataset-handler:
-    if: false  # requires LLM API for memorize() + graph DB validation — re-enable when API is validated
     runs-on: ubuntu-22.04
     name: "Dataset DB handler assertions"
     steps:
@@ -291,7 +287,6 @@ jobs:
         run: uv run python ./m_flow/tests/test_permissions.py
 
   multi-tenancy-scenarios:
-    if: false  # requires LLM API for memorize() + multi-tenant auth — re-enable when API is validated
     runs-on: ubuntu-22.04
     name: "Multi-tenant isolation check"
     steps:
@@ -318,7 +313,6 @@ jobs:
         run: uv run python ./m_flow/tests/test_multi_tenancy.py
 
   graph-edge-ingestion:
-    if: false  # requires LLM API for memorize() to build graph edges — re-enable when API is validated
     runs-on: ubuntu-22.04
     name: "Graph edge ingestion correctness"
     steps:
@@ -434,69 +428,8 @@ jobs:
           EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
         run: uv run python ./m_flow/tests/tasks/concept_extraction/entity_extraction_test.py
 
-  feedback-enrichment:
-    if: false  # test file does not exist yet — re-enable when test_feedback_enrichment.py is created
-    runs-on: ubuntu-22.04
-    name: "Feedback enrichment loop"
-    steps:
-      - name: Pull source tree
-        uses: actions/checkout@v4
-
-      - name: Bootstrap M-Flow environment
-        uses: ./.github/actions/m_flow_setup
-        with:
-          python-version: '3.11.x'
-
-      - name: Confirm dependency resolution
-        run: echo "Dependencies already installed in setup"
-
-      - name: Validate feedback enrichment process
-        env:
-          ENV: 'dev'
-          LLM_MODEL: ${{ secrets.LLM_MODEL }}
-          LLM_ENDPOINT: ${{ secrets.LLM_ENDPOINT }}
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_API_VERSION: ${{ secrets.LLM_API_VERSION }}
-          EMBEDDING_MODEL: ${{ secrets.EMBEDDING_MODEL }}
-          EMBEDDING_DIMENSIONS: "1536"
-          EMBEDDING_ENDPOINT: ${{ secrets.EMBEDDING_ENDPOINT }}
-          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
-          EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
-        run: uv run python ./m_flow/tests/test_feedback_enrichment.py
-
-  edge-centered-payload:
-    if: false  # test file does not exist yet — re-enable when test_edge_centered_payload.py is created
-    runs-on: ubuntu-22.04
-    name: "Edge-centered triplet embedding"
-    steps:
-      - name: Pull source tree
-        uses: actions/checkout@v4
-
-      - name: Bootstrap M-Flow environment
-        uses: ./.github/actions/m_flow_setup
-        with:
-          python-version: '3.11.x'
-
-      - name: Confirm dependency resolution
-        run: echo "Dependencies already installed in setup"
-
-      - name: Validate edge-centered payload memorisation
-        env:
-          ENV: 'dev'
-          TRIPLET_EMBEDDING: True
-          LLM_MODEL: ${{ secrets.LLM_MODEL }}
-          LLM_ENDPOINT: ${{ secrets.LLM_ENDPOINT }}
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_API_VERSION: ${{ secrets.LLM_API_VERSION }}
-          EMBEDDING_MODEL: ${{ secrets.EMBEDDING_MODEL }}
-          EMBEDDING_DIMENSIONS: "1536"
-          EMBEDDING_ENDPOINT: ${{ secrets.EMBEDDING_ENDPOINT }}
-          EMBEDDING_API_KEY: ${{ secrets.EMBEDDING_API_KEY }}
-          EMBEDDING_API_VERSION: ${{ secrets.EMBEDDING_API_VERSION }}
-        run: uv run python ./m_flow/tests/test_edge_centered_payload.py
 
   conversation-sessions-redis:
-    if: false  # requires Redis + PostgreSQL + LLM API — re-enable when full infra is available
     runs-on: ubuntu-latest
     name: "Conversation history (Redis backend)"
     defaults:
@@ -553,7 +486,6 @@ jobs:
         run: uv run python ./m_flow/tests/test_conversation_history.py
 
   conversation-sessions-fs:
-    if: false  # requires PostgreSQL + LLM API for conversation pipeline — re-enable when PG infra is available
     runs-on: ubuntu-latest
     name: "Conversation history (filesystem backend)"
     defaults:
