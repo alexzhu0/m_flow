@@ -83,6 +83,7 @@ All benchmarks use gpt-5-mini (answer) + gpt-4o-mini (judge) + top-k=10.
 | Cognee Cloud | 79.4% |
 | Zep Cloud | 73.4% |
 | Supermemory Cloud | 64.4% |
+| Mem0 Cloud (top-k=30) | 50.4% |
 
 ### LongMemEval
 
