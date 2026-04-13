@@ -80,6 +80,7 @@ jobs:
 
   telemetry-pipeline:
     runs-on: ubuntu-22.04
+    timeout-minutes: 10
     name: "Telemetry with live pipeline"
     steps:
       - name: Pull source tree
