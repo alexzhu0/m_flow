@@ -21,7 +21,26 @@ CREATE TABLE IF NOT EXISTS tracks (
     unit_price DECIMAL(10,2)
 );
 
+CREATE TABLE IF NOT EXISTS employees (
+    employee_id INTEGER PRIMARY KEY,
+    last_name VARCHAR(20) NOT NULL,
+    first_name VARCHAR(20) NOT NULL,
+    title VARCHAR(30),
+    reports_to INTEGER REFERENCES employees(employee_id)
+);
+
 -- Sample data
+
+INSERT INTO employees (employee_id, last_name, first_name, title, reports_to) VALUES
+    (1, 'Adams', 'Andrew', 'General Manager', NULL),
+    (2, 'Edwards', 'Nancy', 'Sales Manager', 1),
+    (3, 'Peacock', 'Jane', 'Sales Support Agent', 2),
+    (4, 'Park', 'Margaret', 'Sales Support Agent', 2),
+    (5, 'Johnson', 'Steve', 'Sales Support Agent', 2),
+    (6, 'Mitchell', 'Michael', 'IT Manager', 1),
+    (7, 'King', 'Robert', 'IT Staff', 6),
+    (8, 'Callahan', 'Laura', 'IT Staff', 6);
+
 INSERT INTO artists (artist_id, name) VALUES
     (1, 'The Beatles'), (2, 'Miles Davis'), (3, 'Bach'),
     (4, 'Led Zeppelin'), (5, 'Chopin');

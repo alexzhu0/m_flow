@@ -212,8 +212,11 @@ async def main():
     assert not os.path.isdir(storage_cfg["data_root_directory"]), "Data dir exists"
 
     await m_flow.prune.prune_system(metadata=True)
-    tables = await vec.get_table_names()
-    assert len(tables) == 0, f"PG has {len(tables)} tables after cleanup"
+    # PGVector shares the PostgreSQL instance with the relational ORM.
+    # After prune, ORM metadata tables (~30) are recreated by create_all(),
+    # but all vector collection tables should be dropped.
+    for coll in ["Entity_name", "Episode_summary", "ContentFragment_text"]:
+        assert not await vec.has_collection(coll), f"Vector collection '{coll}' still exists after cleanup"
 
     # Unlimited search test
     await verify_unlimited_search()
