@@ -315,6 +315,7 @@ async def _cleanup_isolated_nodes(graph) -> list[str]:
     """
     all_purged: list[str] = []
 
+    # Pass 1: iteratively remove degree-0 nodes
     while True:
         nodes, edges = await graph.get_graph_data()
 
@@ -335,7 +336,31 @@ async def _cleanup_isolated_nodes(graph) -> list[str]:
             await graph.delete_node(nid)
 
         all_purged.extend(batch)
-        _log.info("Cleaned %d isolated nodes (iteration %d)", len(batch), len(all_purged))
+        _log.info("Cleaned %d isolated nodes", len(batch))
+
+    # Pass 2: if no document-layer nodes remain, the entire graph is orphaned.
+    # Mutual edges (e.g., same_entity_as cycles) keep nodes at degree > 0
+    # even though they have no document anchor.  Wipe them.
+    nodes, edges = await graph.get_graph_data()
+    if not nodes:
+        return all_purged
+
+    _DOC_TYPES = {
+        "TextDocument",
+        "PdfDocument",
+        "AudioDocument",
+        "ImageDocument",
+        "UnstructuredDocument",
+        "ContentFragment",
+        "FragmentDigest",
+        "Document",
+    }
+    has_doc_anchor = any(props.get("type", "") in _DOC_TYPES for _, props in nodes)
+    if not has_doc_anchor:
+        for nid, _ in nodes:
+            await graph.delete_node(nid)
+            all_purged.append(nid)
+        _log.info("No document anchors remain — purged %d orphan-cluster nodes", len(nodes))
 
     return all_purged
 
