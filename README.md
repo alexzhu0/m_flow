@@ -84,7 +84,7 @@ All systems use gpt-5-mini (answer) + gpt-4o-mini (judge). Cat 5 (adversarial) e
 | **M-flow** | **81.8%** | gpt-5-mini | gpt-4o-mini | 10 |
 | Cognee Cloud | 79.4% | gpt-5-mini | gpt-4o-mini | 10 |
 | Zep Cloud (7e+3n) | 73.4% | gpt-5-mini | gpt-4o-mini | 10 |
-| Supermemory | 64.4% | gpt-5-mini | gpt-4o-mini | 10 |
+| Supermemory Cloud | 64.4% | gpt-5-mini | gpt-4o-mini | 10 |
 
 **With vendor-default retrieval budgets**
 
@@ -95,7 +95,7 @@ All systems use gpt-5-mini (answer) + gpt-4o-mini (judge). Cat 5 (adversarial) e
 | Zep Cloud (20e+20n) | 78.4% | gpt-5-mini | gpt-4o-mini | 40 |
 | Mem0ᵍ Cloud (published) | 68.5% | — | — | — |
 | Mem0 Cloud (published) | 67.1% | — | — | — |
-| Supermemory | 64.4% | gpt-5-mini | gpt-4o-mini | 10 |
+| Supermemory Cloud | 64.4% | gpt-5-mini | gpt-4o-mini | 10 |
 | Mem0 Cloud (tested) | 50.4% | gpt-5-mini | gpt-4o-mini | 30 |
 
 ### LongMemEval
