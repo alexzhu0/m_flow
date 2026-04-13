@@ -415,11 +415,17 @@ class PGVectorAdapter(SQLAlchemyAdapter, VectorProvider):
             return result
 
     async def prune(self) -> None:
-        """Drop all vector collection tables (dynamically created, not in ORM metadata)."""
+        """Drop all vector collection tables (dynamically created, not in ORM metadata).
+
+        Vector collection tables follow the ``{NodeType}_{field}`` naming
+        convention and always start with an uppercase letter (e.g.,
+        ``Entity_name``, ``Episode_summary``).  ORM metadata tables are
+        all-lowercase and must NOT be dropped here.
+        """
         async with self.engine.begin() as conn:
             meta = MetaData()
             await conn.run_sync(meta.reflect)
             for table_name in list(meta.tables):
-                if "_" in table_name:
+                if table_name and table_name[0].isupper():
                     await conn.execute(text(f'DROP TABLE IF EXISTS "{table_name}" CASCADE'))
             meta.clear()

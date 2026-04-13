@@ -51,7 +51,9 @@ async def _migrate_and_verify():
     results = await m_flow.search(query_type=RecallMode.TRIPLET_COMPLETION, query_text="Tell me about AC/DC")
     assert any("AC/DC" in r for r in results), "未找到AC/DC"
 
-    rel_label = "ReportsTo"
+    # SQLite preserves column case (ReportsTo); PostgreSQL lowercases (reportsto)
+    db_dialect = engine.engine.dialect.name
+    rel_label = "reportsto" if db_dialect == "postgresql" else "ReportsTo"
     graph_provider = (os.getenv("GRAPH_DATABASE_PROVIDER") or "networkx").lower()
 
     nodes_set = set()
