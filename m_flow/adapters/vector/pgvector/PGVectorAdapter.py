@@ -12,7 +12,7 @@ from typing import Any, List, Optional
 from uuid import UUID as _PyUUID
 
 from asyncpg import DeadlockDetectedError, DuplicateTableError, UniqueViolationError
-from sqlalchemy import JSON, Column, MetaData, Table, delete, func, select
+from sqlalchemy import JSON, Column, MetaData, Table, delete, func, select, text
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
@@ -415,5 +415,11 @@ class PGVectorAdapter(SQLAlchemyAdapter, VectorProvider):
             return result
 
     async def prune(self) -> None:
-        """清理数据库"""
-        await self.delete_database()
+        """Drop all vector collection tables (dynamically created, not in ORM metadata)."""
+        async with self.engine.begin() as conn:
+            meta = MetaData()
+            await conn.run_sync(meta.reflect)
+            for table_name in list(meta.tables):
+                if "_" in table_name:
+                    await conn.execute(text(f'DROP TABLE IF EXISTS "{table_name}" CASCADE'))
+            meta.clear()

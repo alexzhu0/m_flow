@@ -301,35 +301,43 @@ async def _cleanup_orphan_episodic_nodes(graph) -> list[str]:
 
 
 async def _cleanup_isolated_nodes(graph) -> list[str]:
-    """Remove completely disconnected nodes (degree 0).
+    """Remove orphan nodes that are no longer reachable from any document.
 
-    After document and episodic cleanup, system-level nodes such as
-    MemorySpace, RelationType, or EntityType may lose all edges and
-    become isolated.  This phase garbage-collects them.
+    Runs iteratively: deleting isolated nodes (degree 0) may disconnect
+    other nodes that were only connected to them (e.g., entities linked
+    by ``same_entity_as`` edges form clusters that become fully isolated
+    after their last document connection is severed).
 
-    Provider-agnostic: re-reads the graph after episodic cleanup so that
+    Provider-agnostic: re-reads the graph each iteration so that
     newly-isolated nodes are detected regardless of backend.
 
-    Returns list of deleted node IDs (strings).
+    Returns list of all deleted node IDs (strings).
     """
-    purged: list[str] = []
+    all_purged: list[str] = []
 
-    nodes, edges = await graph.get_graph_data()
+    while True:
+        nodes, edges = await graph.get_graph_data()
 
-    connected: set[str] = set()
-    for src, tgt, _, _ in edges:
-        connected.add(src)
-        connected.add(tgt)
+        connected: set[str] = set()
+        for src, tgt, _, _ in edges:
+            connected.add(src)
+            connected.add(tgt)
 
-    for nid, _ in nodes:
-        if nid not in connected:
+        batch: list[str] = []
+        for nid, _ in nodes:
+            if nid not in connected:
+                batch.append(nid)
+
+        if not batch:
+            break
+
+        for nid in batch:
             await graph.delete_node(nid)
-            purged.append(nid)
 
-    if purged:
-        _log.info("Cleaned %d isolated nodes (MemorySpace, RelationType, etc.)", len(purged))
+        all_purged.extend(batch)
+        _log.info("Cleaned %d isolated nodes (iteration %d)", len(batch), len(all_purged))
 
-    return purged
+    return all_purged
 
 
 async def delete_single_document(
