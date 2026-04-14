@@ -28,7 +28,7 @@ The fundamental shift is this: **existing systems build graphs but still retriev
 
 RAG embeds chunks and ranks by vector similarity. GraphRAG goes further — it extracts entities, builds a knowledge graph, and generates community summaries. But when a query arrives, retrieval still reduces to embedding the query and matching against stored text. The graph informs what gets embedded; it does not participate in how results are scored. The retrieval step remains **similarity-driven**.
 
-M-flow takes a different approach: the graph is not a preprocessing step — it is the scoring engine. When a query arrives, vector search casts a wide net across multiple granularities to find entry points. Then **the graph takes over** — propagating evidence along typed, semantically weighted edges, and scoring each knowledge unit by the tightest chain of reasoning that connects it to the query.
+M-flow takes a different approach: the graph is the scoring engine. When a query arrives, vector search casts a wide net across multiple granularities to find entry points. Then **the graph takes over** — propagating evidence along typed, semantically weighted edges, and scoring each knowledge unit by the tightest chain of reasoning that connects it to the query.
 
 Similar and relevant sometimes overlap, but they are fundamentally different. Consider the query **"Why did the migration fail?"**
 
