@@ -80,7 +80,7 @@ python -m m_flow_mcp.src.server \
   --api-token your-token
 ```
 
-> **注意**：API 模式下 `prune` 操作不可用。
+> **注意**：API 模式下 `memorize_status` 已支持通过远程 `/api/v1/datasets/status` 查询状态；`prune` 仍不可用，`learn` 仍需直接模式。
 
 ## IDE 集成
 

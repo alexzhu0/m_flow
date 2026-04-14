@@ -504,6 +504,27 @@ async def memorize_status() -> list:
     """
     with redirect_stdout(sys.stderr):
         try:
+            if getattr(_client, "_remote", False):
+                from uuid import UUID
+
+                datasets = await _client.list_datasets()
+                if not datasets:
+                    return [types.TextContent(type="text", text="ℹ️ 当前没有可查询的数据集")]
+
+                status_map = await _client.get_workflow_status(
+                    [UUID(ds["id"]) for ds in datasets],
+                    "memorize_pipeline",
+                )
+                if not status_map:
+                    return [types.TextContent(type="text", text="ℹ️ 当前没有记忆化管道状态记录")]
+
+                lines = ["记忆化管道状态:"]
+                for dataset in datasets:
+                    ds_id = str(dataset.get("id"))
+                    ds_name = dataset.get("name") or ds_id
+                    lines.append(f"- {ds_name}: {status_map.get(ds_id, 'unknown')}")
+                return [types.TextContent(type="text", text="\n".join(lines))]
+
             from m_flow.auth.methods import get_seed_user
             from m_flow.data.methods.get_unique_dataset_id import get_unique_dataset_id
 
@@ -511,10 +532,6 @@ async def memorize_status() -> list:
             ds_id = await get_unique_dataset_id("main_dataset", user)
             status = await _client.get_workflow_status([ds_id], "memorize_pipeline")
             return [types.TextContent(type="text", text=str(status))]
-        except NotImplementedError:
-            msg = "❌ API模式不支持状态查询"
-            _log.error(msg)
-            return [types.TextContent(type="text", text=msg)]
         except Exception as e:
             msg = f"❌ 获取状态失败: {e}"
             _log.error(msg)

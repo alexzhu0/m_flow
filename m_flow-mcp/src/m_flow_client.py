@@ -260,26 +260,28 @@ class MflowClient:
             await self._engine.prune.prune_system(graph=graph, vector=vector, metadata=metadata, cache=cache)
             return {"status": "success", "message": "System stores cleared"}
 
-    async def get_workflow_status(self, dataset_ids: List[UUID], workflow_name: str) -> str:
-        """Return human-readable status for a running pipeline.
+    async def get_workflow_status(self, dataset_ids: List[UUID], workflow_name: str) -> Dict[str, str]:
+        """Return latest pipeline status for one or more datasets.
 
         Args:
             dataset_ids: Dataset UUIDs the pipeline operates on.
             workflow_name: Registered pipeline identifier.
 
         Returns:
-            Status string.
-
-        Raises:
-            NotImplementedError: When running in remote mode.
+            Mapping of dataset UUID strings to status strings.
         """
         if self._remote:
-            raise NotImplementedError("Pipeline status query is unavailable in remote mode")
+            params = [("dataset", str(dataset_id)) for dataset_id in dataset_ids]
+            url = f"{self._base_url}/api/v1/datasets/status"
+            resp = await self._http.get(url, params=params, headers=self._auth_headers())
+            resp.raise_for_status()
+            data = resp.json()
+            return data if isinstance(data, dict) else {}
 
         from m_flow.pipeline.operations.get_workflow_status import get_workflow_status
 
         with redirect_stdout(sys.stderr):
-            return str(await get_workflow_status(dataset_ids, workflow_name))
+            return await get_workflow_status(dataset_ids, workflow_name)
 
     async def list_datasets(self) -> List[Dict[str, Any]]:
         """Enumerate all datasets visible to the current user.
