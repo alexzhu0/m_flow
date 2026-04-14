@@ -17,6 +17,7 @@ from m_flow.api.v1.responses.dispatch_function import dispatch_function
 from m_flow.api.v1.responses.models import (
     ChatUsage,
     FunctionCall,
+    MflowModel,
     ResponseBody,
     ResponseRequest,
     ResponseToolCall,
@@ -38,6 +39,13 @@ def get_responses_router() -> APIRouter:
         cfg = get_llm_config()
         return openai.AsyncOpenAI(api_key=cfg.llm_api_key)
 
+    def _resolve_model(requested_model: str) -> str:
+        """Resolve the synthetic M-flow alias to a concrete provider model."""
+        cfg = get_llm_config()
+        if not requested_model or requested_model == MflowModel.MFLOW_V1.value:
+            return cfg.llm_model
+        return requested_model
+
     async def _invoke_model(
         text: str,
         model: str,
@@ -45,21 +53,22 @@ def get_responses_router() -> APIRouter:
         tool_choice: Any,
         temperature: float,
     ) -> dict[str, Any]:
-        """Send request to OpenAI API."""
-        # Hardcoded model override (TODO: expand model support)
-        model = "gpt-4o"
+        """Send request to the configured OpenAI-compatible responses API."""
+        resolved_model = _resolve_model(model)
         client = _build_client()
 
-        _log.debug("Invoking model: %s", model)
+        _log.debug("Invoking model: %s", resolved_model)
         resp = await client.responses.create(
-            model=model,
+            model=resolved_model,
             input=text,
             temperature=temperature,
             tools=tools or DEFAULT_TOOLS,
             tool_choice=tool_choice,
         )
         _log.info("API response received")
-        return resp.model_dump()
+        payload = resp.model_dump()
+        payload.setdefault("model", resolved_model)
+        return payload
 
     @router.post("/", response_model=ResponseBody)
     async def create_response(
@@ -123,7 +132,7 @@ def get_responses_router() -> APIRouter:
 
         return ResponseBody(
             id=resp_id,
-            model=request.model,
+            model=api_resp.get("model", request.model),
             tool_calls=processed_calls,
             usage=ChatUsage(
                 prompt_tokens=usage_data.get("input_tokens", 0),

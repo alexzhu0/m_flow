@@ -151,9 +151,13 @@ class ResponseRequest(InDTO):
     Mirrors the OpenAI Responses API shape with M-Flow-specific defaults.
     ``tool_choice`` may be the literal string ``"auto"`` or a mapping that
     constrains tool selection to a specific function.
+
+    ``model`` accepts either the synthetic ``m_flow-v1`` alias or a concrete
+    provider model name. The serving layer resolves ``m_flow-v1`` to the
+    configured default model from :func:`m_flow.llm.config.get_llm_config`.
     """
 
-    model: MflowModel = MflowModel.MFLOW_V1
+    model: str = MflowModel.MFLOW_V1.value
     input: str
     tools: Sequence[ToolFunction] | None = None
     tool_choice: str | Mapping[str, Any] | None = "auto"
