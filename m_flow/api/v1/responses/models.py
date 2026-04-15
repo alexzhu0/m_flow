@@ -14,7 +14,7 @@ import uuid
 from enum import Enum
 from typing import Any, Mapping, Sequence
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from m_flow.api.DTO import InDTO, OutDTO
 
@@ -153,13 +153,45 @@ class ResponseRequest(InDTO):
     constrains tool selection to a specific function.
     """
 
-    model: MflowModel = MflowModel.MFLOW_V1
-    input: str
-    tools: Sequence[ToolFunction] | None = None
-    tool_choice: str | Mapping[str, Any] | None = "auto"
-    user: str | None = None
-    temperature: float | None = 1.0
-    max_completion_tokens: int | None = None
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "model": "mflow_v1",
+                    "input": "Summarize the latest project update",
+                    "tool_choice": "auto",
+                }
+            ]
+        }
+    )
+
+    model: MflowModel = Field(
+        default=MflowModel.MFLOW_V1,
+        description="Response model alias to execute. Defaults to the built-in M-Flow responses model.",
+    )
+    input: str = Field(
+        description="Text prompt or user message content to send to the responses endpoint.",
+    )
+    tools: Sequence[ToolFunction] | None = Field(
+        default=None,
+        description="Optional tool definitions exposed to the model for function calling.",
+    )
+    tool_choice: str | Mapping[str, Any] | None = Field(
+        default="auto",
+        description="Tool selection policy. Use 'auto' to let the model choose or provide a function selector object.",
+    )
+    user: str | None = Field(
+        default=None,
+        description="Optional end-user identifier for tracing or abuse monitoring.",
+    )
+    temperature: float | None = Field(
+        default=1.0,
+        description="Sampling temperature applied to the response generation request.",
+    )
+    max_completion_tokens: int | None = Field(
+        default=None,
+        description="Optional upper bound for completion tokens returned by the model.",
+    )
 
 
 class ResponseToolCall(BaseModel):
