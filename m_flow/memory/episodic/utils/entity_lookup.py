@@ -44,9 +44,7 @@ async def find_existing_entities_by_canonical_name(
     try:
         graph_engine = await get_graph_provider()
 
-        nodes, _ = await graph_engine.query_by_attributes(
-            [{"type": ["Entity"], "canonical_name": [canonical_name]}]
-        )
+        nodes, _ = await graph_engine.query_by_attributes([{"type": ["Entity"], "canonical_name": [canonical_name]}])
 
         matching_entities = []
         for entity_id, props_raw in nodes:

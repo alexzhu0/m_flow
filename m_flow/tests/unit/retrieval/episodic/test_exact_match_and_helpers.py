@@ -96,8 +96,11 @@ class TestMemoryFragmentHelpers:
         graph_engine = object()
         fragment = AsyncMock(spec=MemoryGraph)
 
-        with patch("m_flow.retrieval.episodic.memory_fragment.MemoryGraph", return_value=fragment), patch(
-            "m_flow.retrieval.episodic.memory_fragment.get_graph_provider", new=AsyncMock(return_value=graph_engine)
+        with (
+            patch("m_flow.retrieval.episodic.memory_fragment.MemoryGraph", return_value=fragment),
+            patch(
+                "m_flow.retrieval.episodic.memory_fragment.get_graph_provider", new=AsyncMock(return_value=graph_engine)
+            ),
         ):
             result = await get_episodic_memory_fragment(
                 episodic_nodeset_name="workspace",
@@ -118,8 +121,11 @@ class TestMemoryFragmentHelpers:
         fragment = AsyncMock(spec=MemoryGraph)
         fragment.project_graph_from_db = AsyncMock(side_effect=[TypeError("legacy"), None])
 
-        with patch("m_flow.retrieval.episodic.memory_fragment.MemoryGraph", return_value=fragment), patch(
-            "m_flow.retrieval.episodic.memory_fragment.get_graph_provider", new=AsyncMock(return_value=graph_engine)
+        with (
+            patch("m_flow.retrieval.episodic.memory_fragment.MemoryGraph", return_value=fragment),
+            patch(
+                "m_flow.retrieval.episodic.memory_fragment.get_graph_provider", new=AsyncMock(return_value=graph_engine)
+            ),
         ):
             await get_episodic_memory_fragment(strict_nodeset_filtering=True)
 
@@ -134,8 +140,9 @@ class TestMemoryFragmentHelpers:
         fragment = AsyncMock(spec=MemoryGraph)
         fragment.project_graph_from_db = AsyncMock(side_effect=ConceptNotFoundError("missing"))
 
-        with patch("m_flow.retrieval.episodic.memory_fragment.MemoryGraph", return_value=fragment), patch(
-            "m_flow.retrieval.episodic.memory_fragment.get_graph_provider", new=AsyncMock(return_value=object())
+        with (
+            patch("m_flow.retrieval.episodic.memory_fragment.MemoryGraph", return_value=fragment),
+            patch("m_flow.retrieval.episodic.memory_fragment.get_graph_provider", new=AsyncMock(return_value=object())),
         ):
             result = await get_episodic_memory_fragment()
 

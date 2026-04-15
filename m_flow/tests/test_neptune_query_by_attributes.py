@@ -24,9 +24,7 @@ def test_neptune_query_by_attributes_uses_all_filters_and_parameters() -> None:
 
         adapter.query = fake_query
 
-        nodes, edges = await adapter.query_by_attributes(
-            [{"type": ["Entity"]}, {"status": ["active"]}]
-        )
+        nodes, edges = await adapter.query_by_attributes([{"type": ["Entity"]}, {"status": ["active"]}])
 
         assert nodes == [("node-1", {"type": "Entity", "status": "active"})]
         assert edges == [("node-1", "node-2", "RELATED", {})]
