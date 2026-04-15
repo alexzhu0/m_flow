@@ -548,8 +548,8 @@ class NeptuneGraphDB(GraphProvider):
             _log.error(f"Edge existence check failed: {format_neptune_error(exc)}")
             return False
 
-    async def has_edges(self, edges: List[EdgeData]) -> List[bool]:
-        """Check existence of multiple edges."""
+    async def has_edges(self, edges: List[EdgeData]) -> List[EdgeData]:
+        """Return the subset of requested edges that already exist."""
         cypher = f"""
         UNWIND $items AS item
         MATCH (a:{self._GRAPH_NODE_LABEL})-[r]->(b:{self._GRAPH_NODE_LABEL})
@@ -561,7 +561,7 @@ class NeptuneGraphDB(GraphProvider):
 
         try:
             results = await self.query(cypher, {"items": items})
-            return [r["found"] for r in results]
+            return [(r["src"], r["tgt"], r["rel"]) for r in results if r.get("found")]
         except Exception as exc:
             _log.error(f"Bulk edge check failed: {format_neptune_error(exc)}")
             return []
