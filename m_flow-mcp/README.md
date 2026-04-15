@@ -80,7 +80,14 @@ python -m m_flow_mcp.src.server \
   --api-token your-token
 ```
 
-> **注意**：API 模式下 `prune` 操作不可用。
+> **注意**：当前 API 模式仅覆盖支持的 HTTP 端点。
+>
+> 已知限制：
+> - `prune` 不可用（`prune_data` / `prune_system` 均要求直接模式）
+> - `memorize_status` 不可用（远程模式下 `get_workflow_status()` 仍会抛出 `NotImplementedError`）
+> - `learn` 不可用（远程模式下 `learn()` 仍会抛出 `NotImplementedError`）
+>
+> 如果需要上述能力，请使用直接模式运行 MCP 服务器。
 
 ## IDE 集成
 
