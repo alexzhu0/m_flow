@@ -325,8 +325,11 @@ class TestE2E007OpenAICompatibleAPI:
         assert "paths" in schema
 
     def test_responses_endpoint_structure(self, test_client):
-        """Step 3-5: Test responses endpoint exists."""
-        response = test_client.post("/api/v1/responses/", json={"messages": [{"role": "user", "content": "test"}]})
+        """Step 3-5: Test responses endpoint exists with the documented request shape."""
+        response = test_client.post(
+            "/api/v1/responses/",
+            json={"input": "test", "model": "m_flow-v1", "tool_choice": "auto"},
+        )
         assert response.status_code != 404
 
 
