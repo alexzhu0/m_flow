@@ -72,6 +72,9 @@ _NODE_TYPE_LABEL = "MFLOW_NODE"
 # Neptune Analytics protocol prefix
 _NEPTUNE_PROTOCOL = "neptune-graph://"
 
+# Backward-compatible endpoint prefix consumed by graph adapter factory
+NEPTUNE_ENDPOINT_URL = _NEPTUNE_PROTOCOL
+
 
 def _prepare_properties_for_storage(props: Dict[str, Any]) -> Dict[str, Any]:
     """
