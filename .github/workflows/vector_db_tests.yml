@@ -37,7 +37,7 @@ jobs:
     defaults: {run: {shell: bash}}
     services:
       chromadb:
-        image: chromadb/chroma:latest
+        image: chromadb/chroma:0.6.3
         env:
           CHROMA_SERVER_AUTH_CREDENTIALS: "test-token"
           CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER: "chromadb.auth.token.TokenAuthCredentialsProvider"
