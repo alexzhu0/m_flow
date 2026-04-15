@@ -1,0 +1,87 @@
+from __future__ import annotations
+
+import asyncio
+import os
+import sys
+
+import pytest
+
+sys.path.insert(0, os.path.dirname(__file__))
+
+from m_flow_client import MflowClient
+
+
+class DummyResponse:
+    def __init__(self, payload: dict):
+        self._payload = payload
+
+    def raise_for_status(self) -> None:
+        return None
+
+    def json(self) -> dict:
+        return self._payload
+
+
+class RecordingAsyncClient:
+    def __init__(self) -> None:
+        self.posts: list[tuple[str, dict, dict]] = []
+
+    async def post(self, url: str, json: dict, headers: dict) -> DummyResponse:
+        self.posts.append((url, json, headers))
+        return DummyResponse({"success": True, "message": "started"})
+
+
+def test_remote_learn_targets_requested_dataset_names() -> None:
+    async def run() -> None:
+        client = MflowClient(server_url="https://example.com", auth_token="secret")
+        client._http = RecordingAsyncClient()
+
+        async def fake_list_datasets() -> list[dict[str, str]]:
+            return [
+                {"id": "11111111-1111-1111-1111-111111111111", "name": "alpha"},
+                {"id": "22222222-2222-2222-2222-222222222222", "name": "beta"},
+            ]
+
+        client.list_datasets = fake_list_datasets
+
+        result = await client.learn(datasets=["beta"])
+
+        assert result == {"success": True, "message": "started"}
+        assert client._http.posts == [
+            (
+                "https://example.com/api/v1/procedural/extract-from-episodic",
+                {
+                    "dataset_id": "22222222-2222-2222-2222-222222222222",
+                    "limit": 100,
+                    "force_reprocess": False,
+                },
+                {"Content-Type": "application/json", "Authorization": "Bearer secret"},
+            )
+        ]
+
+    asyncio.run(run())
+
+
+def test_remote_learn_raises_for_unknown_dataset_names() -> None:
+    async def run() -> None:
+        client = MflowClient(server_url="https://example.com")
+
+        async def fake_list_datasets() -> list[dict[str, str]]:
+            return [{"id": "11111111-1111-1111-1111-111111111111", "name": "alpha"}]
+
+        client.list_datasets = fake_list_datasets
+
+        with pytest.raises(ValueError, match="Unknown dataset"):
+            await client.learn(datasets=["missing"])
+
+    asyncio.run(run())
+
+
+def test_remote_learn_rejects_episode_ids_until_backend_supports_them() -> None:
+    async def run() -> None:
+        client = MflowClient(server_url="https://example.com")
+
+        with pytest.raises(NotImplementedError, match="episode_ids"):
+            await client.learn(episode_ids=["ep-1"])
+
+    asyncio.run(run())

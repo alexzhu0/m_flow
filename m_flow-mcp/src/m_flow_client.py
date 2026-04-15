@@ -321,7 +321,35 @@ class MflowClient:
             NotImplementedError: When running in remote mode.
         """
         if self._remote:
-            raise NotImplementedError("Learning is unavailable in remote mode")
+            if episode_ids:
+                raise NotImplementedError("Remote learn does not yet support episode_ids")
+
+            dataset_ids: List[Optional[str]]
+            if datasets:
+                available = await self.list_datasets()
+                name_to_id = {str(ds.get("name")): str(ds.get("id")) for ds in available if ds.get("name") and ds.get("id")}
+                missing = [name for name in datasets if name not in name_to_id]
+                if missing:
+                    raise ValueError(f"Unknown dataset name(s): {', '.join(missing)}")
+                dataset_ids = [name_to_id[name] for name in datasets]
+            else:
+                dataset_ids = [None]
+
+            url = f"{self._base_url}/api/v1/procedural/extract-from-episodic"
+            last_response: Dict[str, Any] = {}
+            for dataset_id in dataset_ids:
+                body: Dict[str, Any] = {
+                    "dataset_id": dataset_id,
+                    "limit": 100,
+                    "force_reprocess": False,
+                }
+                resp = await self._http.post(url, json=body, headers=self._auth_headers())
+                resp.raise_for_status()
+                last_response = resp.json()
+
+            if run_in_background and last_response:
+                last_response.setdefault("run_in_background", True)
+            return last_response
 
         from m_flow import learn as _learn
 
