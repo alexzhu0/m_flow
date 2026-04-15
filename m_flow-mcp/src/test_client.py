@@ -21,6 +21,7 @@ from mcp.client.stdio import stdio_client
 from m_flow.adapters.exceptions import DatabaseNotCreatedError
 from m_flow.pipeline.models.PipelineRun import RunStatus
 from m_flow.shared.logging_utils import setup_logging
+from learn_response_utils import is_direct_mode_learn_response
 from src.server import load_class, node_to_string, retrieved_edges_to_string
 
 _TIMEOUT = 5 * 60  # 5分钟
@@ -319,12 +320,11 @@ class MCPTestClient:
         try:
             result = await sess.call_tool("learn", arguments={})
             content = result.content[0].text if result.content else ""
-            if "学习完成" in content or "API" in content or "直接模式" in content:
+            if is_direct_mode_learn_response(content):
                 self.results["learn"] = {"status": "PASS"}
                 print("✅ learn 通过")
             else:
-                self.results["learn"] = {"status": "PASS"}
-                print("✅ learn 通过（无数据）")
+                raise Exception(f"learn 返回未匹配直接模式预期: {content}")
         except Exception as e:
             self.results["learn"] = {"status": "FAIL", "error": str(e)}
             print(f"❌ learn 失败: {e}")
@@ -492,12 +492,11 @@ class MCPTestClient:
         try:
             result = await sess.call_tool("learn", arguments={"datasets": ["test_dataset"], "run_in_background": False})
             content = result.content[0].text if result.content else ""
-            if "学习完成" in content or "API" in content or "直接模式" in content:
+            if is_direct_mode_learn_response(content):
                 self.results["learn_with_params"] = {"status": "PASS"}
                 print("✅ learn 带 datasets 通过")
             else:
-                self.results["learn_with_params"] = {"status": "PASS"}
-                print("✅ learn 带 datasets 通过（无数据）")
+                raise Exception(f"learn 带 datasets 返回未匹配直接模式预期: {content}")
         except Exception as e:
             self.results["learn_with_params"] = {"status": "FAIL", "error": str(e)}
             print(f"❌ learn 带 datasets 失败: {e}")
