@@ -235,7 +235,7 @@ def _extract_keyword_by_reason(query: str, reason: Optional[str]) -> str:
 
 
 def extract_english_words(text: str) -> Set[str]:
-    """Extract English words from text (at least 2 characters)."""
+    """Extract normalized English words from text (at least 2 characters)."""
     if not text:
         return set()
 
@@ -245,6 +245,5 @@ def extract_english_words(text: str) -> Set[str]:
         word = match.group(0)
         if len(word) >= 2:
             words.add(word.lower())
-            words.add(word)
 
     return words

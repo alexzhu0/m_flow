@@ -36,8 +36,11 @@ def extract_number_tokens(text: str) -> List[NumberToken]:
     tokens: List[NumberToken] = []
     seen_positions: Set[int] = set()
 
-    # Match numbers with units
-    pattern_with_unit = r"(\d+\.?\d*)\s*(万|亿|TB|GB|MB|KB|次|个|条|人|家|分钟|分|秒|小时|天|月|年|元|%)"
+    # Match numbers with units. Prefer longer/more specific units before shorter ones
+    # so phrases like "12 个月" resolve to "月" instead of the generic classifier "个".
+    pattern_with_unit = (
+        r"(\d+\.?\d*)\s*(分钟|小时|个月|个小时|个星期|个周|万|亿|TB|GB|MB|KB|次|条|人|家|天|月|年|元|%|个|分|秒)"
+    )
     for match in re.finditer(pattern_with_unit, text, re.IGNORECASE):
         if match.start() in seen_positions:
             continue
@@ -55,7 +58,7 @@ def extract_number_tokens(text: str) -> List[NumberToken]:
             continue
         end_pos = match.end()
         if end_pos < len(text) and re.match(
-            r"\s*(万|亿|TB|GB|MB|KB|次|个|条|人|家|分钟|分|秒|小时|天|月|年|元|%)",
+            r"\s*(分钟|小时|个月|个小时|个星期|个周|万|亿|TB|GB|MB|KB|次|条|人|家|天|月|年|元|%|个|分|秒)",
             text[end_pos:],
             re.IGNORECASE,
         ):
