@@ -828,31 +828,31 @@ class NeptuneGraphDB(GraphProvider):
     async def query_by_attributes(self, attribute_filters: list[dict[str, list]]) -> Tuple[List[Tuple], List[Tuple]]:
         """Get nodes and edges filtered by attributes."""
         where_n = []
-        where_m = []
+        params: Dict[str, Any] = {}
 
-        for attr, vals in attribute_filters[0].items():
-            vals_str = ", ".join(f"'{v}'" if isinstance(v, str) else str(v) for v in vals)
-            where_n.append(f"n.{attr} IN [{vals_str}]")
-            where_m.append(f"m.{attr} IN [{vals_str}]")
+        for i, flt in enumerate(attribute_filters):
+            for attr, vals in flt.items():
+                pname = f"vals_{i}_{attr}"
+                where_n.append(f"n.{attr} IN ${pname}")
+                params[pname] = vals
 
-        n_clause = " AND ".join(where_n)
-        m_clause = " AND ".join(where_m)
-        edge_clause = f"{n_clause} AND {m_clause}"
+        where_clause = " AND ".join(where_n)
+        edge_where_clause = where_clause.replace("n.", "m.")
 
         node_cypher = f"""
         MATCH (n:{self._GRAPH_NODE_LABEL})
-        WHERE {n_clause}
+        WHERE {where_clause}
         RETURN ID(n) AS id, labels(n) AS labels, properties(n) AS properties
         """
 
         edge_cypher = f"""
         MATCH (n:{self._GRAPH_NODE_LABEL})-[r]->(m:{self._GRAPH_NODE_LABEL})
-        WHERE {edge_clause}
+        WHERE {where_clause} AND {edge_where_clause}
         RETURN ID(n) AS source, ID(m) AS target, TYPE(r) AS type, properties(r) AS properties
         """
 
-        node_results = await self.query(node_cypher)
-        edge_results = await self.query(edge_cypher)
+        node_results = await self.query(node_cypher, params)
+        edge_results = await self.query(edge_cypher, params)
 
         nodes = [(r["id"], r["properties"]) for r in node_results]
         edges = [(r["source"], r["target"], r["type"], r["properties"]) for r in edge_results]
