@@ -240,7 +240,7 @@ async def search(
                 enable_hybrid_search=hybrid,
             )
 
-            if _client.use_api:
+            if getattr(_client, "_remote", False):
                 if isinstance(results, str):
                     return results
                 elif isinstance(results, list):
@@ -283,7 +283,7 @@ async def list_data(dataset_id: str = None) -> list:
             lines = []
 
             if dataset_id:
-                if _client.use_api:
+                if getattr(_client, "_remote", False):
                     return [
                         types.TextContent(
                             type="text",
