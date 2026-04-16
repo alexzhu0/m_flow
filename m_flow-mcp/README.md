@@ -74,13 +74,14 @@ python src/server.py --transport sse --port 8000
 当设置 `--api-url` 时，MCP 服务器通过 HTTP API 调用远程 M-flow 实例：
 
 ```bash
-python -m m_flow_mcp.src.server \
+cd m_flow-mcp
+python -m src.server \
   --transport sse \
   --api-url http://mflow-backend:8000/api/v1 \
   --api-token your-token
 ```
 
-> **注意**：API 模式下 `memorize_status` 已支持通过远程 `/api/v1/datasets/status` 查询状态；`prune` 仍不可用，`learn` 仍需直接模式。
+> **注意**：API 模式下 `memorize_status` 和 `learn` 已支持远程调用；`prune` 仍不可用。
 
 ## IDE 集成
 
@@ -108,7 +109,7 @@ python -m m_flow_mcp.src.server \
   "mcpServers": {
     "m_flow": {
       "command": "python",
-      "args": ["-m", "m_flow_mcp.src.server", "--transport", "stdio"],
+      "args": ["-m", "src.server", "--transport", "stdio"],
       "cwd": "/path/to/mflow-main"
     }
   }
