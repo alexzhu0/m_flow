@@ -120,7 +120,7 @@ async def memorize(
             try:
                 _log.info("记忆化处理开始: dataset=%s", ds_name)
                 await _client.add(content, dataset_name=ds_name)
-                await _client.memorize(enable_content_routing=False)
+                await _client.memorize(datasets=[ds_name], enable_content_routing=False)
                 _log.info("记忆化处理完成: dataset=%s", ds_name)
             except Exception as e:
                 _log.error("记忆化处理失败: %s", e)
