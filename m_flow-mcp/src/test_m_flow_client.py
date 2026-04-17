@@ -3,12 +3,40 @@ from __future__ import annotations
 import asyncio
 import os
 import sys
+from types import SimpleNamespace
 
 import pytest
 
 sys.path.insert(0, os.path.dirname(__file__))
 
 from m_flow_client import MflowClient
+
+
+def test_direct_search_forwards_datasets_to_engine() -> None:
+    async def run() -> None:
+        client = object.__new__(MflowClient)
+        client._remote = False
+
+        captured: dict[str, object] = {}
+
+        async def fake_search(**kwargs: object) -> dict[str, str]:
+            captured.update(kwargs)
+            return {"status": "ok"}
+
+        client._engine = SimpleNamespace(search=fake_search)
+
+        result = await client.search(
+            query_text="where is alpha",
+            query_type="EPISODIC",
+            datasets=["alpha"],
+            top_k=3,
+        )
+
+        assert result == {"status": "ok"}
+        assert captured["datasets"] == ["alpha"]
+        assert captured["top_k"] == 3
+
+    asyncio.run(run())
 
 
 class DummyResponse:
