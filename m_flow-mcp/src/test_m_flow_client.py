@@ -25,10 +25,41 @@ class DummyResponse:
 class RecordingAsyncClient:
     def __init__(self) -> None:
         self.posts: list[tuple[str, dict, dict]] = []
+        self.patches: list[tuple[str, dict, list, dict]] = []
 
     async def post(self, url: str, json: dict, headers: dict) -> DummyResponse:
         self.posts.append((url, json, headers))
         return DummyResponse({"success": True, "message": "started"})
+
+    async def patch(self, url: str, params: dict, files: list, headers: dict) -> DummyResponse:
+        self.patches.append((url, params, files, headers))
+        return DummyResponse({"success": True, "message": "updated"})
+
+
+def test_remote_update_uses_multipart_without_json_content_type() -> None:
+    async def run() -> None:
+        client = MflowClient(server_url="https://example.com", auth_token="secret")
+        client._http = RecordingAsyncClient()
+
+        result = await client.update(
+            data_id="11111111-1111-1111-1111-111111111111",
+            dataset_id="22222222-2222-2222-2222-222222222222",
+            data="patched content",
+        )
+
+        assert result == {"success": True, "message": "updated"}
+        assert client._http.patches
+
+        url, params, files, headers = client._http.patches[0]
+        assert url == "https://example.com/api/v1/update"
+        assert params == {
+            "data_id": "11111111-1111-1111-1111-111111111111",
+            "dataset_id": "22222222-2222-2222-2222-222222222222",
+        }
+        assert headers == {"Authorization": "Bearer secret"}
+        assert files[0][0] == "data"
+
+    asyncio.run(run())
 
 
 def test_remote_learn_targets_requested_dataset_names() -> None:

@@ -45,9 +45,11 @@ class MflowClient:
 
             self._engine = _mf
 
-    def _auth_headers(self) -> Dict[str, str]:
+    def _auth_headers(self, include_json_content_type: bool = True) -> Dict[str, str]:
         """Build common request headers including optional authorization."""
-        hdrs: Dict[str, str] = {"Content-Type": "application/json"}
+        hdrs: Dict[str, str] = {}
+        if include_json_content_type:
+            hdrs["Content-Type"] = "application/json"
         if self._token:
             hdrs["Authorization"] = f"Bearer {self._token}"
         return hdrs
@@ -393,7 +395,7 @@ class MflowClient:
                 url,
                 params={"data_id": data_id, "dataset_id": dataset_id},
                 files=payload,
-                headers=self._auth_headers(),
+                headers=self._auth_headers(include_json_content_type=False),
             )
             resp.raise_for_status()
             return resp.json()
