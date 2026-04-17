@@ -54,6 +54,7 @@ def test_remote_learn_targets_requested_dataset_names() -> None:
                     "dataset_id": "22222222-2222-2222-2222-222222222222",
                     "limit": 100,
                     "force_reprocess": False,
+                    "run_in_background": False,
                 },
                 {"Content-Type": "application/json", "Authorization": "Bearer secret"},
             )
