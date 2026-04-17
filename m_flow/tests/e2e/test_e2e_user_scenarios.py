@@ -20,6 +20,7 @@ Tests use FastAPI TestClient for API-level E2E testing.
 
 from __future__ import annotations
 
+import importlib
 import io
 import os
 import sys
@@ -324,10 +325,46 @@ class TestE2E007OpenAICompatibleAPI:
 
         assert "paths" in schema
 
-    def test_responses_endpoint_structure(self, test_client):
-        """Step 3-5: Test responses endpoint exists."""
-        response = test_client.post("/api/v1/responses/", json={"messages": [{"role": "user", "content": "test"}]})
-        assert response.status_code != 404
+    def test_responses_endpoint_structure(self, monkeypatch, test_client):
+        """Step 3-5: Test responses endpoint accepts the documented request shape."""
+        responses_router = importlib.import_module("m_flow.api.v1.responses.routers.get_responses_router")
+
+        create_mock = AsyncMock(
+            return_value=MagicMock(
+                model_dump=lambda: {
+                    "id": "resp_e2e",
+                    "output": [],
+                    "usage": {"input_tokens": 2, "output_tokens": 1, "total_tokens": 3},
+                }
+            )
+        )
+        client_mock = MagicMock()
+        client_mock.responses.create = create_mock
+
+        monkeypatch.setattr(
+            responses_router,
+            "get_llm_config",
+            lambda: SimpleNamespace(llm_api_key="test-key", llm_model="gpt-5-mini"),
+        )
+        monkeypatch.setattr(
+            responses_router.openai,
+            "AsyncOpenAI",
+            lambda api_key: client_mock,
+        )
+
+        response = test_client.post(
+            "/api/v1/responses/",
+            json={
+                "model": "m_flow-v1",
+                "input": "test",
+                "tools": [],
+                "temperature": 0,
+            },
+        )
+
+        assert response.status_code == 200, response.text
+        assert create_mock.await_args.kwargs["model"] == "gpt-5-mini"
+        assert response.json()["model"] == "gpt-5-mini"
 
 
 # ============================================================================
