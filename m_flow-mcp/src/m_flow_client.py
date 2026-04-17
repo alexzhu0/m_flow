@@ -180,6 +180,8 @@ class MflowClient:
                 "query_text": query_text,
                 "top_k": top_k,
             }
+            if datasets:
+                params["datasets"] = datasets
             if system_prompt:
                 params["system_prompt"] = system_prompt
             if enable_hybrid_search is not None:
