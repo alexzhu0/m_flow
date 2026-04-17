@@ -32,7 +32,6 @@ permissions:
 jobs:
   load-test:
     name: Execute load / stress test with S3 storage backend
-    if: ${{ secrets.AWS_S3_DEV_USER_KEY_ID != '' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 60
 
@@ -58,16 +57,30 @@ jobs:
       EMBEDDING_API_VERSION:  ${{ secrets.EMBEDDING_API_VERSION }}
 
     steps:
+      - name: Check S3 credentials availability
+        id: s3-creds
+        run: |
+          if [ -n "${AWS_ACCESS_KEY_ID}" ] && [ -n "${AWS_SECRET_ACCESS_KEY}" ]; then
+            echo "run_load_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_load_tests=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping load tests because AWS S3 dev credentials are not configured."
+          fi
+
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        if: ${{ steps.s3-creds.outputs.run_load_tests == 'true' }}
 
       - name: Bootstrap M-flow environment (with AWS extras)
         uses: ./.github/actions/m_flow_setup
+        if: ${{ steps.s3-creds.outputs.run_load_tests == 'true' }}
         with:
           python-version: "3.11.x"
           extra-dependencies: "aws"
 
       - name: Display OS file-descriptor limit
+        if: ${{ steps.s3-creds.outputs.run_load_tests == 'true' }}
         run: ulimit -n
 
       - name: Run load test suite
+        if: ${{ steps.s3-creds.outputs.run_load_tests == 'true' }}
         run: uv run python ./m_flow/tests/test_load.py
