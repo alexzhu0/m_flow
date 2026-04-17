@@ -323,8 +323,7 @@ class MCPTestClient:
                 self.results["learn"] = {"status": "PASS"}
                 print("✅ learn 通过")
             else:
-                self.results["learn"] = {"status": "PASS"}
-                print("✅ learn 通过（无数据）")
+                raise Exception(f"未预期的返回: {content}")
         except Exception as e:
             self.results["learn"] = {"status": "FAIL", "error": str(e)}
             print(f"❌ learn 失败: {e}")
@@ -496,8 +495,7 @@ class MCPTestClient:
                 self.results["learn_with_params"] = {"status": "PASS"}
                 print("✅ learn 带 datasets 通过")
             else:
-                self.results["learn_with_params"] = {"status": "PASS"}
-                print("✅ learn 带 datasets 通过（无数据）")
+                raise Exception(f"未预期的返回: {content}")
         except Exception as e:
             self.results["learn_with_params"] = {"status": "FAIL", "error": str(e)}
             print(f"❌ learn 带 datasets 失败: {e}")
