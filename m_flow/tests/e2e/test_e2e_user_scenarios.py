@@ -20,6 +20,7 @@ Tests use FastAPI TestClient for API-level E2E testing.
 
 from __future__ import annotations
 
+import importlib
 import io
 import os
 import sys
@@ -338,10 +339,31 @@ class TestE2E007OpenAICompatibleAPI:
 class TestE2E010DataUpdateFlow:
     """E2E-010: Test data update flow."""
 
-    def test_update_endpoint_accessible(self, test_client):
-        """Step 4: Update endpoint is accessible."""
-        response = test_client.patch("/api/v1/update", json={"memory_ids": [str(uuid.uuid4())], "new_data": "updated"})
-        assert response.status_code != 404
+    def test_update_endpoint_accessible(self, monkeypatch, test_client):
+        """Step 4: Update endpoint accepts the documented multipart request shape."""
+        update_api = importlib.import_module("m_flow.api.v1.update")
+        captured: dict[str, Any] = {}
+
+        async def fake_update(**kwargs):
+            captured.update(kwargs)
+            return {"status": "ok", "data_id": str(kwargs["data_id"])}
+
+        monkeypatch.setattr(update_api, "update", fake_update)
+
+        data_id = uuid.uuid4()
+        dataset_id = uuid.uuid4()
+        response = test_client.patch(
+            f"/api/v1/update?data_id={data_id}&dataset_id={dataset_id}",
+            files=[("data", ("replacement.txt", b"updated", "text/plain"))],
+            data={"graph_scope": "project-a"},
+        )
+
+        assert response.status_code == 200, response.text
+        assert captured["data_id"] == data_id
+        assert captured["dataset_id"] == dataset_id
+        assert captured["graph_scope"] == ["project-a"]
+        assert [upload.filename for upload in captured["data"]] == ["replacement.txt"]
+        assert response.json()["status"] == "ok"
 
 
 # ============================================================================
