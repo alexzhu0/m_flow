@@ -117,10 +117,11 @@ class TestE2E001NewUserFlow:
         assert response.status_code in [200, 503]
 
     def test_root_accessible(self, unauthenticated_client):
-        """Step 2: Verify root path is accessible."""
+        """Step 2: Verify root path exposes the current service status contract."""
         response = unauthenticated_client.get("/")
         assert response.status_code == 200
-        assert "message" in response.json()
+        payload = response.json()
+        assert payload == {"status": "ok", "service": "m_flow"}
 
     def test_authenticated_user_can_access_datasets(self, test_client):
         """Step 3-5: After login, user can access datasets."""
