@@ -130,10 +130,23 @@ class TestE2E001NewUserFlow:
         assert response.status_code != 401
 
     def test_settings_retrieval(self, test_client):
-        """Step 6: User can retrieve configuration settings."""
+        """Step 6: User can retrieve configuration settings using the current response contract."""
         response = test_client.get("/api/v1/settings")
-        assert response.status_code != 401
-        assert response.status_code != 404
+
+        assert response.status_code == 200, response.text
+        payload = response.json()
+        assert set(payload) == {"llm", "vectorDb", "embedding"}
+        assert {"llmProvider", "llmModel", "llmApiKey"}.issubset(payload["llm"])
+        assert {"vectorDbProvider", "vectorDbUrl", "vectorDbKey"}.issubset(payload["vectorDb"])
+        assert {
+            "embeddingProvider",
+            "embeddingModel",
+            "embeddingDimensions",
+            "embeddingEndpoint",
+        }.issubset(payload["embedding"])
+        assert "provider" not in payload["llm"]
+        assert "vector_db" not in payload
+        assert "embedding_provider" not in payload["embedding"]
 
     @patch("m_flow.api.v1.add.add")
     def test_first_dataset_creation(self, mock_add, test_client):
