@@ -34,27 +34,32 @@ That distinction matters because similarity and relevance are not identical.
 *Similarity* is proximity in representation space. *Relevance* is whether the system can connect the query to the answer through a coherent structure of evidence.
 
 <u>Similar</u> and <u>relevant</u> sometimes overlap, but they are fundamentally different.  
-Consider a non-technical query: **"Why did I miss my flight?"**
+Consider an everyday query: **"Why was Maria upset at Monday's standup?"**
 
 **Traditional retrieval** — keyword overlap can look related, yet miss the real cause:
 
 ```mermaid
 flowchart LR
-    Q["Query: Why did I\nmiss my flight?"] -->|"keyword overlap / similarity"| C1["Document: airport checklist\n(passport, baggage, gate,\nboarding, airport)"]
-    C1 -->|"✗ repeated travel keywords,\nbut not my causal chain"| R["Looks related,\nactually irrelevant answer"]
+    Q["Query: Why was Maria upset\nat Monday's standup?"] -->|"similarity on repeated words:\nstandup / upset / team"| C1["Document: how to run effective\ndaily standups (handling conflict,\nteam communication tips)"]
+    C1 -->|"✗ high keyword overlap,\nbut generic advice"| R["Looks relevant by words,\nnot the cause of THIS event"]
 ```
 
-**M-flow retrieval** — anchor match first, then graph propagation:
+**M-flow retrieval** — anchor at matching granularity, then graph propagation to the Episode bundle:
+
+M-flow stores knowledge in a four-layer cone graph: **Episode → Facet → FacetPoint → Entity**. **A query lands on the layer that matches its granularity** — a precise cue hits a fine-grained *FacetPoint*; a broader theme hits a *Facet* or an *Episode* summary. Here the specific cue *"I wasn't told about the deadline"* anchors on a FacetPoint at the same granularity, and graph propagation then routes up through its *Facet* to the *Episode* it belongs to. Each returned **bundle is one Episode**, scored by its strongest path of evidence.
 
 ```mermaid
 flowchart LR
-    Q["Query: Why did I\nmiss my flight?"] -->|"anchor match"| FP["FacetPoint\nalarm dismissed at 6:30"]
-    FP -->|"graph propagation"| F["Facet\nleft home 40 min late"]
-    F -->|"supported path"| E["Episode\nmissed airport check-in"]
-    E -->|"✓ evidence-based answer"| R["Primary cause:\nlate departure from home"]
+    Q["Query:<br/>Why was Maria upset<br/>at Monday's standup?"]
+    Q -->|"vector hit at matching<br/>granularity"| FP["FacetPoint (anchor)<br/>'I wasn't told about<br/>the deadline'<br/>— Maria, Mon 09:15"]
+    FP -->|"belongs to"| F["Facet<br/>Deadline communication<br/>gap raised at standup"]
+    F -->|"part of"| EP["Episode (bundle)<br/>Monday standup discussion<br/>(contains Maria's complaint AND<br/>the weekend deadline change<br/>context she referenced)"]
+    EP --> R["Answer composed from<br/>the Episode bundle's contents:<br/>Maria was blindsided by a<br/>weekend deadline change<br/>she was not included in"]
 ```
 
-> **Key idea:** similarity can be misled by repeated keywords; M-flow first locks onto an anchor, then retrieves through graph propagation along an evidence path.
+The downstream LLM then composes the final answer from the bundle's content (the Episode together with its Facets and FacetPoints). For the full path-cost mechanism, see [Retrieval Architecture](docs/RETRIEVAL_ARCHITECTURE.md).
+
+> **Key idea:** similarity matches by overlapping words; M-flow matches by granularity-aligned anchors and then routes through the cone graph to a coherent Episode bundle.
 
 The graph finds the answer not by matching words, but by following the chain of evidence. This difference — **from candidate matching to path-cost retrieval** — is what drives M-flow's advantage in our reported benchmarks.
 
