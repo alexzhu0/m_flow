@@ -174,6 +174,40 @@ flowchart LR
 
 > For the full technical deep-dive, see [Retrieval Architecture](docs/RETRIEVAL_ARCHITECTURE.md)
 
+### Three more capabilities
+
+
+
+**Coreference resolution at ingestion**
+
+- Pronouns (`he / she / it / 那个 / 该公司`) are **resolved into concrete antecedents *before* indexing**
+- The graph stores actual names and entities, not pronouns — so reference ambiguity never propagates into retrieval
+
+*Mini-example (two-turn conversation).*
+
+- Turn 1 (ingested earlier): *"Maria raised the deadline issue at Monday's standup."*
+- Turn 2 (ingested later, as a separate call): *"**She** said **she** wasn't told about the change."*
+
+*Without coreference*: each turn is ingested independently. Turn 2 contains no `Maria` token, so its FacetPoint cannot anchor on Entity `Maria`. A later query *"What did Maria say about the deadline?"* finds Turn 1 but **never reaches Turn 2** — the relevant evidence is invisible because the anchor is missing.
+
+*With coreference*: M-flow keeps a stream-level session across turns. When Turn 2 arrives, *she* is resolved to *Maria* using the antecedent from Turn 1, producing *"**Maria** said **Maria** wasn't told about the change."* before indexing. Turn 2 now anchors on Entity `Maria` and becomes retrievable through the same Entity bridge.
+
+> *Pronouns get resolved before they reach the graph.* See the [coreference module](coreference/README.md).
+
+**Face-aware memory partitioning (real-time routing)**
+
+- Optional integration with [fanjing-face-recognition](https://github.com/FlowElement-ai/fanjing-face-recognition) detects who is in front of the camera in real time
+- Each recognized person is automatically mapped to **their own memory partition** (dataset)
+- Conversations are ingested into and retrieved from the right partition with no manual switching — multi-person memory isolation by biometric identity
+
+> *Each face has its own memory; the system routes by who is talking.* See [Playground with Face Recognition](#playground-with-face-recognition).
+
+**Procedural memory — the abstract dimension**
+
+- Beyond factual knowledge, M-flow extracts **reusable abstract patterns the LLM cannot pre-train on**: your habits, workflows, decision rules, naming conventions, format preferences — captured once, applied across future interactions
+
+> *The reusable abstract know-how about you and your work that no foundation model can already have.*
+
 ## Benchmarks
 
 All systems use gpt-5-mini (answer) + gpt-4o-mini (judge). Cat 5 (adversarial) excluded from LoCoMo.
