@@ -26,6 +26,18 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from pydantic import BaseModel
 
+# The MiniMax adapter imports `anthropic` at module top-level (it speaks MiniMax's
+# Anthropic-compatible endpoint). `anthropic` is declared as an OPTIONAL extra in
+# pyproject.toml ([project.optional-dependencies] anthropic = ["anthropic>=0.26"]),
+# so environments that do not install `m_flow[anthropic]` (e.g. the default CI matrix)
+# would otherwise crash at collection time with ModuleNotFoundError. Skip the whole
+# module cleanly when the optional dependency is absent.
+pytest.importorskip(
+    "anthropic",
+    reason="MiniMax adapter requires the optional `anthropic` extra "
+    "(install with `pip install m_flow[anthropic]`).",
+)
+
 
 # ---------------------------------------------------------------------------
 # Pydantic response models used across tests
