@@ -2,7 +2,7 @@
 
 # M-flow
 
-**Graph RAG finds what's similar. M-flow finds what's relevant.**
+**RAG matches chunks. GraphRAG structures context. M-flow scores evidence paths.**
 
 Retrieval through reasoning and association — M-flow operates like a cognitive memory system.
 
