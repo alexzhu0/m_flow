@@ -92,10 +92,10 @@ A simple analogy: thinking of classmate A may first bring up the fact that A gre
 
 In the inverted-cone view, each hop can be seen as moving toward a wider semantic cross-section: from a precise cue, to a related fact or facet, to the broader Episode that contains the useful context.
 
-The figure below is a visual aid for this process in an inverted-cone layout (wide top, narrow bottom; supplementary to the text above):
+The figure below is a visual aid for this process, laid out left-to-right (cue on the left, broader Episodes on the right; supplementary to the text above):
 
 ```mermaid
-flowchart BT
+flowchart LR
     Q["Cue / query\nclassmate A"]
     A["Anchor (Entity)\nA"]
     FP1["FacetPoint\nA grew up in California"]
