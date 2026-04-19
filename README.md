@@ -84,7 +84,7 @@ M-flow organizes knowledge into a four-level **Cone Graph** — a layered hierar
 
 M-flow treats association as controlled graph propagation, not as a one-shot match.
 
-A query first lands on the most precise anchor it can find — an Entity, FacetPoint, Facet, or Episode. From that anchor, evidence spreads through nearby typed edges and connected memory units. Each hop expands the semantic field, but each edge also adds cost. This means association is not a random graph walk: only paths with coherent, low-cost connections remain competitive.
+A query lands on the most precise anchor it can find — an Entity, FacetPoint, Facet, or Episode. From that anchor, evidence spreads through nearby typed edges and connected memory units. Each hop expands the semantic field, but each edge also adds cost. This means association is not a random graph walk: only paths with coherent, low-cost connections remain competitive.
 
 A simple analogy: thinking of classmate A may first bring up the fact that A grew up in California. That fact opens a wider neighborhood of California-related memories; within that neighborhood, the Lakers may become the next low-cost association. M-flow models this kind of recall as path-cost propagation through a structured memory graph.
 
