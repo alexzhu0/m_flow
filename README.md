@@ -24,13 +24,15 @@ Retrieval through reasoning and association — M-flow operates like a cognitive
 
 ## What is M-flow?
 
-The fundamental shift is this: **existing systems build graphs but still retrieve by embedding distance. M-flow makes the graph the retrieval mechanism itself.**
+The real shift is not whether a system builds a graph, but what the graph is allowed to do at retrieval time.
 
-RAG embeds chunks and ranks by vector similarity. GraphRAG goes further — it extracts entities, builds a knowledge graph, and generates community summaries. But when a query arrives, retrieval still reduces to embedding the query and matching against stored text. The graph informs what gets embedded; it does not participate in how results are scored. The retrieval step remains **similarity-driven**.
+In most RAG systems, retrieval is still dominated by similarity: the query is embedded, textual units are ranked by vector distance, and structure—if present—mainly helps organize, summarize, or expand context. Many GraphRAG systems add entities, relations, and community structure, but the graph often remains supportive rather than decisive in scoring.
 
-M-flow takes a different approach: the graph is the scoring engine. When a query arrives, vector search casts a wide net across multiple granularities to find entry points. Then **the graph takes over** — propagating evidence along typed, semantically weighted edges, and scoring each knowledge unit by the tightest chain of reasoning that connects it to the query.
+M-flow takes a different approach. Vector search is used primarily to open candidate entry points across multiple granularities. From there, retrieval becomes graph-led: evidence moves through typed, semantically weighted edges, and each knowledge unit is scored by the strongest supporting path that links it to the query.
 
-Similar and relevant sometimes overlap, but they are fundamentally different. Consider the query **"Why did the migration fail?"**
+That distinction matters because similarity and relevance are not identical. Similarity is proximity in representation space. Relevance is whether the system can connect the query to the answer through a coherent structure of evidence.
+
+Consider the query **"Why did the migration fail?"**
 
 **Traditional retrieval** — matches by surface similarity:
 
