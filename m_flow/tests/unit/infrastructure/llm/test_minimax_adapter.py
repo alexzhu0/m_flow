@@ -34,8 +34,7 @@ from pydantic import BaseModel
 # module cleanly when the optional dependency is absent.
 pytest.importorskip(
     "anthropic",
-    reason="MiniMax adapter requires the optional `anthropic` extra "
-    "(install with `pip install m_flow[anthropic]`).",
+    reason="MiniMax adapter requires the optional `anthropic` extra (install with `pip install m_flow[anthropic]`).",
 )
 
 
