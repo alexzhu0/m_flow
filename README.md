@@ -28,35 +28,37 @@ The real shift is not whether a system builds a graph, but what the graph is all
 
 In most RAG systems, retrieval is still dominated by similarity: the query is embedded, textual units are ranked by vector distance, and structure—if present—mainly helps organize, summarize, or expand context. Many GraphRAG systems add entities, relations, and community structure, but the graph often remains supportive rather than decisive in scoring.
 
-M-flow takes a different approach. Vector search is used primarily to open candidate entry points across multiple granularities. From there, retrieval becomes graph-led: evidence moves through typed, semantically weighted edges, and each knowledge unit is scored by the strongest supporting path that links it to the query.
+M-flow takes a different approach: the graph is the scoring engine. When a query arrives, vector search casts a wide net across multiple granularities to find entry points. Then **the graph takes over** — propagating evidence along typed, semantically weighted edges, and scoring each knowledge unit by the *strongest* chain of reasoning that connects it to the query.
 
-That distinction matters because similarity and relevance are not identical. Similarity is proximity in representation space. Relevance is whether the system can connect the query to the answer through a coherent structure of evidence.
+That distinction matters because similarity and relevance are not identical.  
+*Similarity* is proximity in representation space. *Relevance* is whether the system can connect the query to the answer through a coherent structure of evidence.
 
-Consider the query **"Why did the migration fail?"**
+<u>Similar</u> and <u>relevant</u> sometimes overlap, but they are fundamentally different.  
+Consider a non-technical query: **"Why did I miss my flight?"**
 
 **Traditional retrieval** — matches by surface similarity:
 
 ```mermaid
 flowchart LR
-    Q["Query: Why did the\nmigration fail?"] -->|"embed → cosine similarity"| C1["Chunk: Database migration\nbest practices checklist"]
-    C1 -->|"✗ wrong answer"| R["keywords match,\nbut answers a\ndifferent question"]
+    Q["Query: Why did I\nmiss my flight?"] -->|"embed → similarity"| C1["Document: airport checklist\n(passport, baggage, gate)"]
+    C1 -->|"✗ sounds related,\nbut not causal"| R["good travel tips,\nwrong explanation"]
 ```
 
-**M-flow retrieval** — traces through the knowledge graph:
+**M-flow retrieval** — traces through a causal memory path:
 
 ```mermaid
 flowchart LR
-    Q["Query: Why did the\nmigration fail?"] -->|search| FP["FacetPoint\nconnection pool\nexhausted at 2:47 AM"]
-    FP -->|"edge:pool failure caused\nservice downtime"| F["Facet\nRedis failure\nanalysis"]
-    F -->|"edge:core incident\ndetails"| E["Episode\nProduction outage\nFeb 12"]
-    E -->|"✓ correct result"| R["Redis connection pool\nexhausted under peak load"]
+    Q["Query: Why did I\nmiss my flight?"] -->|anchor| FP["FacetPoint\nalarm dismissed at 6:30"]
+    FP -->|"led to"| F["Facet\nleft home 40 min late"]
+    F -->|"caused"| E["Episode\nmissed airport check-in"]
+    E -->|"✓ useful answer"| R["Primary cause:\nlate departure from home"]
 ```
 
-> Zero keyword overlap with "migration" — found through graph path, not text similarity.
+> **Key idea:** the answer is found through an *evidence path*, not keyword overlap.
 
-The graph finds the answer not by matching words, but by following the chain of evidence. This difference — **from distance-based ranking to path-based reasoning** — is what drives M-flow's consistent advantage across benchmarks.
+The graph finds the answer not by matching words, but by following the chain of evidence. This difference — **from candidate matching to path-cost retrieval** — is what drives M-flow's advantage in our reported benchmarks.
 
-**M-flow operates like a cognitive system: it captures signal at the sharpest point of detail, traces associations through structured memory, and arrives at the right answer the way human recall does.**
+**M-flow operates like a cognitive system:** it captures signal at the sharpest point of detail, traces associations through structured memory, and arrives at the right answer the way human recall does.
 
 ## How It Works
 
@@ -69,7 +71,43 @@ M-flow organizes knowledge into a four-level **Cone Graph** — a layered hierar
 | **FacetPoint** | An atomic assertion or fact derived from a Facet | *"Was the P99 target under 500ms?"* |
 | **Entity** | A named thing — person, tool, metric — linked across all Episodes | *"Tell me about GPT-4o"* → surfaces all related contexts |
 
-Retrieval is **graph-routed**: the system casts a wide net across all levels, projects hits into the knowledge graph, propagates cost along every possible path, and scores each Episode by its **tightest chain of evidence**. One strong path is enough — the way a single association triggers an entire memory.
+Retrieval is **graph-routed**: the system casts a wide net across all levels, projects hits into the knowledge graph, propagates cost along *supported evidence paths*, and scores each Episode by its **strongest chain of evidence**. One strong path is enough — the way a single association triggers an entire memory.
+
+### Association as controlled propagation
+
+**Association is not random wandering.** It is *controlled propagation* over typed edges.
+
+```mermaid
+flowchart LR
+    Q["Cue: classmate A"] --> A["Entity: A"]
+    A --> FP1["FacetPoint:\nA grew up in California"]
+    FP1 --> F1["Facet:\nCalifornia background"]
+    F1 --> E1["Episode:\nschool years context"]
+    F1 --> FP2["FacetPoint:\nA is a Lakers fan"]
+    FP2 --> E2["Episode:\nNBA chat memory"]
+```
+
+Each hop expands context, but each edge adds cost.  
+Only **coherent, low-cost** paths survive scoring.
+
+### Multi-granularity anchors can coexist
+
+A query can enter from multiple anchor types at once; the graph then unifies them into one evidence bundle.
+
+```mermaid
+flowchart LR
+    Q["Query: how did the launch delay happen?"]
+    Q --> EP["Episode anchor:\nlaunch week summary"]
+    Q --> FC["Facet anchor:\nsupplier delay"]
+    Q --> FP["FacetPoint anchor:\nshipment arrived 2 days late"]
+    Q --> EN["Entity anchor:\nVendor X"]
+    EP --> B["Unified evidence bundle"]
+    FC --> B
+    FP --> B
+    EN --> B
+```
+
+This is why users do **not** need to pick the "correct memory layer" manually.
 
 > For the full technical deep-dive, see [Retrieval Architecture](docs/RETRIEVAL_ARCHITECTURE.md)
 
