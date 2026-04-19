@@ -242,7 +242,7 @@ All systems use gpt-5-mini (answer) + gpt-4o-mini (judge). Cat 5 (adversarial) e
 | Supermemory Cloud | 64.4% | gpt-5-mini | gpt-4o-mini | 10 |
 | Mem0 Cloud (tested) | 50.4% | gpt-5-mini | gpt-4o-mini | 30 |
 
-### LongMemEval
+### LongMemEval (top-k = 10)
 
 | System | LLM-Judge | Temporal (60) | Multi-session (40) |
 |--------|:---------:|:-------------:|:------------------:|
