@@ -57,16 +57,13 @@ flowchart LR
     EP --> R["Answer composed from<br/>the Episode bundle's contents:<br/>Maria was blindsided by a<br/>weekend deadline change<br/>she was not included in"]
 ```
 
- For the full path-cost mechanism, see [Retrieval Architecture](docs/RETRIEVAL_ARCHITECTURE.md).
+The downstream LLM then composes the final answer from the bundle's content (the Episode together with its Facets and FacetPoints). For the full path-cost mechanism, see [Retrieval Architecture](docs/RETRIEVAL_ARCHITECTURE.md).
 
 > **Key idea:** similarity matches by overlapping words; M-flow matches by granularity-aligned anchors and then routes through the cone graph to a coherent Episode bundle.
 
-M-flow's retrieval is graph-routed: the system casts a wide net across all levels, projects the hits into the knowledge graph, propagates cost along supported evidence paths, and scores each Episode by its strongest chain of evidence.
+The graph finds the answer not by matching words, but by following the chain of evidence. This difference — **from candidate matching to path-cost retrieval** — is what drives M-flow's advantage in our reported benchmarks.
 
-One strong path is enough — the way a single association can trigger an entire memory.
-
-**M-flow operates like a cognitive system:** This difference — **from candidate matching to path-cost retrieval** — is what drives M-flow's advantage in our reported benchmarks.
-
+**M-flow operates like a cognitive system:** it captures signal at the sharpest point of detail, traces associations through structured memory, and arrives at the right answer the way human recall does.
 
 ## How It Works
 
@@ -79,12 +76,17 @@ M-flow organizes knowledge into a four-level **Cone Graph** — a layered hierar
 | **FacetPoint** | An atomic assertion or fact derived from a Facet | *"Was the P99 target under 500ms?"* |
 | **Entity** | A named thing — person, tool, metric — linked across all Episodes | *"Tell me about GPT-4o"* → surfaces all related contexts |
 
+### Graph-routed Bundle Search
+
+Retrieval is graph-routed: the system casts a wide net across all levels, projects the hits into the knowledge graph, propagates cost along supported evidence paths, and scores each Episode by its strongest chain of evidence.
+
+One strong path is enough — the way a single association can trigger an entire memory.
 
 ### Association as controlled propagation
 
-M-flow treats association as controlled graph propagation, not as a one-shot match.
+M-flow treats association as controlled graph propagation, not as a one-shot similarity match.
 
-A query lands on the most precise anchor it can find — an Entity, FacetPoint, Facet, or Episode. From that anchor, evidence spreads through nearby typed edges and connected memory units. Each hop expands the semantic field, but each edge also adds cost. This means association is not a random graph walk: only paths with coherent, low-cost connections remain competitive.
+A query first lands on the most precise anchor it can find — an Entity, FacetPoint, Facet, or Episode. From that anchor, evidence spreads through nearby typed edges and connected memory units. Each hop expands the semantic field, but each edge also adds cost. This means association is not a random graph walk: only paths with coherent, low-cost connections remain competitive.
 
 A simple analogy: thinking of classmate A may first bring up the fact that A grew up in California. That fact opens a wider neighborhood of California-related memories; within that neighborhood, the Lakers may become the next low-cost association. M-flow models this kind of recall as path-cost propagation through a structured memory graph.
 
@@ -120,24 +122,18 @@ M-flow connects these granularities inside one graph. Episodes, Facets, FacetPoi
 
 The user does not need to choose the right memory layer. M-flow lets the query find the right-granularity anchor, then uses the graph to return the memory bundle with the strongest supporting path.
 
-The figure below only illustrates this mechanism:
+How the routing maps in practice:
 
-```mermaid
-flowchart LR
-    Q["Query"]
-    Q --> EP["Episode entry"]
-    Q --> FC["Facet entry"]
-    Q --> FP["FacetPoint entry"]
-    Q --> EN["Entity entry"]
-    EP -->|supported path| B["Returned memory bundle"]
-    FC -->|supported path| B
-    FP -->|supported path| B
-    EN -->|supported path| B
-```
+| Query style | Typical entry layer | What's returned |
+|-------------|---------------------|-----------------|
+| Broad / thematic — *"How did Q3 planning go?"* | Episode summary (direct hit; penalized) | The matching Episode |
+| Mid-grained / topical — *"deadline communication issues"* | Facet | The Episode that contains the Facet |
+| Precise / atomic — *"'I wasn't told about the deadline'"* | FacetPoint | The Episode that contains the FacetPoint |
+| Entity-centered — *"anything about Maria"* | Entity | All Episodes that involve `Maria` |
 
 ### M-flow retrieval at a glance
 
-**1. Graph-led retrieval**
+**1. Graph-led retrieval (not similarity-led)**
 
 - Vector / hybrid search only opens entry points
 - Final relevance is determined by graph propagation
@@ -156,21 +152,28 @@ flowchart LR
 - Episodes, Facets, FacetPoints, Entities all act as entry points
 - All granularities are connected in one graph
 
-> *Not just multi-level storage — but shared retrieval space.*
+> *Not just multi-level storage — but multi-level retrieval.*
 
-**4. Controlled propagation**
+**4. Semantic edges as first-class signals**
+
+- Edges carry natural-language meaning (`edge_text`)
+- Relationships are searchable and scored
+
+> *Connections carry meaning, not just structure.*
+
+**5. Controlled propagation (not a naive graph walk)**
 
 - Each hop expands context but also adds cost
 - Only coherent, low-cost paths survive
 
 > *Association, but with structure and discipline.*
 
-**5. Adaptive and noise-resistant retrieval**
+**6. Adaptive and noise-resistant retrieval**
 
 - Broad matches are penalized
 - Node / edge importance adapts per query
 
-> *Prevents "looks similar" from beating "is relevant".*
+> *Prevents "looks relevant" from beating "is relevant".*
 
 > For the full technical deep-dive, see [Retrieval Architecture](docs/RETRIEVAL_ARCHITECTURE.md)
 
@@ -185,8 +188,8 @@ flowchart LR
 
 *Mini-example (two-turn conversation).*
 
-- Turn 1 (ingested earlier): *"Maria raised the deadline issue at Monday's standup."*
-- Turn 2 (ingested later, as a separate call): *"**She** said **she** wasn't told about the change."*
+- Turn 1 : *"Maria raised the deadline issue at Monday's standup."*
+- Turn 2 : *"**She** said **she** wasn't told about the change."*
 
 *Without coreference*: each turn is ingested independently. Turn 2 contains no `Maria` token, so its FacetPoint cannot anchor on Entity `Maria`. A later query *"What did Maria say about the deadline?"* finds Turn 1 but **never reaches Turn 2** — the relevant evidence is invisible because the anchor is missing.
 
