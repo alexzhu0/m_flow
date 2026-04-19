@@ -124,12 +124,12 @@ The user does not need to choose the right memory layer. M-flow lets the query f
 
 How the routing maps in practice:
 
-| Query style | Typical entry layer | What's returned |
-|-------------|---------------------|-----------------|
-| Broad / thematic — *"How did Q3 planning go?"* | Episode summary (direct hit; penalized) | The matching Episode |
-| Mid-grained / topical — *"deadline communication issues"* | Facet | The Episode that contains the Facet |
-| Precise / atomic — *"'I wasn't told about the deadline'"* | FacetPoint | The Episode that contains the FacetPoint |
-| Entity-centered — *"anything about Maria"* | Entity | All Episodes that involve `Maria` |
+| Query style | Typical entry layer | 
+|-------------|---------------------|
+| Broad / thematic — *"How did Q3 planning go?"* | Episode summary (direct hit; penalized) |
+| Mid-grained / topical — *"deadline communication issues"* | Facet |
+| Precise / atomic — *"'I wasn't told about the deadline'"* | FacetPoint |
+| Entity-centered — *"anything about Maria"* | Entity |
 
 ### M-flow retrieval at a glance
 
