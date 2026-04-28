@@ -360,11 +360,38 @@ class TestE2E005ErrorRecoveryFlow:
 class TestE2E006CloudSyncFlow:
     """E2E-006: Test cloud sync flow."""
 
-    def test_sync_status_accessible(self, test_client):
-        """Step 5: User can check sync status."""
+    def test_sync_status_accessible(self, monkeypatch, test_client):
+        """Step 5: User can check sync status using the current response contract."""
+        sync_router = importlib.import_module("m_flow.api.v1.sync.routers.get_sync_router")
+        created_at = datetime(2026, 4, 23, 12, 30, 0)
+
+        async def fake_running_syncs(_user_id):
+            return [
+                SimpleNamespace(
+                    run_id="run-123",
+                    dataset_ids=["ds-1"],
+                    dataset_names=["alpha"],
+                    progress_percentage=42,
+                    created_at=created_at,
+                )
+            ]
+
+        monkeypatch.setattr(sync_router, "get_running_sync_operations_for_user", fake_running_syncs)
+
         response = test_client.get("/api/v1/sync/status")
-        assert response.status_code != 401
-        assert response.status_code != 404
+
+        assert response.status_code == 200, response.text
+        assert response.json() == {
+            "has_running_sync": True,
+            "running_sync_count": 1,
+            "latest_running_sync": {
+                "run_id": "run-123",
+                "dataset_ids": ["ds-1"],
+                "dataset_names": ["alpha"],
+                "progress_percentage": 42,
+                "created_at": "2026-04-23T12:30:00Z",
+            },
+        }
 
 
 # ============================================================================
