@@ -567,6 +567,48 @@ class TestAPIEndpointCoverage:
         assert response.status_code != 404, f"Endpoint {endpoint} not found"
         assert response.status_code != 401, f"Endpoint {endpoint} requires auth but shouldn't"
 
+    def test_pipeline_active_returns_current_contract(self, monkeypatch, test_client):
+        """Pin the active-pipeline endpoint's serialized response contract."""
+        pipeline_methods = importlib.import_module("m_flow.pipeline.methods")
+
+        async def fake_active_pipeline_runs():
+            return [
+                {
+                    "workflow_run_id": "11111111-1111-1111-1111-111111111111",
+                    "dataset_id": "22222222-2222-2222-2222-222222222222",
+                    "dataset_name": "customer-notes",
+                    "workflow_name": "memorize",
+                    "status": "STARTED",
+                    "total_items": 5,
+                    "processed_items": 2,
+                    "current_step": "extracting facets",
+                    "started_at": "2026-04-29T10:00:00Z",
+                    "updated_at": "2026-04-29T10:01:30Z",
+                    "created_at": "2026-04-29T09:59:00Z",
+                }
+            ]
+
+        monkeypatch.setattr(pipeline_methods, "get_active_pipeline_runs", fake_active_pipeline_runs)
+
+        response = test_client.get("/api/v1/pipeline/active")
+
+        assert response.status_code == 200, response.text
+        assert response.json() == [
+            {
+                "workflowRunId": "11111111-1111-1111-1111-111111111111",
+                "datasetId": "22222222-2222-2222-2222-222222222222",
+                "datasetName": "customer-notes",
+                "workflowName": "memorize",
+                "status": "STARTED",
+                "totalItems": 5,
+                "processedItems": 2,
+                "currentStep": "extracting facets",
+                "startedAt": "2026-04-29T10:00:00Z",
+                "updatedAt": "2026-04-29T10:01:30Z",
+                "createdAt": "2026-04-29T09:59:00Z",
+            }
+        ]
+
 
 # ============================================================================
 # Cross-Cutting Concerns
