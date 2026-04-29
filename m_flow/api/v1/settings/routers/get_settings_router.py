@@ -12,10 +12,8 @@ from typing import TYPE_CHECKING, Literal, Optional
 from fastapi import APIRouter, Depends
 from pydantic import Field
 
-from m_flow.api.DTO import InDTO, OutDTO
-from m_flow.llm.config import LLMConfig
-from m_flow.adapters.vector.config import VectorConfig
 from m_flow.adapters.vector.embeddings.config import EmbeddingConfig
+from m_flow.api.DTO import InDTO, OutDTO
 
 if TYPE_CHECKING:
     from m_flow.auth.models import User
@@ -26,16 +24,22 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 
-class LLMSettingsOut(OutDTO, LLMConfig):
-    """LLM configuration output wrapper."""
+class LLMSettingsOut(OutDTO):
+    """Public LLM configuration output wrapper."""
 
-    pass
+    llm_provider: str
+    llm_model: str
+    llm_endpoint: Optional[str] = None
+    llm_api_version: Optional[str] = None
+    llm_api_key: str = ""
 
 
-class VectorDBSettingsOut(OutDTO, VectorConfig):
-    """Vector database configuration output wrapper."""
+class VectorDBSettingsOut(OutDTO):
+    """Public vector database configuration output wrapper."""
 
-    pass
+    vector_db_provider: str
+    vector_db_url: str
+    vector_db_key: str = ""
 
 
 class EmbeddingSettingsOut(OutDTO):
@@ -148,14 +152,18 @@ def get_settings_router() -> APIRouter:
             embedding_endpoint=emb_cfg.embedding_endpoint,
         )
 
-        # Convert Pydantic models to dicts for compatibility
-        llm_dict = base_settings.llm.model_dump()
-        vector_dict = base_settings.vector_db.model_dump()
-
         return SystemSettingsOut(
-            llm=LLMSettingsOut(**{k: v for k, v in llm_dict.items() if k in LLMSettingsOut.model_fields}),
+            llm=LLMSettingsOut(
+                llm_provider=base_settings.llm.provider,
+                llm_model=base_settings.llm.model,
+                llm_endpoint=base_settings.llm.endpoint,
+                llm_api_version=base_settings.llm.api_version,
+                llm_api_key=base_settings.llm.api_key,
+            ),
             vector_db=VectorDBSettingsOut(
-                **{k: v for k, v in vector_dict.items() if k in VectorDBSettingsOut.model_fields}
+                vector_db_provider=base_settings.vector_db.provider,
+                vector_db_url=base_settings.vector_db.url,
+                vector_db_key=base_settings.vector_db.api_key,
             ),
             embedding=embedding_out,
         )
