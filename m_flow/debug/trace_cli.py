@@ -16,7 +16,7 @@ import glob
 import json
 import os
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Any
 
 
@@ -82,8 +82,10 @@ def print_trace_summary(events: List[Dict[str, Any]]) -> None:
     print("\n[STATS] Trace Summary")
     print(f"   Events: {len(events)}")
     print(f"   Duration: {duration_ms}ms")
-    print(f"   Start: {datetime.fromtimestamp(start_ts / 1000).strftime('%H:%M:%S.%f')[:-3]}")
-    print(f"   End: {datetime.fromtimestamp(end_ts / 1000).strftime('%H:%M:%S.%f')[:-3]}")
+    print(
+        f"   Start: {datetime.fromtimestamp(start_ts / 1000, tz=timezone.utc).astimezone().strftime('%H:%M:%S.%f')[:-3]}"
+    )
+    print(f"   End: {datetime.fromtimestamp(end_ts / 1000, tz=timezone.utc).astimezone().strftime('%H:%M:%S.%f')[:-3]}")
 
     # Count by name
     cnt = defaultdict(int)
@@ -106,7 +108,7 @@ def print_events(events: List[Dict[str, Any]], tail: int = 100) -> None:
         ts = e.get("ts_ms", 0)
         data = e.get("data", {})
 
-        ts_str = datetime.fromtimestamp(ts / 1000).strftime("%H:%M:%S.%f")[:-3]
+        ts_str = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).astimezone().strftime("%H:%M:%S.%f")[:-3]
         print(f"[{ts_str}] {name}")
 
         if isinstance(data, dict):
@@ -161,7 +163,7 @@ def main():
         print(f"\n[LIST] Recent Traces ({len(traces)}):")
         print("-" * 80)
         for t in traces:
-            mtime_str = datetime.fromtimestamp(t["mtime"]).strftime("%Y-%m-%d %H:%M:%S")
+            mtime_str = datetime.fromtimestamp(t["mtime"], tz=timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M:%S")
             print(f"   {t['trace_id']}  {mtime_str}  {t['size']:>8} bytes")
         return
 
