@@ -225,7 +225,7 @@ async def extract_procedural_from_episodic(
             nodes = [(nid, p) for nid, p in nodes if nid in ep_id_set]
         results = nodes
     except Exception as e:
-        logger.error(f"[extract_from_episodic] Query failed: {e}", exc_info=True)
+        logger.exception(f"[extract_from_episodic] Query failed: {e}")
         return {
             "result": [],
             "episodes_analyzed": 0,

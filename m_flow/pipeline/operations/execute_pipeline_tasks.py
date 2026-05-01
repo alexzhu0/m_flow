@@ -120,7 +120,7 @@ async def _execute_task(
         _send_event(f"{task_type} Task Completed", user, name)
 
     except Exception as err:
-        logger.error("%s failed: %s - %s", task_type, name, str(err), exc_info=True)
+        logger.exception("%s failed: %s - %s", task_type, name, str(err))
         _send_event(f"{task_type} Task Errored", user, name)
         raise
 

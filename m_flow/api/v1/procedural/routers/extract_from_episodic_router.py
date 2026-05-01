@@ -181,7 +181,7 @@ def get_extract_from_episodic_router() -> APIRouter:
         except HTTPException:
             raise
         except Exception as e:
-            logger.error(f"[extract_from_episodic] Failed: {e}", exc_info=True)
+            logger.exception(f"[extract_from_episodic] Failed: {e}")
             raise HTTPException(status_code=500, detail=str(e))
 
     return router
