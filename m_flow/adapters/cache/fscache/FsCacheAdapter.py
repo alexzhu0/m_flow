@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 import diskcache as dc
 
@@ -65,7 +65,7 @@ class FSCacheAdapter(CacheDBInterface):
             key = f"agent_sessions:{user_id}:{session_id}"
 
             entry = {
-                "time": datetime.utcnow().isoformat(),
+                "time": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                 "question": question,
                 "context": context,
                 "answer": answer,

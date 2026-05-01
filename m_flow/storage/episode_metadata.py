@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import sqlite3
 import threading
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -159,7 +159,12 @@ def set_adapted_threshold(episode_id: str, threshold: int) -> bool:
             (episode_id, adapted_threshold, last_check_time, check_count)
             VALUES (?, ?, ?, ?)
             """,
-            (episode_id, threshold, datetime.utcnow().isoformat(), current_count + 1),
+            (
+                episode_id,
+                threshold,
+                datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
+                current_count + 1,
+            ),
         )
         conn.commit()
 

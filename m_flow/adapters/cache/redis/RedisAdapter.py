@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 import redis
@@ -137,7 +137,7 @@ class RedisAdapter(CacheDBInterface):
             key = f"agent_sessions:{user_id}:{session_id}"
 
             entry = {
-                "time": datetime.utcnow().isoformat(),
+                "time": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                 "question": question,
                 "context": context,
                 "answer": answer,

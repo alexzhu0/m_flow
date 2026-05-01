@@ -29,7 +29,7 @@ from __future__ import annotations
 import json
 import uuid
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
 
@@ -681,7 +681,7 @@ async def execute_split(
     # 4. Log split history (outside transaction, non-blocking)
     try:
         history_entry = SplitHistoryEntry(
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc).replace(tzinfo=None),
             original_episode_id=original_episode_id,
             original_episode_name=original_episode.get("name", ""),
             original_facet_count=len(facets),

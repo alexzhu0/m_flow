@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Union, Optional, List, Dict, Any
 from uuid import UUID, uuid4
-from datetime import datetime
+from datetime import datetime, timezone
 
 from m_flow.shared.logging_utils import get_logger
 from m_flow.auth.models import User
@@ -327,7 +327,7 @@ async def _create_derived_procedure_edges(
                         "derived_procedure",
                         {
                             "edge_text": f"Episode '{episode.name}' derived into Procedure '{proc.name}'",
-                            "created_at": datetime.utcnow().isoformat(),
+                            "created_at": datetime.now(timezone.utc).replace(tzinfo=None).isoformat(),
                         },
                     )
                     edges_created += 1
