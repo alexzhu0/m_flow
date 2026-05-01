@@ -64,11 +64,10 @@ async def execute_with_telemetry(
         send_telemetry("Pipeline Run Completed", user.id, additional_properties=props)
 
     except Exception as err:
-        logger.error(
+        logger.exception(
             "Pipeline failed: %s - %s",
             workflow_name,
             str(err),
-            exc_info=True,
         )
         send_telemetry("Pipeline Run Errored", user.id, additional_properties=props)
         raise
