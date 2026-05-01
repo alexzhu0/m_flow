@@ -252,7 +252,7 @@ async def fine_grained_triplet_search(
             f"Vector collection retrieval completed: Retrieved distances from {sum(1 for res in results if res)} collections in {vector_collection_search_time:.2f}s"
         )
 
-        node_distances = {collection: result for collection, result in zip(collections, results)}
+        node_distances = dict(zip(collections, results))
 
         edge_distances = node_distances.get("RelationType_relationship_name", None)
 

@@ -120,7 +120,7 @@ class EvalReport:
     ) -> tuple[List[FailureCase], Dict[str, int]]:
         """Analyze failure samples and bucket them."""
         failures = []
-        buckets: Dict[str, int] = {k: 0 for k in FAILURE_BUCKETS}
+        buckets: Dict[str, int] = dict.fromkeys(FAILURE_BUCKETS, 0)
 
         for case, result in zip(cases, results):
             if not result.ok:

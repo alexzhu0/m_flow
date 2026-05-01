@@ -286,7 +286,7 @@ async def procedural_bundle_search(
         if all(not r for r in results):
             return ([], []) if return_bundles else []
 
-        node_distances: Dict[str, list] = {c: r for c, r in zip(collections, results)}
+        node_distances: Dict[str, list] = dict(zip(collections, results))
         edge_distances = node_distances.get("RelationType_relationship_name")
 
         # Apply bonuses

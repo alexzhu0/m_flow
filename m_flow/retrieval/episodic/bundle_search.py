@@ -338,7 +338,7 @@ async def _vector_search(
 
     results = await asyncio.gather(*[search_in_collection(c) for c in cfg.collections])
 
-    node_distances = {c: r for c, r in zip(cfg.collections, results)}
+    node_distances = dict(zip(cfg.collections, results))
     edge_distances = node_distances.get("RelationType_relationship_name", None)
 
     return node_distances, edge_distances

@@ -20,7 +20,7 @@ from m_flow.search.types import RecallMode
 
 
 def _nodes_dict(nodes):
-    return {n_id: data for (n_id, data) in nodes}
+    return dict(nodes)
 
 
 def _normalize_name(name: str) -> str:
