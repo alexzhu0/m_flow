@@ -349,4 +349,4 @@ def _get_env_var_registry(
 
 def get_categories() -> list[str]:
     """Return all available environment variable categories."""
-    return sorted(set(v.get("category", "other") for v in ENV_REGISTRY.values()))
+    return sorted({v.get("category", "other") for v in ENV_REGISTRY.values()})

@@ -522,7 +522,7 @@ def _collect_same_entity_as_edges(
     Returns:
         Number of edges added to pending queue
     """
-    involves_entity_names = set(e.name for e in involves_entities)
+    involves_entity_names = {e.name for e in involves_entities}
     edges_added = 0
 
     for new_entity, existing_list in same_entity_edges_pending:

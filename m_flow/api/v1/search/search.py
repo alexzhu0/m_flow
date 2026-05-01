@@ -400,7 +400,7 @@ def _convert_to_query_result(
             return QueryResult(answer=None, context=[], datasets=[])
 
         context_list = [r.search_result for r in raw_result]
-        dataset_names = list(set(r.dataset_name for r in raw_result if r.dataset_name is not None))
+        dataset_names = list({r.dataset_name for r in raw_result if r.dataset_name is not None})
 
         return QueryResult(
             answer=None,

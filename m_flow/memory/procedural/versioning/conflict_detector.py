@@ -187,8 +187,8 @@ class ConflictDetector:
         candidate_boundary = self._extract_boundary_text(candidate)
 
         # Check boundary constraint word changes
-        existing_constraints = set(w for w in BOUNDARY_WORDS if w in existing_boundary)
-        candidate_constraints = set(w for w in BOUNDARY_WORDS if w in candidate_boundary)
+        existing_constraints = {w for w in BOUNDARY_WORDS if w in existing_boundary}
+        candidate_constraints = {w for w in BOUNDARY_WORDS if w in candidate_boundary}
 
         new_constraints = candidate_constraints - existing_constraints
         removed_constraints = existing_constraints - candidate_constraints

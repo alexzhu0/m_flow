@@ -75,20 +75,20 @@ async def run_custom_pipeline(
 
     from m_flow.pipeline.operations.pipeline import WorkflowConfig
 
-    pipeline_kwargs = dict(
-        pipeline=execute_workflow,
-        tasks=resolved_tasks,
-        user=user,
-        data=data,
-        datasets=dataset,
-        name=workflow_name,
-        config=WorkflowConfig(
+    pipeline_kwargs = {
+        "pipeline": execute_workflow,
+        "tasks": resolved_tasks,
+        "user": user,
+        "data": data,
+        "datasets": dataset,
+        "name": workflow_name,
+        "config": WorkflowConfig(
             vector_db=vector_db_config,
             graph_db=graph_db_config,
             cache=enable_cache,
             incremental=incremental_loading,
             batch_size=items_per_batch,
         ),
-    )
+    }
 
     return await dispatch_fn(**pipeline_kwargs)

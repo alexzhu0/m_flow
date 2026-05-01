@@ -137,7 +137,7 @@ class TestGetOrCreatePermission:
         assert len(errors) == 0, f"Got errors: {errors}"
 
         # All should have the same permission ID
-        perm_ids = set(r[2] for r in results if not isinstance(r, Exception))
+        perm_ids = {r[2] for r in results if not isinstance(r, Exception)}
         assert len(perm_ids) == 1, f"Expected 1 permission ID, got {len(perm_ids)}: {perm_ids}"
 
         # Verify only one permission was created in the database
