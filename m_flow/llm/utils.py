@@ -51,7 +51,7 @@ def get_max_chunk_tokens() -> int:
     half_llm_context = language_model.max_completion_tokens // 2
     embedding_cap = embedding_backend.max_completion_tokens
 
-    return embedding_cap if embedding_cap <= half_llm_context else half_llm_context
+    return min(embedding_cap, half_llm_context)
 
 
 def get_model_max_completion_tokens(model_name: str) -> Optional[int]:

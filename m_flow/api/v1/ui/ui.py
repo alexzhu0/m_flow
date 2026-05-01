@@ -146,8 +146,7 @@ def download_frontend_assets(force: bool = False) -> bool:
             resp = requests.get(url, stream=True, timeout=60)
             resp.raise_for_status()
             with open(archive, "wb") as f:
-                for chunk in resp.iter_content(8192):
-                    f.write(chunk)
+                f.writelines(resp.iter_content(8192))
 
             shutil.rmtree(frontend, ignore_errors=True)
             extract = Path(tmp) / "extracted"
