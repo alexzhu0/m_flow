@@ -277,10 +277,43 @@ class TestE2E003AdminOperationsFlow:
         response = admin_client.get("/api/v1/users")
         assert response.status_code != 401
 
-    def test_admin_can_view_activity(self, admin_client):
-        """Step 8: Admin can view activity logs."""
-        response = admin_client.get("/api/v1/activity")
-        assert response.status_code != 401
+    def test_admin_can_view_activity(self, monkeypatch, admin_client, mock_admin_user):
+        """Step 8: Admin can view activity logs using the current response contract."""
+        data_methods = importlib.import_module("m_flow.data.methods")
+        created_at = datetime(2026, 4, 29, 9, 15, 0)
+        captured: dict[str, Any] = {}
+
+        async def fake_recent_activities(*, user_id, limit):
+            captured["user_id"] = user_id
+            captured["limit"] = limit
+            return [
+                {
+                    "id": "activity-1",
+                    "type": "search",
+                    "title": "Searched project notes",
+                    "description": "Matched two memories",
+                    "status": "success",
+                    "created_at": created_at,
+                }
+            ]
+
+        monkeypatch.setattr(data_methods, "get_recent_activities", fake_recent_activities)
+
+        response = admin_client.get("/api/v1/activity?limit=1")
+
+        assert response.status_code == 200, response.text
+        assert captured["user_id"] == mock_admin_user.id
+        assert captured["limit"] == 1
+        assert response.json() == [
+            {
+                "id": "activity-1",
+                "type": "search",
+                "title": "Searched project notes",
+                "description": "Matched two memories",
+                "status": "success",
+                "createdAt": "2026-04-29T09:15:00",
+            }
+        ]
 
     def test_admin_data_cleanup_endpoint_exists(self, admin_client):
         """Step 7: Data cleanup endpoint exists (requires superuser via fastapi-users)."""
