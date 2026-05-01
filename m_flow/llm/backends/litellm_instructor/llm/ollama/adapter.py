@@ -33,15 +33,15 @@ from m_flow.shared.rate_limiting import llm_rate_limiter_context_manager
 _logger = get_logger()
 
 # Retry configuration: 120s total with jitter
-_RETRY_CFG = dict(
-    stop=stop_after_delay(120),
-    wait=wait_exponential_jitter(5, 120),
-    retry=retry_if_not_exception_type(
+_RETRY_CFG = {
+    "stop": stop_after_delay(120),
+    "wait": wait_exponential_jitter(5, 120),
+    "retry": retry_if_not_exception_type(
         (litellm.exceptions.NotFoundError, litellm.exceptions.BadRequestError, litellm.exceptions.AuthenticationError)
     ),
-    before_sleep=before_sleep_log(_logger, logging.DEBUG),
-    reraise=True,
-)
+    "before_sleep": before_sleep_log(_logger, logging.DEBUG),
+    "reraise": True,
+}
 
 
 class OllamaAPIAdapter(LLMBackend):
