@@ -21,7 +21,7 @@ _CONFIG_PATH = "m_flow.llm.backends.litellm_instructor.llm.rate_limiter.get_llm_
 def clean_singleton():
     """每个测试前重置单例"""
     llm_rate_limiter._instance = None
-    yield
+    return
 
 
 class TestRateLimiterInit:

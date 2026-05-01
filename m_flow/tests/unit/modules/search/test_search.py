@@ -54,7 +54,7 @@ def patch_side_effects(monkeypatch, search_module):
     monkeypatch.setattr(search_module, "log_query", mock_log_q)
     monkeypatch.setattr(search_module, "log_result", mock_log_r)
     monkeypatch.setattr(search_module, "prepare_search_result", mock_prepare)
-    yield
+    return
 
 
 class TestSearchAccessControl:
