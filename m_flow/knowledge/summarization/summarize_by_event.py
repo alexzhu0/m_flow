@@ -108,7 +108,7 @@ def _extract_episode_name(raw_text: str) -> str:
     """Extract 'Episode Name: ...' from LLM output."""
     import re
 
-    match = re.search(r"^Episode Name:\s*(.+?)(?:\n|$)", raw_text, re.I | re.M)
+    match = re.search(r"^Episode Name:\s*(.+?)(?:\n|$)", raw_text, re.IGNORECASE | re.MULTILINE)
     return match.group(1).strip() if match else ""
 
 

@@ -16,7 +16,7 @@ def _normalise_file_uri(raw: str) -> str:
     normalised = os.path.normpath(without_scheme)
     # On Windows the URI ``file:///C:/dir`` normalises to ``/C:\\dir``
     if os.name == "nt":
-        if (normalised.startswith("/") or normalised.startswith("\\")) and len(normalised) > 2 and normalised[2] == ":":
+        if (normalised.startswith(("/", "\\"))) and len(normalised) > 2 and normalised[2] == ":":
             normalised = normalised[1:]
     return normalised
 

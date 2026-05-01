@@ -224,7 +224,7 @@ async def route_documents_to_episodes(
         doc = getattr(first_chunk, "is_part_of", None)
 
         # Sentence-level mode: doc_id is actually event_id (precomputed once)
-        is_single_event = doc_id.startswith("evt_") or doc_id.startswith("atomic_")
+        is_single_event = doc_id.startswith(("evt_", "atomic_"))
 
         # Get doc_title (use extracted helper function to reduce nesting)
         doc_title = ""

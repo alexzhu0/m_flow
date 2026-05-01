@@ -259,7 +259,7 @@ async def fine_grained_triplet_search(
         if wide_search_limit is not None:
             relevant_ids_to_filter = list(
                 {
-                    str(getattr(scored_node, "id"))
+                    str(scored_node.id)
                     for collection_name, score_collection in node_distances.items()
                     if collection_name != "RelationType_relationship_name"
                     and isinstance(score_collection, (list, tuple))

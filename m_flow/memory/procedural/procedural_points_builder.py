@@ -79,7 +79,7 @@ def extract_anchor_tokens(text: str, min_len: int = 2, max_count: int = 50) -> L
     seen: Set[str] = set()
 
     # Numbers with units
-    for m in re.finditer(r"\d+\.?\d*\s*(?:TB|GB|MB|KB|%|次|个|分钟|秒|小时|天|ms|s|min)", text, re.I):
+    for m in re.finditer(r"\d+\.?\d*\s*(?:TB|GB|MB|KB|%|次|个|分钟|秒|小时|天|ms|s|min)", text, re.IGNORECASE):
         t = m.group(0).strip()
         k = t.lower()
         if k not in seen and len(t) >= min_len:

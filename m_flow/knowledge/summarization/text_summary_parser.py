@@ -97,7 +97,7 @@ class TextSummaryParser:
     def _extract_topic(cls, text: str) -> Optional[str]:
         """Extract overall topic from text."""
         # Try "Topic: ..." format
-        topic_match = re.search(r"^(?:Topic|Overall Topic|Summary):\s*(.+?)(?:\n|$)", text, re.I)
+        topic_match = re.search(r"^(?:Topic|Overall Topic|Summary):\s*(.+?)(?:\n|$)", text, re.IGNORECASE)
         if topic_match:
             return topic_match.group(1).strip()
 
@@ -106,7 +106,7 @@ class TextSummaryParser:
         if (
             10 < len(first_line) < 100
             and not first_line.startswith(("【", "-", "*", "#"))
-            and not re.match(r"^Episode Name:", first_line, re.I)
+            and not re.match(r"^Episode Name:", first_line, re.IGNORECASE)
         ):
             return first_line
 

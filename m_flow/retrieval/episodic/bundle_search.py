@@ -142,11 +142,7 @@ async def episodic_bundle_search(
         results_by_collection = {c: len(r) for c, r in node_distances.items()}
         total_hits = sum(results_by_collection.values())
         all_ids = {
-            str(getattr(r, "id"))
-            for results in node_distances.values()
-            if results
-            for r in results
-            if getattr(r, "id", None)
+            str(r.id) for results in node_distances.values() if results for r in results if getattr(r, "id", None)
         }
         rlog.log_vector_search(
             collections=cfg.collections,
@@ -425,7 +421,7 @@ async def _two_phase_projection(
     """Two-phase graph projection."""
     # Collect relevant IDs
     all_hit_ids = {
-        str(getattr(r, "id"))
+        str(r.id)
         for collection_name, results in node_distances.items()
         if collection_name != "RelationType_relationship_name" and results
         for r in results
@@ -485,7 +481,7 @@ async def _two_phase_projection_with_stats(
 
     # Collect relevant IDs
     all_hit_ids = {
-        str(getattr(r, "id"))
+        str(r.id)
         for collection_name, results in node_distances.items()
         if collection_name != "RelationType_relationship_name" and results
         for r in results

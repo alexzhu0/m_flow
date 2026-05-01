@@ -118,15 +118,14 @@ def _categorize_prompt(filename: str) -> str:
     # Answering: question answering and context generation
     # Note: summarize_search_results is for Q&A response, not general summarization
     if (
-        name.startswith("answer")
-        or name.startswith("direct_answer")
+        name.startswith(("answer", "direct_answer"))
         or "retrieval_context" in name
         or name == "search_result_deduplicator.txt"
     ):
         return "answering"
 
     # Episodic: Episode/Facet extraction and routing
-    if name.startswith("episodic") or name.startswith("episode"):
+    if name.startswith(("episodic", "episode")):
         return "episodic"
 
     # Entity: entity extraction and description
@@ -134,7 +133,7 @@ def _categorize_prompt(filename: str) -> str:
         return "entity"
 
     # Graph: knowledge graph generation
-    if name.startswith("generate_graph") or name.startswith("knowledge_graph_extractor"):
+    if name.startswith(("generate_graph", "knowledge_graph_extractor")):
         return "graph"
 
     # Summarization: content summarization (general purpose)

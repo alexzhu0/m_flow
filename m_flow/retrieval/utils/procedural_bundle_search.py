@@ -298,7 +298,7 @@ async def procedural_bundle_search(
 
         # Collect hit IDs
         all_hit_ids = {
-            str(getattr(r, "id"))
+            str(r.id)
             for col, scored in node_distances.items()
             if col != "RelationType_relationship_name"
             for r in (scored or [])
