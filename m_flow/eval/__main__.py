@@ -87,7 +87,7 @@ async def main_async(args):
         progress_callback=progress_callback if not args.quiet else None,
     )
 
-    print("")  # Newline
+    print()  # Newline
 
     # Load baseline (if comparison needed)
     baseline = None

@@ -197,8 +197,7 @@ def get_playground_router() -> APIRouter:
             user_id=str(user.id),
             session_id=req.session_id,
         )
-        if resolved_query.startswith(f"[{speaker_label}] "):
-            resolved_query = resolved_query[len(f"[{speaker_label}] ") :]
+        resolved_query = resolved_query.removeprefix(f"[{speaker_label}] ")
         t3 = _t.perf_counter()
 
         session.add_message("user", req.message, speaker_face_id=req.speaker_face_id)

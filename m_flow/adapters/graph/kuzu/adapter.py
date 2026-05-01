@@ -85,7 +85,7 @@ def _merge_node_props(data: Dict[str, Any]) -> Dict[str, Any]:
     col_created_at = data.pop("created_at", None)
     col_updated_at = data.pop("updated_at", None)
 
-    if "properties" in data and data["properties"]:
+    if data.get("properties"):
         try:
             nested = json.loads(data["properties"])
             del data["properties"]

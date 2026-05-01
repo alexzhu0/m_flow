@@ -501,8 +501,7 @@ def _register_get_raw_file(router: APIRouter) -> None:
             raise DataNotFoundError(message=f"Data ({data_id}) not found in dataset ({dataset_id}).")
 
         raw_loc = data_obj.processed_path or ""
-        if raw_loc.startswith("file://"):
-            raw_loc = raw_loc[len("file://") :]
+        raw_loc = raw_loc.removeprefix("file://")
         if not raw_loc or not os.path.exists(raw_loc):
             return JSONResponse(
                 status_code=404,
