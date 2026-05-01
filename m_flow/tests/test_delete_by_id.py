@@ -90,7 +90,7 @@ async def run_delete_by_id_tests():
     print("\n📝 测试2: 无权限删除应失败")
     try:
         await m_flow.delete(data_id=data_id2, dataset_id=ds2.id, user=default_user)
-        assert False, "应抛出异常"
+        raise AssertionError("应抛出异常")
     except (PermissionDeniedError, DatasetNotFoundError):
         print("✅ 通过")
 
@@ -98,7 +98,7 @@ async def run_delete_by_id_tests():
     print("\n📝 测试3: 删除不存在的数据")
     try:
         await m_flow.delete(data_id=uuid4(), dataset_id=ds1.id, user=default_user)
-        assert False
+        raise AssertionError
     except DocumentNotFoundError:
         print("✅ 通过")
 
@@ -106,7 +106,7 @@ async def run_delete_by_id_tests():
     print("\n📝 测试4: 删除不存在的数据集")
     try:
         await m_flow.delete(data_id=data_id2, dataset_id=uuid4(), user=test_user)
-        assert False
+        raise AssertionError
     except (DatasetNotFoundError, PermissionDeniedError):
         print("✅ 通过")
 
@@ -117,7 +117,7 @@ async def run_delete_by_id_tests():
     other_dss = await get_datasets_by_name(["other_ds"], default_user.id)
     try:
         await m_flow.delete(data_id=data_id2, dataset_id=other_dss[0].id, user=default_user)
-        assert False
+        raise AssertionError
     except DocumentNotFoundError:
         print("✅ 通过")
 
