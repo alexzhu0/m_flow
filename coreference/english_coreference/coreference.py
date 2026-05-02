@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 English coreference resolution: rule-first, conservative replacement.
 """

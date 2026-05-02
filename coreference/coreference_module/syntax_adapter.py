@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Lightweight syntax / role adapter layer: prefers available parsers, falls back to heuristic rules.
 """

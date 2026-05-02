@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Stage 5 Smoke Test: 写入质量增强验证
 

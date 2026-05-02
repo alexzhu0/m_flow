@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 NER result normalization: align entity types with Chinese implementation.
 """

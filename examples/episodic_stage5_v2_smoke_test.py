@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Stage 5.8-5.13 Smoke Test: aliases 兜底召回 + 语义同义合并
 

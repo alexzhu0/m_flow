@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 English tokenization and mention extraction (based on spaCy, conservative NP+NER extraction).
 """
