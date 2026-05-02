@@ -36,7 +36,7 @@ class Node:
         Default cost when this node was **not** hit by any vector search.
     """
 
-    __slots__ = ("id", "attributes", "_neighbours", "_edges", "status")
+    __slots__ = ("_edges", "_neighbours", "attributes", "id", "status")
 
     def __init__(
         self,
@@ -134,7 +134,7 @@ class Edge:
         Default cost when this edge was **not** matched by vector search.
     """
 
-    __slots__ = ("node1", "node2", "attributes", "directed", "status")
+    __slots__ = ("attributes", "directed", "node1", "node2", "status")
 
     def __init__(
         self,

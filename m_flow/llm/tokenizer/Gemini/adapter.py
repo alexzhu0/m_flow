@@ -30,7 +30,7 @@ class GeminiTokenizer(TokenizerInterface):
         Upper bound on output tokens for downstream callers.
     """
 
-    __slots__ = ("llm_model", "max_completion_tokens", "_api_client")
+    __slots__ = ("_api_client", "llm_model", "max_completion_tokens")
 
     def __init__(
         self,

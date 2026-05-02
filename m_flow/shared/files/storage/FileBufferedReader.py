@@ -12,7 +12,7 @@ from io import BufferedReader
 class FileBufferedReader(BufferedReader):
     """BufferedReader that exposes an explicit ``name`` property."""
 
-    __slots__ = ("_wrapped", "_label")
+    __slots__ = ("_label", "_wrapped")
 
     def __init__(self, raw_stream, name: str) -> None:
         super().__init__(raw_stream)

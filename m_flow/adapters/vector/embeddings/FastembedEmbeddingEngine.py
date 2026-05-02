@@ -41,13 +41,13 @@ class FastembedEmbeddingEngine(EmbeddingEngine):
     """
 
     __slots__ = (
-        "model",
-        "dimensions",
-        "max_completion_tokens",
         "batch_size",
+        "dimensions",
         "embedding_model",
-        "tokenizer",
+        "max_completion_tokens",
         "mock",
+        "model",
+        "tokenizer",
     )
 
     def __init__(

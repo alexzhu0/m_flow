@@ -30,7 +30,7 @@ class MistralTokenizer(TokenizerInterface):
         Downstream hint for maximum generation length.
     """
 
-    __slots__ = ("model", "max_completion_tokens", "_backing_tokenizer")
+    __slots__ = ("_backing_tokenizer", "max_completion_tokens", "model")
 
     def __init__(
         self,

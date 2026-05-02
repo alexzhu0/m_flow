@@ -16,7 +16,7 @@ class CacheDBInterface(ABC):
     Subclasses must implement lock primitives and Q/A session storage.
     """
 
-    __slots__ = ("_host", "_port", "_key", "_lock")
+    __slots__ = ("_host", "_key", "_lock", "_port")
 
     def __init__(self, host: str, port: int, lock_key: str) -> None:
         self._host = host

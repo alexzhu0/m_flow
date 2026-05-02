@@ -35,7 +35,7 @@ class MemoryGraph(MemoryAbstractGraph):
     ``directed`` flag controls whether edge semantics are symmetric.
     """
 
-    __slots__ = ("nodes", "edges", "directed")
+    __slots__ = ("directed", "edges", "nodes")
 
     nodes: Dict[str, Node]
     edges: List[Edge]

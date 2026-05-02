@@ -44,14 +44,14 @@ class OllamaEmbeddingEngine(EmbeddingEngine):
     """
 
     __slots__ = (
-        "model",
+        "batch_size",
         "dimensions",
-        "max_completion_tokens",
         "endpoint",
         "hf_tokenizer_name",
-        "batch_size",
-        "tokenizer",
+        "max_completion_tokens",
         "mock",
+        "model",
+        "tokenizer",
     )
 
     def __init__(

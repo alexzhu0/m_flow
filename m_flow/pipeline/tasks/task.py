@@ -31,7 +31,7 @@ class Stage:
         Keyword arguments merged into every invocation of *fn*.
     """
 
-    __slots__ = ("_fn", "_defaults", "_kw", "_cfg", "_kind", "_batch")
+    __slots__ = ("_batch", "_cfg", "_defaults", "_fn", "_kind", "_kw")
 
     def __init__(
         self,
