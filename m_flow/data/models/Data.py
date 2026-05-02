@@ -10,7 +10,7 @@ that has been processed through the ingestion pipeline.
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Dict, TYPE_CHECKING
+from typing import Any, Dict
 from uuid import uuid4
 
 from sqlalchemy import Column, DateTime, Integer, JSON, String
@@ -22,9 +22,6 @@ from m_flow.adapters.relational import Base
 from m_flow.shared.utils import to_iso_z
 
 from .DatasetEntry import DatasetEntry
-
-if TYPE_CHECKING:
-    pass
 
 
 def _current_utc_timestamp() -> datetime:

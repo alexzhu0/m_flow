@@ -10,14 +10,11 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections import Counter
-from typing import TYPE_CHECKING
 
 import m_flow
 from m_flow.adapters.graph.get_graph_adapter import get_graph_provider
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger()
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import base64
 import logging
-from typing import TYPE_CHECKING, Type
+from typing import Type
 
 import instructor
 import litellm
@@ -34,8 +34,6 @@ from m_flow.shared.logging_utils import get_logger
 from m_flow.shared.observability.get_observe import get_observe
 from m_flow.shared.rate_limiting import llm_rate_limiter_context_manager
 
-if TYPE_CHECKING:
-    pass
 
 _log = get_logger()
 _observe = get_observe()

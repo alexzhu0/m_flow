@@ -11,10 +11,7 @@ optional advanced metrics calculations.
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    pass
 
 # Import metric validation utilities
 from m_flow.tests.tasks.descriptive_metrics.metrics_test_utils import validate_metrics

@@ -15,7 +15,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from uuid import NAMESPACE_OID, UUID, uuid5
 
 from kuzu import Connection
@@ -33,8 +33,6 @@ from m_flow.shared.infra_utils.run_sync import run_sync
 from m_flow.shared.logging_utils import get_logger
 from m_flow.storage.utils_mod.utils import JSONEncoder
 
-if TYPE_CHECKING:
-    pass
 
 _log = get_logger()
 

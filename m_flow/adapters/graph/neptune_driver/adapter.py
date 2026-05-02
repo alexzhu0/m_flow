@@ -8,13 +8,11 @@ supporting openCypher queries with automatic retry and bulk operations.
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Optional, Tuple, Type
 from uuid import UUID
 
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 from m_flow.adapters.graph.graph_db_interface import (
     EdgeTuple as EdgeData,

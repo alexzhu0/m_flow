@@ -10,7 +10,7 @@ from __future__ import annotations
 import asyncio
 import json
 import re
-from typing import TYPE_CHECKING, List, Optional
+from typing import List, Optional
 from uuid import UUID
 
 from chromadb import AsyncHttpClient, Settings
@@ -27,8 +27,6 @@ from ..embeddings.EmbeddingEngine import EmbeddingEngine
 from ..utils import normalize_distances
 from ..vector_db_interface import VectorProvider
 
-if TYPE_CHECKING:
-    pass
 
 _log = get_logger("ChromaDB")
 

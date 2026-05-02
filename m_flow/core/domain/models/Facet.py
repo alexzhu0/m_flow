@@ -11,12 +11,9 @@ Enhancements:
 - has_point: Fine-grained point collection Facet → FacetPoint
 """
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, List
 
 from m_flow.core import MemoryNode
-
-if TYPE_CHECKING:
-    pass
 
 
 class Facet(MemoryNode):

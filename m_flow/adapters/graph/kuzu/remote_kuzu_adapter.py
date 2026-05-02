@@ -11,7 +11,7 @@ import asyncio
 import atexit
 import json
 import weakref
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 from uuid import UUID
 
 import aiohttp
@@ -20,8 +20,6 @@ from m_flow.adapters.graph.kuzu.adapter import KuzuAdapter
 from m_flow.shared.logging_utils import get_logger
 from m_flow.shared.utils import create_secure_ssl_context
 
-if TYPE_CHECKING:
-    pass
 
 _log = get_logger()
 

@@ -9,13 +9,10 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import m_flow
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger()
 

@@ -10,7 +10,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import sys
-from typing import TYPE_CHECKING, Any
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -22,9 +22,6 @@ from m_flow.cli.commands.memorize_command import MemorizeCommand
 from m_flow.cli.commands.search_command import SearchCommand
 from m_flow.cli.exceptions import CliCommandException
 from m_flow.data.methods.get_deletion_counts import DeletionCountsPreview
-
-if TYPE_CHECKING:
-    pass
 
 
 # ============================================================================

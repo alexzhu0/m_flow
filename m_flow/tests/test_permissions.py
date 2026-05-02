@@ -12,7 +12,7 @@ from __future__ import annotations
 import asyncio
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import m_flow
 from m_flow.auth.exceptions import PermissionDeniedError
@@ -22,8 +22,6 @@ from m_flow.data.methods import fetch_dataset_items
 from m_flow.search.types import RecallMode
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger()
 

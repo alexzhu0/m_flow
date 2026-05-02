@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
 
@@ -22,8 +21,6 @@ from m_flow.shared.files.utils.get_data_file_path import get_data_file_path
 from m_flow.shared.loaders.external.beautiful_soup_loader import BeautifulSoupLoader
 from m_flow.shared.loaders.LoaderEngine import LoaderEngine
 
-if TYPE_CHECKING:
-    pass
 
 # Test constants
 SAMPLE_URL = "http://example.com/"

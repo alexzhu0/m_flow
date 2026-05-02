@@ -12,7 +12,7 @@ import json
 import time
 from contextlib import asynccontextmanager
 from textwrap import dedent
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Optional, Tuple, Type
 from uuid import UUID
 
 from neo4j import AsyncGraphDatabase, AsyncSession
@@ -40,8 +40,6 @@ from .neo4j_metrics_utils import (
     get_size_of_connected_components,
 )
 
-if TYPE_CHECKING:
-    pass
 
 _log = get_logger("Neo4jDB")
 

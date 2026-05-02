@@ -8,7 +8,6 @@ Tenants group users and data into separate organizational units.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
@@ -16,9 +15,6 @@ from sqlalchemy.orm import relationship
 
 from .Principal import Principal
 from .UserTenant import UserTenant
-
-if TYPE_CHECKING:
-    pass
 
 
 class Tenant(Principal):

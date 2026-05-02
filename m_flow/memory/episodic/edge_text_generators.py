@@ -15,12 +15,8 @@ Optimization notes:
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 
 from .normalization import truncate
-
-if TYPE_CHECKING:
-    pass  # Entity is the new name for Entity
 
 
 def make_has_facet_edge_text(facet_type: str, facet_search_text: str, facet_description: str = "") -> str:

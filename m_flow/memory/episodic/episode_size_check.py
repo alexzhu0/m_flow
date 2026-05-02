@@ -31,7 +31,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, TYPE_CHECKING
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from pydantic import BaseModel, Field
@@ -59,8 +59,6 @@ from m_flow.memory.episodic.edge_text_generators import (
 )
 from m_flow.memory.episodic.normalization import truncate
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger("episodic.size_check")
 

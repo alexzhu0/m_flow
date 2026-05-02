@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 from sqlalchemy import Column, DateTime, Integer, JSON, Text
@@ -17,9 +17,6 @@ from sqlalchemy import UUID as SA_UUID
 from sqlalchemy import Enum as SA_Enum
 
 from m_flow.adapters.relational import Base
-
-if TYPE_CHECKING:
-    pass
 
 
 class SyncStatus(str, Enum):

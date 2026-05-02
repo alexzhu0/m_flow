@@ -7,7 +7,7 @@ Provides functions to analyze Episode quality and detect issues.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import Any, List, Optional
 
 from m_flow.memory.episodic.episode_size_check import (
     EpisodeStats,
@@ -20,8 +20,6 @@ from m_flow.memory.episodic.episode_size_check import (
 )
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 _logger = get_logger(__name__)
 

@@ -1,10 +1,7 @@
 from __future__ import annotations
 from m_flow.core import MemoryNode, Edge
 from m_flow.core.domain.models.EntityType import EntityType
-from typing import Optional, List, TYPE_CHECKING
-
-if TYPE_CHECKING:
-    pass
+from typing import Optional, List
 
 
 class Entity(MemoryNode):

@@ -23,13 +23,11 @@ Usage:
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Any, TYPE_CHECKING
+from typing import Dict, List, Any
 
 from m_flow.shared.logging_utils import get_logger
 from m_flow.memory.episodic.edge_text_generators import make_facet_involves_entity_edge_text
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger("episodic.facet_entity_matcher")
 

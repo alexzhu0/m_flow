@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Type, TypeVar
+from typing import Type, TypeVar
 
 from pydantic import BaseModel
 from tenacity import (
@@ -22,8 +22,6 @@ from tenacity import (
 from m_flow.shared.logging_utils import get_logger
 from m_flow.shared.rate_limiting import llm_rate_limiter_context_manager
 
-if TYPE_CHECKING:
-    pass
 
 _logger = get_logger()
 

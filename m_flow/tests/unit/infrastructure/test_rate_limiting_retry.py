@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import asyncio
 import time
-from typing import TYPE_CHECKING
 
 import pytest
 
@@ -20,8 +19,6 @@ from m_flow.llm.backends.litellm_instructor.llm.rate_limiter import (
 )
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger()
 

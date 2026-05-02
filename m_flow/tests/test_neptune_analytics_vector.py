@@ -11,7 +11,6 @@ import asyncio
 import os
 import uuid
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
 
@@ -26,8 +25,6 @@ from m_flow.search.operations import get_history
 from m_flow.search.types import RecallMode
 from m_flow.shared.logging_utils import get_logger
 
-if TYPE_CHECKING:
-    pass
 
 logger = get_logger()
 

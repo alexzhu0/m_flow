@@ -17,7 +17,7 @@ Facet generation now directly uses section-based path (zero information loss).
 
 from __future__ import annotations
 
-from typing import List, TYPE_CHECKING
+from typing import List
 
 from m_flow.shared.logging_utils import get_logger
 from m_flow.llm.LLMGateway import LLMService
@@ -30,9 +30,6 @@ from m_flow.memory.episodic.models import (
     FacetPointExtractionResult,
 )
 from m_flow.memory.episodic.llm_call_tracker import get_llm_tracker, LLMCallTracker
-
-if TYPE_CHECKING:
-    pass
 
 
 logger = get_logger("episodic.llm_tasks")

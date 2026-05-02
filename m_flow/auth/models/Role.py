@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID as PgUUID
@@ -10,9 +9,6 @@ from sqlalchemy.orm import relationship
 
 from .Principal import Principal
 from .UserRole import UserRole
-
-if TYPE_CHECKING:
-    pass
 
 
 class Role(Principal):

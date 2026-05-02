@@ -19,7 +19,7 @@ Design:
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING, Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from m_flow.shared.logging_utils import get_logger
 
@@ -41,9 +41,6 @@ from m_flow.core.domain.models import Entity  # Entity is new name, Entity is al
 from m_flow.memory.episodic.episode_builder.pipeline_contexts import (
     Phase0CResult,
 )
-
-if TYPE_CHECKING:
-    pass
 
 
 logger = get_logger(__name__)
