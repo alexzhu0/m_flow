@@ -18,5 +18,3 @@ class MetricsBase(DeclarativeBase):
     Inherit from this class when creating ORM models that
     store metrics and evaluation data.
     """
-
-    pass

@@ -100,7 +100,6 @@ async def get_memory_fragment(
     except Exception as e:
         logger.error(f"Error during memory fragment creation: {str(e)}")
         # Still return the fragment even if projection failed
-        pass
 
     return memory_fragment
 

@@ -25,5 +25,3 @@ class ExtendableMemoryNode(MemoryNode):
     Concrete subclasses are expected to declare at least a ``name``
     field so that the node can be rendered in graph visualisations.
     """
-
-    pass

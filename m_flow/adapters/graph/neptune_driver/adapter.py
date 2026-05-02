@@ -928,15 +928,12 @@ class NeptuneGraphDB(GraphProvider):
 
     async def drop_graph(self, graph_name: str = "myGraph") -> None:
         """Placeholder - GDS projection not supported in Neptune Analytics."""
-        pass
 
     async def graph_exists(self, graph_name: str = "myGraph") -> Optional[bool]:
         """Placeholder - GDS projection not supported in Neptune Analytics."""
-        pass
 
     async def project_entire_graph(self, graph_name: str = "myGraph") -> None:
         """Placeholder - GDS projection not supported in Neptune Analytics."""
-        pass
 
     # -------------------------------------------------------------------------
     # Internal Helpers

@@ -18,5 +18,3 @@ class AnswersBase(DeclarativeBase):
     Inherit from this class when creating ORM models that
     store answer data in the evaluation database.
     """
-
-    pass

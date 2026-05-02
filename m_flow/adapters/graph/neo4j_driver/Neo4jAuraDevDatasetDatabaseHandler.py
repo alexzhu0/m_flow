@@ -129,7 +129,6 @@ class Neo4jAuraDevDatasetStoreHandler(DatasetStoreHandlerInterface):
     @classmethod
     async def delete_dataset(cls, dataset_database: DatasetStore):
         """Delete Aura instance (not yet implemented)."""
-        pass
 
     @classmethod
     def _derive_encryption_key(cls) -> bytes:

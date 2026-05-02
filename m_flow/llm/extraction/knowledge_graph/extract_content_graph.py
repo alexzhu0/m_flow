@@ -25,8 +25,6 @@ _INTERNAL_PARAMS = frozenset({"dataset_name", "datasets", "batch_size", "task_co
 class SchemaResponseError(Exception):
     """Raised when LLM returns JSON Schema definition instead of actual data."""
 
-    pass
-
 
 def _detect_schema_in_response(model_output: BaseModel) -> bool:
     """

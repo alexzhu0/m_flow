@@ -18,5 +18,3 @@ class QuestionsBase(DeclarativeBase):
     Inherit from this class when creating ORM models that
     store question data in the evaluation database.
     """
-
-    pass

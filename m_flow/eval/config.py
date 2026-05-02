@@ -164,7 +164,6 @@ class EvalSetup:
 
     async def cleanup(self) -> None:
         """Clean up evaluation environment"""
-        pass
 
     async def reset_database(self) -> None:
         """
@@ -174,7 +173,6 @@ class EvalSetup:
         """
         # Can call m_flow's cleanup interface here
         # await m_flow.prune.prune_data()
-        pass
 
     async def load_snapshot(self, snapshot_path: str) -> None:
         """
@@ -183,4 +181,3 @@ class EvalSetup:
         Used to quickly restore to a known state.
         """
         # Implement snapshot loading logic
-        pass

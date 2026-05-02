@@ -185,7 +185,7 @@ class TestGetOrCreatePermission:
         # This test is tricky because the error condition is "impossible"
         # We just verify the function handles the None case correctly
         # by checking the error message format
-        pass  # Skip - cannot reliably trigger this condition
+        # Skip - cannot reliably trigger this condition
 
 
 class TestConcurrencyStress:

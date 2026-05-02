@@ -343,4 +343,4 @@ class GraphProvider(ABC):
         Should be called after critical write operations (e.g., after memorize)
         to prevent data loss on abnormal shutdown.
         """
-        pass  # Default: no-op for databases that auto-checkpoint
+        # Default: no-op for databases that auto-checkpoint

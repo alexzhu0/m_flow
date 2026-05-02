@@ -138,7 +138,6 @@ class VectorProvider(Protocol):
         index_property_name: str,
     ) -> None:
         """Create a vector index (no-op by default)."""
-        pass
 
     async def index_memory_nodes(
         self,
@@ -147,7 +146,6 @@ class VectorProvider(Protocol):
         memory_nodes: List["MemoryNode"],
     ) -> None:
         """Index nodes for faster retrieval (no-op by default)."""
-        pass
 
     def get_memory_node_schema(self, model_type: Any) -> Any:
         """Transform model to backend-specific schema (identity by default)."""
@@ -176,4 +174,3 @@ class VectorProvider(Protocol):
         user: "User",
     ) -> None:
         """Deprovision the vector store for a dataset."""
-        pass

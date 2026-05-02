@@ -119,7 +119,6 @@ class S3FileStorage(Storage):
 
     async def ensure_directory_exists(self, directory_path: str = "") -> None:
         """No-op on S3 — directories are implicit key prefixes."""
-        pass
 
     async def copy_file(self, source_file_path: str, destination_file_path: str):
         src_key = self._key(source_file_path)

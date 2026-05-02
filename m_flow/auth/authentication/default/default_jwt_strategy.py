@@ -11,5 +11,3 @@ class DefaultJWTStrategy(JWTStrategy):
 
     Currently uses default JWTStrategy behavior.
     """
-
-    pass

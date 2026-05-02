@@ -94,7 +94,6 @@ class NeptuneAnalyticsAdapter(NeptuneGraphDB, VectorProvider):
         payload_schema: PayloadSchema | None = None,
     ) -> None:
         """No-op (node-level storage)."""
-        pass
 
     async def get_collection(self, collection_name: str):
         """Not applicable for Neptune Analytics."""

@@ -82,5 +82,3 @@ class UserCreate(schemas.BaseUserCreate):
 
 class UserUpdate(schemas.BaseUserUpdate):
     """Inbound payload for partial user profile updates."""
-
-    pass

@@ -17,8 +17,6 @@ class ContentPolicyFilterError(BadInputError):
     provider's usage policies.
     """
 
-    pass
-
 
 class LLMAPIKeyNotSetError(BadInputError):
     """
