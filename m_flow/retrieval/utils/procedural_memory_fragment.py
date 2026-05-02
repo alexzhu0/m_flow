@@ -111,7 +111,7 @@ async def get_procedural_memory_fragment(
         # Return empty graph when MemorySpace doesn't exist
         pass
     except Exception as e:
-        logger.error(f"Error during procedural memory fragment creation: {str(e)}")
+        logger.error(f"Error during procedural memory fragment creation: {e!s}")
         pass
 
     return memory_fragment

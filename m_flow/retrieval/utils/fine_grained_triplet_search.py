@@ -98,7 +98,7 @@ async def get_memory_fragment(
         # This is expected behavior - continue with empty fragment
         pass
     except Exception as e:
-        logger.error(f"Error during memory fragment creation: {str(e)}")
+        logger.error(f"Error during memory fragment creation: {e!s}")
         # Still return the fragment even if projection failed
         pass
 

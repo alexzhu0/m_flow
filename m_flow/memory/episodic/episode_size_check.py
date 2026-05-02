@@ -399,7 +399,7 @@ async def audit_episode(
                         f"[size_check] LLM audit failed for {episode.episode_name}: {e}, "
                         "defaulting to KEEP after retries exhausted"
                     )
-                    return AuditResult(decision="KEEP", reasoning=f"LLM error: {str(e)}")
+                    return AuditResult(decision="KEEP", reasoning=f"LLM error: {e!s}")
 
         # 5. Validate split suggestions
         if response.decision == "SPLIT" and response.splits:
@@ -424,7 +424,7 @@ async def audit_episode(
                     )
                     return AuditResult(
                         decision="KEEP",
-                        reasoning=f"Invalid split suggestion after {max_retries + 1} attempts: {str(e)}",
+                        reasoning=f"Invalid split suggestion after {max_retries + 1} attempts: {e!s}",
                     )
         else:
             # KEEP decision or no splits needed, no validation required
@@ -1266,7 +1266,7 @@ async def run_episode_size_check(
                 stats["split"] += 1
 
         except Exception as e:
-            error_msg = f"Episode {ep.episode_name}: {str(e)}"
+            error_msg = f"Episode {ep.episode_name}: {e!s}"
             stats["errors"].append(error_msg)
             logger.error(f"[size_check] Error processing Episode: {error_msg}")
 

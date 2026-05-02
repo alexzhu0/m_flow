@@ -490,7 +490,7 @@ async def search(
         return [types.TextContent(type="text", text=result)]
     except Exception as e:
         _log.error("搜索失败: %s", e)
-        return [types.TextContent(type="text", text=f"❌ 搜索失败: {str(e)}")]
+        return [types.TextContent(type="text", text=f"❌ 搜索失败: {e!s}")]
 
 
 @_mcp.tool()
@@ -859,12 +859,12 @@ async def learn(
                 )
             ]
         except NotImplementedError as e:
-            msg = f"⚠️ {str(e)}\n请使用直接模式运行 MCP 服务器"
+            msg = f"⚠️ {e!s}\n请使用直接模式运行 MCP 服务器"
             _log.warning(msg)
             return [types.TextContent(type="text", text=msg)]
         except Exception as e:
             _log.error("学习失败: %s", e)
-            return [types.TextContent(type="text", text=f"❌ 学习失败: {str(e)}")]
+            return [types.TextContent(type="text", text=f"❌ 学习失败: {e!s}")]
 
 
 @_mcp.tool()
@@ -899,7 +899,7 @@ async def update_data(
                 UUID(data_id)
                 UUID(dataset_id)
             except ValueError as e:
-                return [types.TextContent(type="text", text=f"❌ 无效的 UUID 格式: {str(e)}")]
+                return [types.TextContent(type="text", text=f"❌ 无效的 UUID 格式: {e!s}")]
 
             _log.info("更新数据: data_id=%s, dataset_id=%s", data_id, dataset_id)
 
@@ -913,7 +913,7 @@ async def update_data(
             return [types.TextContent(type="text", text="✅ 数据已更新")]
         except Exception as e:
             _log.error("更新失败: %s", e)
-            return [types.TextContent(type="text", text=f"❌ 更新失败: {str(e)}")]
+            return [types.TextContent(type="text", text=f"❌ 更新失败: {e!s}")]
 
 
 @_mcp.tool()
@@ -957,7 +957,7 @@ async def ingest(
             return [types.TextContent(type="text", text=f"✅ 数据已入库到 {dataset_name}")]
         except Exception as e:
             _log.error("入库失败: %s", e)
-            return [types.TextContent(type="text", text=f"❌ 入库失败: {str(e)}")]
+            return [types.TextContent(type="text", text=f"❌ 入库失败: {e!s}")]
 
 
 @_mcp.tool()
@@ -1027,7 +1027,7 @@ async def query(
             return [types.TextContent(type="text", text=msg)]
         except Exception as e:
             _log.error("查询失败: %s", e)
-            return [types.TextContent(type="text", text=f"❌ 查询失败: {str(e)}")]
+            return [types.TextContent(type="text", text=f"❌ 查询失败: {e!s}")]
 
 
 # ============================================================

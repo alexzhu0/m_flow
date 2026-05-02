@@ -350,7 +350,7 @@ async def manual_ingest(
                 entity_count += len(concepts)
 
             except Exception as e:
-                error_msg = f"Failed to build episode '{ep_input.name}': {str(e)}"
+                error_msg = f"Failed to build episode '{ep_input.name}': {e!s}"
                 _log.error(f"[manual_ingest] {error_msg}")
                 errors.append(error_msg)
 
@@ -396,14 +396,14 @@ async def manual_ingest(
         )
 
     except Exception as e:
-        _log.error(f"[manual_ingest] Critical error during persistence: {str(e)}")
+        _log.error(f"[manual_ingest] Critical error during persistence: {e!s}")
         return ManualIngestResult(
             success=False,
             episodes_created=0,  # Persistence failed, counts are unreliable
             facets_created=0,
             facet_points_created=0,
             entities_created=0,
-            errors=[f"Critical error during persistence: {str(e)}"],
+            errors=[f"Critical error during persistence: {e!s}"],
         )
 
 
@@ -575,12 +575,12 @@ async def patch_node(
         )
 
     except Exception as e:
-        _log.error(f"[patch_node] Error updating node: {str(e)}")
+        _log.error(f"[patch_node] Error updating node: {e!s}")
         return PatchNodeResult(
             success=False,
             node_id=request.node_id,
             node_type=request.node_type,
-            message=f"Error: {str(e)}",
+            message=f"Error: {e!s}",
         )
 
 

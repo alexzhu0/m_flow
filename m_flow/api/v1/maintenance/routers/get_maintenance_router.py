@@ -167,7 +167,7 @@ def get_maintenance_router() -> APIRouter:
             _logger.error(f"[maintenance] Failed to get quality stats: {e}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to get Episode quality stats: {str(e)}",
+                detail=f"Failed to get Episode quality stats: {e!s}",
             )
 
     @router.post("/episode-size-check", response_model=SizeCheckResponse)
@@ -209,7 +209,7 @@ def get_maintenance_router() -> APIRouter:
             _logger.error(f"[maintenance] Size Check failed: {e}")
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Size Check failed: {str(e)}",
+                detail=f"Size Check failed: {e!s}",
             )
 
     return router

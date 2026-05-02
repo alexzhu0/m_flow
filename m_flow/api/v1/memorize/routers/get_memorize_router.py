@@ -285,7 +285,7 @@ def get_memorize_router() -> APIRouter:
                     async with get_user_manager_context(user_db) as user_manager:
                         user = await strategy.read_token(access_token, user_manager)
         except Exception as error:
-            logger.error(f"Authentication failed: {str(error)}")
+            logger.error(f"Authentication failed: {error!s}")
             await websocket.close(code=WS_1008_POLICY_VIOLATION, reason="Unauthorized")
             return
 

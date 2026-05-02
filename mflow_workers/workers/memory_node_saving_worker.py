@@ -113,7 +113,7 @@ async def memory_node_saving_worker():
                         print(f"Finished adding data points to '{collection_name}'.")
 
             except modal.exception.DeserializationError as error:
-                logger.error(f"Deserialization error: {str(error)}")
+                logger.error(f"Deserialization error: {error!s}")
                 continue
 
         else:

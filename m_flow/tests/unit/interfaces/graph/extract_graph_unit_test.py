@@ -90,7 +90,7 @@ async def test_basic_node_relationship():
     assert len(extracted_nodes) == 2, f"Should extract 2 nodes, found {len(extracted_nodes)}"
     assert len(extracted_edges) == 1, f"Should extract 1 edge, found {len(extracted_edges)}"
 
-    expected_edge_key = f"{str(concept.id)}_{str(category.id)}_category"
+    expected_edge_key = f"{concept.id!s}_{category.id!s}_category"
     assert expected_edge_key in edge_registry, f"Missing edge: {expected_edge_key}"
 
 

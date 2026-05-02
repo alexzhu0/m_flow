@@ -79,7 +79,7 @@ async def get_episodic_memory_fragment(
     except ConceptNotFoundError:
         pass
     except Exception as e:
-        logger.error(f"Error during episodic memory fragment creation: {str(e)}")
+        logger.error(f"Error during episodic memory fragment creation: {e!s}")
 
     return memory_fragment
 
