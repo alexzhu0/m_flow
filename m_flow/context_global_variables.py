@@ -51,10 +51,10 @@ def _require_handler_registered(
     kind: str,
     registry: dict,
 ) -> None:
-    """Raise ``EnvironmentError`` when *handler_name* is absent from *registry*."""
+    """Raise ``OSError`` when *handler_name* is absent from *registry*."""
     if handler_name in registry:
         return
-    raise EnvironmentError(
+    raise OSError(
         f"The {kind} dataset-database handler '{handler_name}' is not recognised. "
         f"Supported handlers: {list(registry)}. "
         f"Set {_ACL_ENV_KEY}=false to disable access-control mode."
@@ -71,7 +71,7 @@ def _require_handler_matches_provider(
     expected = registry[handler_name]["handler_provider"]
     if expected == provider:
         return
-    raise EnvironmentError(
+    raise OSError(
         f"Mismatch: the {kind} handler '{handler_name}' expects provider "
         f"'{expected}' but '{provider}' is configured. "
         f"Set {_ACL_ENV_KEY}=false to disable access-control mode."

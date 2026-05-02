@@ -108,7 +108,7 @@ def create_vector_engine(
         "Pinecone",
         "Milvus",
     ]
-    raise EnvironmentError(f"Unknown vector provider: {vector_db_provider}. Supported: {', '.join(known)}")
+    raise OSError(f"Unknown vector provider: {vector_db_provider}. Supported: {', '.join(known)}")
 
 
 def _create_pgvector_adapter(embedder, api_key: str):
@@ -119,7 +119,7 @@ def _create_pgvector_adapter(embedder, api_key: str):
     required = [cfg.db_host, cfg.db_port, cfg.db_name, cfg.db_username, cfg.db_password]
 
     if not all(required):
-        raise EnvironmentError("Missing PGVector credentials")
+        raise OSError("Missing PGVector credentials")
 
     conn_str = f"postgresql+asyncpg://{cfg.db_username}:{cfg.db_password}@{cfg.db_host}:{cfg.db_port}/{cfg.db_name}"
 
@@ -151,7 +151,7 @@ def _create_neptune_adapter(url: str, embedder):
         raise ImportError("langchain_aws not installed. Run: pip install langchain_aws")
 
     if not url:
-        raise EnvironmentError("Neptune endpoint URL required")
+        raise OSError("Neptune endpoint URL required")
 
     from m_flow.adapters.hybrid.neptune_analytics.NeptuneAnalyticsAdapter import (
         NEPTUNE_ANALYTICS_ENDPOINT_URL,

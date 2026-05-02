@@ -128,7 +128,7 @@ def _build_adapter(
         "neptune",
         "neptune_analytics",
     ]
-    raise EnvironmentError(f"Unknown graph provider '{graph_database_provider}'. Supported: {', '.join(known)}")
+    raise OSError(f"Unknown graph provider '{graph_database_provider}'. Supported: {', '.join(known)}")
 
 
 # ---------------------------------------------------------------------------
@@ -138,7 +138,7 @@ def _build_adapter(
 
 def _require(val: Optional[str], label: str) -> None:
     if not val:
-        raise EnvironmentError(f"Missing required configuration: {label}")
+        raise OSError(f"Missing required configuration: {label}")
 
 
 def _validate_prefix(url: str, prefix: str) -> None:

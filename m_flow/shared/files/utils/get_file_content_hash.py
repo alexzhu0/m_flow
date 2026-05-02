@@ -37,7 +37,7 @@ async def get_file_content_hash(source: Union[str, BinaryIO]) -> str:
             async with backend.open(name, "rb") as fh:
                 return _hex_digest_of(fh)
         return _hex_digest_of(source)
-    except IOError as err:
+    except OSError as err:
         raise FileContentHashingError(
             message=f"Hashing failed for {source!r}: {err}",
         ) from err
