@@ -77,7 +77,7 @@ def _deserialize_from_chroma(data: dict) -> dict:
     deferred_dict = []
     deferred_list = []
 
-    for key in data.keys():
+    for key in data:
         if key.endswith("__dict"):
             deferred_dict.append(key)
         elif key.endswith("__list"):

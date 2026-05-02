@@ -320,7 +320,7 @@ async def procedural_bundle_search(
         if relevant_ids and frag1 and frag1.nodes:
             # Step 2: expand neighbors
             ids_1_set = set(relevant_ids)
-            neighbor_ids = [nid for nid in frag1.nodes.keys() if nid not in ids_1_set]
+            neighbor_ids = [nid for nid in frag1.nodes if nid not in ids_1_set]
             TYPE_PRIO = {
                 "Procedure": 0,
                 "ProcedureStepPoint": 1,

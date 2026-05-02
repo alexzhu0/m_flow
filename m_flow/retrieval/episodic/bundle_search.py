@@ -449,7 +449,7 @@ async def _two_phase_projection(
 
     # Step 2: Expand neighbors
     ids_1_set = set(relevant_ids)
-    neighbor_ids = [nid for nid in fragment_1.nodes.keys() if nid not in ids_1_set]
+    neighbor_ids = [nid for nid in fragment_1.nodes if nid not in ids_1_set]
 
     # Priority for neighbor node types (lower = higher priority)
     # Support both "Entity" (new) and "Entity" (legacy) type values
@@ -527,7 +527,7 @@ async def _two_phase_projection_with_stats(
 
     # Step 2: Expand neighbors
     ids_1_set = set(relevant_ids)
-    neighbor_ids = [nid for nid in fragment_1.nodes.keys() if nid not in ids_1_set]
+    neighbor_ids = [nid for nid in fragment_1.nodes if nid not in ids_1_set]
 
     # Priority for neighbor node types (lower = higher priority)
     # Support both "Entity" (new) and "Entity" (legacy) type values

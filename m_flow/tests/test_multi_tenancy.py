@@ -28,7 +28,7 @@ _logger = get_logger()
 
 def _get_first_dataset_id(memorize_output):
     """Extract the first dataset_id from memorize output dictionary."""
-    for ds_id in memorize_output.keys():
+    for ds_id in memorize_output:
         return ds_id
     return None
 
