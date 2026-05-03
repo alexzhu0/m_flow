@@ -49,7 +49,7 @@ class TextLoader(LoaderInterface):
 
         dest_name = f"text_{meta['content_hash']}.txt"
 
-        with open(file_path, "r", encoding=encoding) as fh:
+        with open(file_path, encoding=encoding) as fh:
             body = fh.read()
 
         cfg = get_storage_config()

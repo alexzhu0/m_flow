@@ -129,7 +129,7 @@ async def build_connected_graph() -> None:
 def load_ground_truth() -> dict[str, Any]:
     """Load expected metrics from ground truth JSON."""
     gt_file = Path(__file__).parent / "ground_truth_metrics.json"
-    with open(gt_file, "r", encoding="utf-8") as f:
+    with open(gt_file, encoding="utf-8") as f:
         return json.load(f)
 
 

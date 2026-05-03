@@ -58,7 +58,7 @@ def list_recent_traces(base_dir: str, limit: int = 20) -> List[Dict[str, Any]]:
 def load_events(path: str) -> List[Dict[str, Any]]:
     """Load trace events."""
     events = []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         for line in f:
             try:
                 events.append(json.loads(line))

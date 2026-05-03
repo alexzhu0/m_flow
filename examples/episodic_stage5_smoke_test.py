@@ -196,7 +196,7 @@ async def test_5_6_pgvector_upsert():
     )
 
     try:
-        with open(pgvector_path, "r", encoding="utf-8") as f:
+        with open(pgvector_path, encoding="utf-8") as f:
             source = f.read()
     except FileNotFoundError:
         print("  ⚠️ PGVectorAdapter.py 文件未找到，跳过测试")

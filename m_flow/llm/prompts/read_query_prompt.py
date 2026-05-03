@@ -33,7 +33,7 @@ def read_query_prompt(
     target = path.join(base, prompt_file_name)
 
     try:
-        with open(target, "r", encoding="utf-8") as f:
+        with open(target, encoding="utf-8") as f:
             return f.read()
     except FileNotFoundError:
         _log.error(f"Prompt not found: {target}")

@@ -86,7 +86,7 @@ class CsvLoader(LoaderInterface):
 
         # Parse CSV and format rows
         formatted_rows: list[str] = []
-        with open(file_path, "r", encoding=encoding, newline="") as text_handle:
+        with open(file_path, encoding=encoding, newline="") as text_handle:
             reader = csv.DictReader(text_handle)
             for row_index, row_data in enumerate(reader, start=1):
                 formatted_rows.append(_format_row(row_index, row_data))

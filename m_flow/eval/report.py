@@ -357,7 +357,7 @@ class EvalReport:
     @classmethod
     def load(cls, path: str) -> "EvalReport":
         """Load report from JSON."""
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             data = json.load(f)
 
         from .metrics import TypeMetrics, EvalMetricsResult

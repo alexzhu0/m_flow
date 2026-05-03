@@ -134,7 +134,7 @@ class CaseLoader:
         if not os.path.exists(self.dataset_path):
             raise FileNotFoundError(f"Dataset not found: {self.dataset_path}")
 
-        with open(self.dataset_path, "r", encoding="utf-8") as f:
+        with open(self.dataset_path, encoding="utf-8") as f:
             for line_num, line in enumerate(f, 1):
                 line = line.strip()
                 if not line:
