@@ -254,7 +254,7 @@ async def fine_grained_triplet_search(
 
         node_distances = {collection: result for collection, result in zip(collections, results)}
 
-        edge_distances = node_distances.get("RelationType_relationship_name", None)
+        edge_distances = node_distances.get("RelationType_relationship_name")
 
         if wide_search_limit is not None:
             relevant_ids_to_filter = list(
