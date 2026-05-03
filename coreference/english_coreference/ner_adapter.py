@@ -195,16 +195,13 @@ class EnglishNerAdapter:
         if etype in {"LOC_ORG", "GROUP"}:
             # Remove articles (the) and common company suffixes
             for p in ("the ",):
-                if low.startswith(p):
-                    low = low[len(p) :]
+                low = low.removeprefix(p)
             for suf in (" inc", " ltd", " corp", " corporation", " llc"):
-                if low.endswith(suf):
-                    low = low[: -len(suf)]
+                low = low.removesuffix(suf)
             return low
         if etype == "OBJ":
             for art in ("the ", "a ", "an "):
-                if low.startswith(art):
-                    low = low[len(art) :]
+                low = low.removeprefix(art)
             parts = [p for p in low.replace(".", "").split() if p]
             if parts:
                 return parts[-1]
